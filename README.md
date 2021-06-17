@@ -5,11 +5,11 @@
 ## Cargar contenedor docker
 ```docker run -it --rm -p 3000:8000 -v C:\app\git\aena-som-laravel\laravel-app:/var/www/html/laravel-app laravel-app bash```
 ## Actualizar dependencia y actualizar librerías en composer
-"laravel/ui": "3.1",
-```composer update```
-```composer install```
+- ```"laravel/ui": "3.1"```
+- ```composer update```
+- ```composer install```
 ## Crear tablas usuario
-```php artisan migrate --seed```
+-```php artisan migrate --seed```
 ## Crear symlinks
 ```php artisan storage:link```
 
@@ -19,8 +19,8 @@
 ## Cargar contenedor docker
 ```docker run -it --rm -p 3000:8000 -v C:\app\git\aena-som-laravel\laravel-app:/var/www/html/laravel-app laravel-app bash```
 ## Actualizar librerías en composer
-```composer update```
-```composer install```
+- ```composer update```
+- ```composer install```
 ## Crear symlinks
 ```php artisan storage:link```
 
