@@ -24,8 +24,3 @@ Auth::routes();
 Route::get('/home', [
     HomeController::class, 'index'
 ])->name('home');
-
-
-Route::resource('news', App\Http\Controllers\NewsController::class);
-
-Route::resource('departments', App\Http\Controllers\DepartmentsController::class);
