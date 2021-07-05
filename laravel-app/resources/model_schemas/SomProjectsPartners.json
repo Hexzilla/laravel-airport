@@ -1,0 +1,114 @@
+[
+    {
+        "name": "id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": true,
+        "inForm": false,
+        "inIndex": false,
+        "inView": false
+    },
+    {
+        "name": "name",
+        "dbType": "string,255",
+        "htmlType": "text",
+        "validations": "required|string|max:255|string|max:255",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "som_projects_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "required|integer|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "company",
+        "dbType": "string,45:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:45|nullable|string|max:45",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "company_profile",
+        "dbType": "string,45:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:45|nullable|string|max:45",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "role_in_project",
+        "dbType": "string,45:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:45|nullable|string|max:45",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "email",
+        "dbType": "string,250:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:250|nullable|string|max:250",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "phone_number",
+        "dbType": "string,45:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:45|nullable|string|max:45",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "other_information",
+        "dbType": "string,2000:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:2000|nullable|string|max:2000",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "type": "relation",
+        "relation": "mt1,SomProject,som_projects_id"
+    }
+]

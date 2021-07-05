@@ -1,0 +1,118 @@
+[
+    {
+        "name": "id",
+        "dbType": "integer,true,true",
+        "htmlType": null,
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": true,
+        "inForm": false,
+        "inIndex": false,
+        "inView": false
+    },
+    {
+        "name": "name",
+        "dbType": "string,255:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:255|nullable|string|max:255",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "is_superadmin",
+        "dbType": "boolean:nullable",
+        "htmlType": "checkbox,1",
+        "validations": "nullable|boolean|nullable|boolean",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "theme_color",
+        "dbType": "string,255:nullable",
+        "htmlType": "text",
+        "validations": "nullable|string|max:255|nullable|string|max:255",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "created_at",
+        "dbType": "datetime:nullable",
+        "htmlType": "date",
+        "validations": "nullable|nullable",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "updated_at",
+        "dbType": "datetime:nullable",
+        "htmlType": "date",
+        "validations": "nullable|nullable",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "is_app_role",
+        "dbType": "boolean:nullable",
+        "htmlType": "checkbox,1",
+        "validations": "nullable|boolean|nullable|boolean",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "is_project_role",
+        "dbType": "boolean:nullable",
+        "htmlType": "checkbox,1",
+        "validations": "nullable|boolean|nullable|boolean",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomApprovalsResponsible,cms_privilege_id_assigned"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomApprovalsResponsible,cms_privilege_id_notify"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomFormElement,cms_privileges_role_id"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomFormTask,cms_privileges_role_id"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomProjectUser,cms_privileges_id"
+    }
+]

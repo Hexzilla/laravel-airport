@@ -24,3 +24,95 @@ Auth::routes();
 Route::get('/home', [
     HomeController::class, 'index'
 ])->name('home');
+
+Route::resource('cmsApiCustoms', App\Http\Controllers\CmsApiCustomController::class);
+
+Route::resource('cmsApiKeys', App\Http\Controllers\CmsApiKeyController::class);
+
+Route::resource('cmsLogs', App\Http\Controllers\CmsLogsController::class);
+
+Route::resource('cmsStatisticComponents', App\Http\Controllers\CmsStatisticComponentsController::class);
+
+Route::resource('cmsStatistics', App\Http\Controllers\CmsStatisticsController::class);
+
+Route::resource('cmsUsers', App\Http\Controllers\CmsUsersController::class);
+
+Route::resource('cmsSettings', App\Http\Controllers\CmsSettingsController::class);
+
+Route::resource('cmsPrivilegesRoles', App\Http\Controllers\CmsPrivilegesRolesController::class);
+
+Route::resource('cmsPrivileges', App\Http\Controllers\CmsPrivilegesController::class);
+
+Route::resource('cmsModuls', App\Http\Controllers\CmsModulsController::class);
+
+Route::resource('cmsMenusPrivileges', App\Http\Controllers\CmsMenusPrivilegesController::class);
+
+Route::resource('cmsMenuses', App\Http\Controllers\CmsMenusController::class);
+
+Route::resource('cmsEmailTemplates', App\Http\Controllers\CmsEmailTemplatesController::class);
+
+Route::resource('cmsEmailQueues', App\Http\Controllers\CmsEmailQueuesController::class);
+
+Route::resource('cmsDashboards', App\Http\Controllers\CmsDashboardController::class);
+
+Route::resource('cmsUsers', App\Http\Controllers\CmsUsersController::class);
+
+Route::resource('somApprovalsResponsibles', App\Http\Controllers\SomApprovalsResponsibleController::class);
+
+Route::resource('somCountries', App\Http\Controllers\SomCountryController::class);
+
+Route::resource('somCountryInfos', App\Http\Controllers\SomCountryInfoController::class);
+
+Route::resource('somDepartments', App\Http\Controllers\SomDepartmentsController::class);
+
+Route::resource('somDepartmentsUsers', App\Http\Controllers\SomDepartmentsUsersController::class);
+
+Route::resource('somFormApprovals', App\Http\Controllers\SomFormApprovalsController::class);
+
+Route::resource('somFormElements', App\Http\Controllers\SomFormElementsController::class);
+
+Route::resource('somFormTasks', App\Http\Controllers\SomFormTasksController::class);
+
+Route::resource('somForms', App\Http\Controllers\SomFormsController::class);
+
+Route::resource('somMilestonesFormsTypes', App\Http\Controllers\SomMilestonesFormsTypesController::class);
+
+Route::resource('somNews', App\Http\Controllers\SomNewsController::class);
+
+Route::resource('somPhases', App\Http\Controllers\SomPhasesController::class);
+
+Route::resource('somProjectsMilestones', App\Http\Controllers\SomProjectsMilestonesController::class);
+
+Route::resource('somPhasesMilestonesTypes', App\Http\Controllers\SomPhasesMilestonesTypesController::class);
+
+Route::resource('somProjectInfoStatuses', App\Http\Controllers\SomProjectInfoStatusController::class);
+
+Route::resource('somProjectProcessTypes', App\Http\Controllers\SomProjectProcessTypeController::class);
+
+Route::resource('somProjectUsers', App\Http\Controllers\SomProjectUsersController::class);
+
+Route::resource('somProjects', App\Http\Controllers\SomProjectsController::class);
+
+Route::resource('somProjectsAdditionalAirports', App\Http\Controllers\SomProjectsAdditionalAirportController::class);
+
+Route::resource('somProjectsAdvisors', App\Http\Controllers\SomProjectsAdvisorsController::class);
+
+Route::resource('somProjectsAirports', App\Http\Controllers\SomProjectsAirportController::class);
+
+Route::resource('somProjectsAirportTypes', App\Http\Controllers\SomProjectsAirportTypeController::class);
+
+Route::resource('somProjectsAssetTypes', App\Http\Controllers\SomProjectsAssetTypeController::class);
+
+Route::resource('somProjectsModels', App\Http\Controllers\SomProjectsModelController::class);
+
+Route::resource('somProjectsPartners', App\Http\Controllers\SomProjectsPartnersController::class);
+
+Route::resource('somProjectsPhases', App\Http\Controllers\SomProjectsPhasesController::class);
+
+Route::resource('somProjectsPriorities', App\Http\Controllers\SomProjectsPriorityController::class);
+
+Route::resource('somProjectsTransactionTypes', App\Http\Controllers\SomProjectsTransactionTypeController::class);
+
+Route::resource('somStatuses', App\Http\Controllers\SomStatusController::class);
+
+Route::resource('somStatusApprovals', App\Http\Controllers\SomStatusApprovalsController::class);

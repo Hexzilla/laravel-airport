@@ -1,0 +1,78 @@
+[
+    {
+        "name": "id",
+        "dbType": "integer,true",
+        "htmlType": null,
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": true,
+        "inForm": false,
+        "inIndex": false,
+        "inView": false
+    },
+    {
+        "name": "som_projects_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "required|integer|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "som_phases_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "required|integer|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "order",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "required|integer|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "name": "som_status_id",
+        "dbType": "integer,false",
+        "htmlType": null,
+        "validations": "nullable|integer|nullable|integer",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
+        "type": "relation",
+        "relation": "mt1,SomPhase,som_phases_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mt1,SomProject,som_projects_id"
+    },
+    {
+        "type": "relation",
+        "relation": "mt1,SomStatus,som_status_id"
+    },
+    {
+        "type": "relation",
+        "relation": "1tm,SomPhasesMilestone,som_projects_phases_id"
+    }
+]
