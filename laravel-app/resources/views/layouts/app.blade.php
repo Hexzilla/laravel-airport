@@ -63,7 +63,9 @@
                              alt="User Image">
                         <p>
                             {{ Auth::user()->name }}
+                            @if (Auth::user()->created_at)
                             <small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
+                            @endif
                         </p>
                     </li>
                     <!-- Menu Footer-->
