@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class CmsUsers
@@ -25,17 +27,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $job_title
  * @property string $objectguid
  */
-class CmsUsers extends Model
+class CmsUsers  extends Authenticatable
 {
-
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     public $table = 'cms_users';
-    
+
     public $timestamps = false;
-
-
-
 
     public $fillable = [
         'name',
@@ -66,7 +64,8 @@ class CmsUsers extends Model
         'updated_at' => 'datetime',
         'status' => 'string',
         'job_title' => 'string',
-        'objectguid' => 'string'
+        'objectguid' => 'string',
+        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -110,4 +109,14 @@ class CmsUsers extends Model
     {
         return $this->hasMany(\App\Models\SomProjectUser::class, 'cms_users_id');
     }
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }
