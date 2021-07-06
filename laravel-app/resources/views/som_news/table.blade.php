@@ -3,9 +3,9 @@
         <thead>
             <tr>
                 <th>Title</th>
-        <th>News Description</th>
-        <th>Date From</th>
-        <th>Date Until</th>
+                <th>News Description</th>
+                <th>Date From</th>
+                <th>Date Until</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -19,11 +19,11 @@
                 <td width="120">
                     {!! Form::open(['route' => ['somNews.destroy', $somNews->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('somNews.show', [$somNews->id]) }}" class='btn btn-default btn-xs'>
+                        {{-- <a href="{{ route('somNews.show', [$somNews->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
-                        </a>
+                        </a> --}}
                         <a href="{{ route('somNews.edit', [$somNews->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
+                            <i class="fa fa-pencil-alt"></i>
                         </a>
                         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
                     </div>
