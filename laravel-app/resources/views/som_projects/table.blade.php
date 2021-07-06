@@ -63,10 +63,6 @@
                         <a href="{{ route('somProjectsAdvisors.index', ['project_id' => $somProjects->id]) }}" class='btn btn-default btn-xs'>
                             <i class="fas fa-users"></i>Advisors
                         </a>
-
-                        {{-- <a href="{{ route('somProjects.show', [$somProjects->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-eye"></i>
-                        </a> --}}
                         <a href="{{ route('somProjects.edit', [$somProjects->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

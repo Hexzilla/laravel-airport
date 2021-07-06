@@ -4,8 +4,8 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Som Projects Additional Airports</h1>
+                <div class="col-sm-6">                    
+                    <h1><i class="fas fa-plane-departure"></i> Additional Airports</h1>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
