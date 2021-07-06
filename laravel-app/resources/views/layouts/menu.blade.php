@@ -1,4 +1,46 @@
 <li class="nav-item">
+    <a href="{{ route('somProjects.index') }}"
+       class="nav-link {{ Request::is('projects*') ? 'active' : '' }}">
+        <p>Projects</p>
+    </a>
+</li>
+
+
+
+<li class="nav-item">
+    <a href="{{ route('somNews.index') }}"
+       class="nav-link {{ Request::is('news*') ? 'active' : '' }}">
+        <p>News</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('somDepartments.index') }}"
+       class="nav-link {{ Request::is('departments*') ? 'active' : '' }}">
+        <p>Departments</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('somCountryInfos.index') }}"
+       class="nav-link {{ Request::is('countryInfos*') ? 'active' : '' }}">
+        <p>Country Infos</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('somCountries.index') }}"
+       class="nav-link {{ Request::is('countries*') ? 'active' : '' }}">
+        <p>Countries</p>
+    </a>
+</li>
+
+
+<!--
+<li class="nav-item">
     <a href="{{ route('cmsApiCustoms.index') }}"
        class="nav-link {{ Request::is('cmsApiCustoms*') ? 'active' : '' }}">
         <p>Cms Api Customs</p>
@@ -358,3 +400,4 @@
 </li>
 
 
+-->
