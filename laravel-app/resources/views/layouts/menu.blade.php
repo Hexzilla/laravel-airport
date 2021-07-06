@@ -1,7 +1,7 @@
 <li class="nav-item">
     <a href="{{ route('somProjects.index') }}"
        class="nav-link {{ Request::is('projects*') ? 'active' : '' }}">
-        <p title="Projects"><i class="far fa-dropbox"></i> Projects</p>
+        <p title="Projects"><i class="fa fa-box"></i> Projects</p>
     </a>
 </li>
 
@@ -18,7 +18,7 @@
 <li class="nav-item">
     <a href="{{ route('somDepartments.index') }}"
        class="nav-link {{ Request::is('departments*') ? 'active' : '' }}">
-        <p title="Departments"><i class="fa fa-box"></i> Departments</p>
+        <p title="Departments"><i class="fa fa-folder"></i> Departments</p>
     </a>
 </li>
 
