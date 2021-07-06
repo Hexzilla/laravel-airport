@@ -29,7 +29,12 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all();
+        //$somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all();
+
+        //JOIN BY PROJECT_ID---
+        $projectId = $request->input('project_id');
+        $somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all(['som_project_id' => $projectId]);
+        //---------------------
 
         return view('som_projects_additional_airports.index')
             ->with('somProjectsAdditionalAirports', $somProjectsAdditionalAirports);
