@@ -4,15 +4,11 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Som News</h1>
-                </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('somNews.create') }}">
-                        Add New
-                    </a>
-                </div>
+                <h1><i class="far fa-newspaper ml-2"></i> News</h1>
+                <a class="btn btn-primary ml-3"
+                    href="{{ route('somNews.create') }}">
+                    <i class="fa fa-plus"></i> Add Data
+                </a>
             </div>
         </div>
     </section>
@@ -29,7 +25,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>
