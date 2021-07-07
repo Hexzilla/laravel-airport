@@ -58,7 +58,7 @@ class SomNewsController extends AppBaseController
 
         $somNews = $this->somNewsRepository->create($input);
 
-        Flash::success('Som News saved successfully.');
+        Flash::success('News saved successfully.');
 
         return redirect(route('somNews.index'));
     }
@@ -75,7 +75,7 @@ class SomNewsController extends AppBaseController
         $somNews = $this->somNewsRepository->find($id);
 
         if (empty($somNews)) {
-            Flash::error('Som News not found');
+            Flash::error('News not found');
 
             return redirect(route('somNews.index'));
         }
@@ -123,7 +123,7 @@ class SomNewsController extends AppBaseController
 
         $somNews = $this->somNewsRepository->update($request->all(), $id);
 
-        Flash::success('Som News updated successfully.');
+        Flash::success('News updated successfully.');
 
         return redirect(route('somNews.index'));
     }
@@ -142,14 +142,14 @@ class SomNewsController extends AppBaseController
         $somNews = $this->somNewsRepository->find($id);
 
         if (empty($somNews)) {
-            Flash::error('Som News not found');
+            Flash::error('News not found');
 
             return redirect(route('somNews.index'));
         }
 
         $this->somNewsRepository->delete($id);
 
-        Flash::success('Som News deleted successfully.');
+        Flash::success('News deleted successfully.');
 
         return redirect(route('somNews.index'));
     }

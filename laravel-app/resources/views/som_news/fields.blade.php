@@ -1,25 +1,25 @@
 <!-- Title Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('title', 'Title:') !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('title', 'Title *') !!}
     {!! Form::text('title', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <!-- News Description Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('news_description', 'News Description:') !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('news_description', 'News Description *') !!}
     {!! Form::text('news_description', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!}
 </div>
 
 <!-- Date From Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('date_from', 'Date From:') !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('date_from', 'Date From *') !!}
     {!! Form::text('date_from', null, ['class' => 'form-control','id'=>'date_from']) !!}
 </div>
 
 @push('page_scripts')
     <script type="text/javascript">
         $('#date_from').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
+            format: 'YYYY-MM-DD',
             useCurrent: true,
             sideBySide: true
         })
@@ -35,7 +35,7 @@
 @push('page_scripts')
     <script type="text/javascript">
         $('#date_until').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
+            format: 'YYYY-MM-DD',
             useCurrent: true,
             sideBySide: true
         })
