@@ -26,7 +26,7 @@ class SomProjectsPhases extends Model
     use HasFactory;
 
     public $table = 'som_projects_phases';
-    
+
     public $timestamps = false;
 
 
@@ -69,7 +69,7 @@ class SomProjectsPhases extends Model
      **/
     public function somPhases()
     {
-        return $this->belongsTo(\App\Models\SomPhase::class, 'som_phases_id');
+        return $this->belongsTo(\App\Models\SomPhases::class, 'som_phases_id');
     }
 
     /**

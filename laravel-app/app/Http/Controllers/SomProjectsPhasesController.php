@@ -29,7 +29,10 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsPhases = $this->somProjectsPhasesRepository->all();
+        //JOIN BY PROJECT_ID---
+        $projectId = $request->input('project_id');
+        $somProjectsPhases = $this->somProjectsPhasesRepository->all(['som_projects_id' => $projectId]);
+        //---------------------
 
         return view('som_projects_phases.index')
             ->with('somProjectsPhases', $somProjectsPhases);

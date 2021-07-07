@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Som Projects</h1>
+                    <h1><i class="fa fa-box"></i> Projects</h1>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
                        href="{{ route('somProjects.create') }}">
-                        Add New
+                        Add Project
                     </a>
                 </div>
             </div>
