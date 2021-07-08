@@ -32,17 +32,17 @@
             </div>
 
             <div class="card-body">
-
-                <div class="row">
-                    @include('som_news.fields')
-                </div>
-
+                @include('som_news.fields')
             </div>
 
             <div class="card-footer">
-                <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
-                <a href="#" class="btn btn-secondary">Save & Add More</a>
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+                        <a href="#" class="btn btn-secondary">Save & Add More</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                    </div>
+                </div>    
             </div>
 
             {!! Form::close() !!}

@@ -35,8 +35,12 @@
             </div>
 
             <div class="card-footer">
-                <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                        </div>
+                </div>
             </div>
 
            {!! Form::close() !!}
