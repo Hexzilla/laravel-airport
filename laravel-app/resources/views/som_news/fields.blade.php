@@ -1,19 +1,34 @@
 <!-- Title Field -->
-<div class="form-group col-sm-12">
-    {!! Form::label('title', 'Title *') !!}
-    {!! Form::text('title', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
+<div class="form-group row">
+    <div class="col-sm-2 col-form-label text-right">
+        {!! Form::label('title', 'Title ') !!}
+        <span class="required">*</span>
+    </div>
+    <div class="col-sm-10">
+      {!! Form::text('title', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
+    </div>
 </div>
 
 <!-- News Description Field -->
-<div class="form-group col-sm-12">
-    {!! Form::label('news_description', 'News Description *') !!}
-    {!! Form::text('news_description', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!}
+<div class="form-group row">
+    <div class="col-sm-2 col-form-label text-right">
+        {!! Form::label('news_description', 'News Description ') !!}
+        <span class="required">*</span>
+    </div>
+    <div class="col-sm-10">
+        {!! Form::text('news_description', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!}
+    </div>
 </div>
 
 <!-- Date From Field -->
-<div class="form-group col-sm-12">
-    {!! Form::label('date_from', 'Date From *') !!}
-    {!! Form::text('date_from', null, ['class' => 'form-control','id'=>'date_from']) !!}
+<div class="form-group row">
+    <div class="col-sm-2 col-form-label text-right">
+        {!! Form::label('date_from', 'Date From ') !!}
+        <span class="required">*</span>
+    </div>
+    <div class="col-sm-10">
+        {!! Form::text('date_from', null, ['class' => 'form-control','id'=>'date_from']) !!}
+    </div>
 </div>
 
 @push('page_scripts')
@@ -27,9 +42,11 @@
 @endpush
 
 <!-- Date Until Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('date_until', 'Date Until:') !!}
-    {!! Form::text('date_until', null, ['class' => 'form-control','id'=>'date_until']) !!}
+<div class="form-group row">
+    {!! Form::label('date_until', 'Date Until:', ['class' => 'col-sm-2 col-form-label text-right']) !!}
+    <div class="col-sm-10">
+        {!! Form::text('date_until', null, ['class' => 'form-control','id'=>'date_until']) !!}
+    </div>
 </div>
 
 @push('page_scripts')

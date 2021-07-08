@@ -31,9 +31,7 @@
             {!! Form::model($somNews, ['route' => ['somNews.update', $somNews->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
-                    @include('som_news.fields')
-                </div>
+                @include('som_news.fields')
             </div>
 
             <div class="card-footer">
