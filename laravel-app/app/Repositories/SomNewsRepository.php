@@ -40,4 +40,13 @@ class SomNewsRepository extends BaseRepository
     {
         return SomNews::class;
     }
+
+    public function news($date_from, $date_until)
+    {
+        return $this->makeModel()
+            ->whereBetween('date_from', [$date_from, $date_until])
+            ->orWhereBetween('date_until', [$date_from, $date_until])
+            ->select('id', 'title', 'news_description', 'date_from', 'date_until')
+            ->get();
+    }
 }

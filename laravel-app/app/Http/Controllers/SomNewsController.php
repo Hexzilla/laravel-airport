@@ -84,6 +84,34 @@ class SomNewsController extends AppBaseController
     }
 
     /**
+     * Display a listing of the SomNews.
+     * POST /news
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function news(Request $request)
+    {
+        $date_from = $request->input('date_from');
+        $date_until = $request->input('date_until');
+
+        if ($date_from == null || $date_until == null) {
+            return response()->json([
+                'api_status' => 'KO',
+                'api_message' => 'Missing parameters'
+            ], 401);
+        }
+
+        $somNews = $this->somNewsRepository->news($date_from, $date_until);
+
+        return response()->json([
+            'api_status' => 'OK',
+            'api_message' => '',
+            'data' => $somNews->toArray()
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified SomNews.
      *
      * @param int $id
