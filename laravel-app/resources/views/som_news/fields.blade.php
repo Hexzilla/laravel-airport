@@ -27,7 +27,12 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::text('date_from', null, ['class' => 'form-control','id'=>'date_from']) !!}
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <div class="input-group-text">@</div>
+            </div>
+            {!! Form::text('date_from', null, ['class' => 'form-control','id'=>'date_from']) !!}
+        </div>
     </div>
 </div>
 
@@ -43,9 +48,17 @@
 
 <!-- Date Until Field -->
 <div class="form-group row">
-    {!! Form::label('date_until', 'Date Until:', ['class' => 'col-sm-2 col-form-label text-right']) !!}
+    <div class="col-sm-2 col-form-label text-right">
+        {!! Form::label('date_until', 'Date Until') !!}
+        <span class="required">&nbsp</span>
+    </div>
     <div class="col-sm-10">
-        {!! Form::text('date_until', null, ['class' => 'form-control','id'=>'date_until']) !!}
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <div class="input-group-text">@</div>
+            </div>
+            {!! Form::text('date_until', null, ['class' => 'form-control','id'=>'date_until']) !!}
+        </div>
     </div>
 </div>
 

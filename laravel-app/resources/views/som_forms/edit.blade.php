@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Edit Som Forms</h1>
+                    <h1>Edit Forms</h1>
                 </div>
             </div>
         </div>
@@ -20,14 +20,15 @@
             {!! Form::model($somForms, ['route' => ['somForms.update', $somForms->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
-                    @include('som_forms.fields')
-                </div>
+                @include('som_forms.fields')
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somForms.index') }}" class="btn btn-default">Cancel</a>
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-10">
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                        <a href="{{ route('somForms.index') }}" class="btn btn-default">Cancel</a>
+                </div>
             </div>
 
            {!! Form::close() !!}
