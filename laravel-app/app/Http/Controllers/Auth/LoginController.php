@@ -120,10 +120,9 @@ class LoginController extends Controller
             // Searching for a user:
             $usersLdap = Adldap::search()->where('userprincipalname', '=', $user->email)->get();
             if($usersLdap!=null && $usersLdap[0] != null){
-                //Save photo
+                //Save photo -- TODO: Set default route if user photo is not found.
                 $photo_img = $usersLdap[0]->thumbnailphoto[0];
-
-                if(strlen($photo_img)>50){
+                if(ISSET($photo_img) && strlen($photo_img)>50){
                     $finfo = new finfo(FILEINFO_MIME);
                     $mime = $finfo->buffer($photo_img);
                     $extension = explode(';',explode('/', $mime )[1])[0];
