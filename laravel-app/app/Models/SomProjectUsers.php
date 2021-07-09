@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version July 5, 2021, 9:35 am UTC
  *
  * @property \App\Models\CmsPrivilege $cmsPrivileges
- * @property \App\Models\CmsUser $cmsUsers
+ * @property \App\Models\CmsUsers $cmsUsers
  * @property \App\Models\SomProject $somProjects
  * @property integer $som_projects_id
  * @property integer $cms_users_id
@@ -24,7 +24,7 @@ class SomProjectUsers extends Model
     use HasFactory;
 
     public $table = 'som_project_users';
-    
+
     public $timestamps = false;
 
 
@@ -72,7 +72,7 @@ class SomProjectUsers extends Model
      **/
     public function cmsUsers()
     {
-        return $this->belongsTo(\App\Models\CmsUser::class, 'cms_users_id');
+        return $this->belongsTo(\App\Models\CmsUsers::class, 'cms_users_id');
     }
 
     /**

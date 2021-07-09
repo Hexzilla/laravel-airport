@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version July 5, 2021, 9:27 am UTC
  *
  * @property \App\Models\CmsPrivilege $cmsPrivilegesRole
- * @property \App\Models\CmsUser $cmsUsers
+ * @property \App\Models\CmsUsers $cmsUsers
  * @property \App\Models\SomDepartmentsUser $somDepartmentsUsers
  * @property \App\Models\SomForm $somForms
  * @property \App\Models\SomStatus $somStatus
@@ -41,7 +41,7 @@ class SomFormTasks extends Model
     use HasFactory;
 
     public $table = 'som_form_tasks';
-    
+
     public $timestamps = false;
 
 
@@ -134,7 +134,7 @@ class SomFormTasks extends Model
      **/
     public function cmsUsers()
     {
-        return $this->belongsTo(\App\Models\CmsUser::class, 'cms_users_id');
+        return $this->belongsTo(\App\Models\CmsUsers::class, 'cms_users_id');
     }
 
     /**
