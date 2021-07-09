@@ -13,6 +13,14 @@
 
     <div class="content px-3">
 
+        <div class="row">
+            <div class="col-12-lg ml-2 mb-4">
+                <a href="{{ route('somFormTasks.index') }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Form Tasks
+                </a>
+            </div>
+        </div>
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
@@ -26,8 +34,11 @@
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somFormTasks.index') }}" class="btn btn-default">Cancel</a>
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-10">
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                        <a href="{{ route('somFormTasks.index') }}" class="btn btn-default">Cancel</a>
+                </div>
             </div>
 
            {!! Form::close() !!}
