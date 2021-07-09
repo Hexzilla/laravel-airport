@@ -54,9 +54,12 @@ class SomCountryInfoController extends AppBaseController
      */
     public function store(CreateSomCountryInfoRequest $request)
     {
-        $input = $request->all();
+        $validated = $request->validated();
 
-        $somCountryInfo = $this->somCountryInfoRepository->create($input);
+        if (array_key_exists('som_country_id', $validated)) {
+            unset($validated['som_country_id']);
+        }
+        $somCountryInfo = $this->somCountryInfoRepository->create($validated);
 
         Flash::success('Som Country Info saved successfully.');
 

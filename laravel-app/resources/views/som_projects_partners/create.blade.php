@@ -35,7 +35,9 @@
                 <div class="row">
                     <div class="offset-sm-2 col-sm-10">
                         {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                        <a href="{{ route('somProjectsPartners.index') }}" class="btn btn-default">Cancel</a>
+                        <a href="{{ route('somProjectsPartners.index') }}" class="btn btn-default">
+                            <i class="fa fa-chevron-left"></i> Cancel
+                        </a>
                     </div>
                 </div>    
             </div>

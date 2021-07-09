@@ -59,7 +59,7 @@ class SomCountryInfo extends Model
      */
     public static $rules = [
         'som_country_id' => 'nullable|integer',
-        'year' => 'nullable',
+        'year' => 'required',
         'population' => 'nullable|numeric',
         'inflation' => 'nullable|numeric',
         'gpd_evolution' => 'nullable|numeric'

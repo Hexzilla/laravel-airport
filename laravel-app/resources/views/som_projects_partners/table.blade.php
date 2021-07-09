@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-        <th>Som Projects Id</th>
+        <th style='display:none;'>Som Projects Id</th>
         <th>Company</th>
         <th>Company Profile</th>
         <th>Role In Project</th>
@@ -17,7 +17,7 @@
         @foreach($somProjectsPartners as $somProjectsPartners)
             <tr>
                 <td>{{ $somProjectsPartners->name }}</td>
-            <td>{{ $somProjectsPartners->som_projects_id }}</td>
+            <td style='display:none;'>{{ $somProjectsPartners->som_projects_id }}</td>
             <td>{{ $somProjectsPartners->company }}</td>
             <td>{{ $somProjectsPartners->company_profile }}</td>
             <td>{{ $somProjectsPartners->role_in_project }}</td>

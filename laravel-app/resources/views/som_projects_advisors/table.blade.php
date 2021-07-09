@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-        <th>Som Projects Id</th>
+        <th style='display:none;'>Som Projects Id</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -11,7 +11,7 @@
         @foreach($somProjectsAdvisors as $somProjectsAdvisors)
             <tr>
                 <td>{{ $somProjectsAdvisors->name }}</td>
-            <td>{{ $somProjectsAdvisors->som_projects_id }}</td>
+            <td style='display:none;'>{{ $somProjectsAdvisors->som_projects_id }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['somProjectsAdvisors.destroy', $somProjectsAdvisors->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

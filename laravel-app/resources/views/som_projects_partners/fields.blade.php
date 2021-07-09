@@ -1,5 +1,6 @@
 <!-- Som Projects Id Field -->
-{{ Form::hidden('som_projects_id', 'som_projects_id') }}
+{{ Form::hidden('som_projects_id', $somProjectID) }}
+{{--{{ $somProjectsPartners->som_projects_id }}--}}
 
 <!-- Name Field -->
 <div class="form-group row">
@@ -16,7 +17,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('email', 'Email') !!}
-        <span class="required">*</span>
     </div>
     <div class="col-sm-10">
         {!! Form::email('email', null, ['class' => 'form-control','maxlength' => 250,'maxlength' => 250]) !!}
@@ -27,7 +27,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('phone_number', 'Phone Number') !!}
-        <span class="required">*</span>
     </div>
     <div class="col-sm-10">
         {!! Form::text('phone_number', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
@@ -38,7 +37,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('other_information', 'Other Information') !!}
-        <span class="required">&nbsp;</span>
     </div>
     <div class="col-sm-10">
         {!! Form::text('other_information', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000]) !!}
@@ -49,7 +47,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('company', 'Company') !!}
-        <span class="required">*</span>
     </div>
     <div class="col-sm-10">
         {!! Form::text('company', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
@@ -60,7 +57,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('company_profile', 'Company Profile') !!}
-        <span class="required">*</span>
     </div>
     <div class="col-sm-10">
         {!! Form::text('company_profile', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
@@ -71,7 +67,6 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('role_in_project', 'Role In Project') !!}
-        <span class="required">*</span>
     </div>
     <div class="col-sm-10">
         {!! Form::text('role_in_project', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}

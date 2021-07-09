@@ -1,5 +1,5 @@
 <!-- Som Project Id Field -->
-{{ Form::hidden('som_project_id', 'som_project_id') }}
+{{ Form::hidden('som_project_id', $somProjectsId) }} 
 
 <!-- Som Airport Id Field -->
 <div class="form-group row">
@@ -8,6 +8,6 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('som_airport_id', null, ['class' => 'form-control']) !!}
+        {!! Form::select('som_airport_id', $somProjectsAirports, $selectedItem, ['class' => 'form-control']) !!}
     </div>
 </div>

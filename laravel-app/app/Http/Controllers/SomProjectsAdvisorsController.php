@@ -29,10 +29,11 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function index(Request $request)
     {
+        $somProjectsID = $request->input('project_id');  //0712
         $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->all();
-
         return view('som_projects_advisors.index')
-            ->with('somProjectsAdvisors', $somProjectsAdvisors);
+            ->with('somProjectsAdvisors', $somProjectsAdvisors)
+            ->with('somProjectID',$somProjectsID);  //0712
     }
 
     /**
@@ -40,11 +41,10 @@ class SomProjectsAdvisorsController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_projects_advisors.create');
+        return view('som_projects_advisors.create')->with('somProjectID',$request->input('som_project_id'));
     }
-
     /**
      * Store a newly created SomProjectsAdvisors in storage.
      *
@@ -100,7 +100,9 @@ class SomProjectsAdvisorsController extends AppBaseController
             return redirect(route('somProjectsAdvisors.index'));
         }
 
-        return view('som_projects_advisors.edit')->with('somProjectsAdvisors', $somProjectsAdvisors);
+        return view('som_projects_advisors.edit')
+            ->with('somProjectsAdvisors', $somProjectsAdvisors)
+            ->with('somProjectID', $somProjectsAdvisors->som_porjects_id); //0712
     }
 
     /**

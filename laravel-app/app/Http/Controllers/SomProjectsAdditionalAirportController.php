@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomProjectsAdditionalAirportRequest;
 use App\Http\Requests\UpdateSomProjectsAdditionalAirportRequest;
 use App\Repositories\SomProjectsAdditionalAirportRepository;
+use App\Repositories\SomProjectsAirportRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -14,10 +15,15 @@ class SomProjectsAdditionalAirportController extends AppBaseController
 {
     /** @var  SomProjectsAdditionalAirportRepository */
     private $somProjectsAdditionalAirportRepository;
+    private $somProjectsAirportRepository;
 
-    public function __construct(SomProjectsAdditionalAirportRepository $somProjectsAdditionalAirportRepo)
+    public function __construct(
+        SomProjectsAdditionalAirportRepository $somProjectsAdditionalAirportRepo,
+        SomProjectsAirportRepository $somProjectsAirportRepo
+        )
     {
         $this->somProjectsAdditionalAirportRepository = $somProjectsAdditionalAirportRepo;
+        $this->somProjectsAirportRepository = $somProjectsAirportRepo;
     }
 
     /**
@@ -29,14 +35,13 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function index(Request $request)
     {
-        //$somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all();
-
         //JOIN BY PROJECT_ID---
         $projectId = $request->input('project_id');
         $somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all(['som_project_id' => $projectId]);
         //---------------------
 
         return view('som_projects_additional_airports.index')
+            ->with('projectId', $projectId)
             ->with('somProjectsAdditionalAirports', $somProjectsAdditionalAirports);
     }
 
@@ -45,9 +50,21 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_projects_additional_airports.create');
+    	$somProjectsId = $request->input('project_id');
+        $somProjectsAirports= $this->somProjectsAirportRepository->all([], null, null, ['id', 'name']);
+        
+        $airports = array(0 => '**Please Select a Airport');
+        foreach($somProjectsAirports->toArray() as $rows)
+        {
+            $airports[$rows['id']] = $rows['name'];
+        }
+        return view('som_projects_additional_airports.create')
+                    ->with('somProjectsId', $somProjectsId)
+                    ->with('somProjectsAirports', $airports)
+                    ->with('selectedItem', 0);
+
     }
 
     /**
@@ -60,12 +77,12 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     public function store(CreateSomProjectsAdditionalAirportRequest $request)
     {
         $input = $request->all();
-
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->create($input);
 
         Flash::success('Som Projects Additional Airport saved successfully.');
-
-        return redirect(route('somProjectsAdditionalAirports.index'));
+        
+        $projectId = $request->input('som_project_id');
+        return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $projectId]));
     }
 
     /**
@@ -98,14 +115,27 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     public function edit($id)
     {
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
-
+       // print_r($somProjectsAdditionalAirport); exit;
         if (empty($somProjectsAdditionalAirport)) {
             Flash::error('Som Projects Additional Airport not found');
 
             return redirect(route('somProjectsAdditionalAirports.index'));
         }
 
-        return view('som_projects_additional_airports.edit')->with('somProjectsAdditionalAirport', $somProjectsAdditionalAirport);
+        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
+        $somProjectsAirports= $this->somProjectsAirportRepository->all([], null, null, ['id', 'name']);
+        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
+        $selectedItem = $somProjectsAdditionalAirportArray['som_airport_id'];
+        $airports = array(0 => '**Please Select a Airport');
+        foreach($somProjectsAirports->toArray() as $rows)
+        {
+            $airports[$rows['id']] = $rows['name'];
+        }
+        return view('som_projects_additional_airports.edit')
+            ->with('somProjectsId', $somProjectsId)
+            ->with('somProjectsAirports', $airports )
+            ->with('selectedItem', $selectedItem)
+            ->with('somProjectsAdditionalAirport', $somProjectsAdditionalAirport);
     }
 
     /**
@@ -127,10 +157,12 @@ class SomProjectsAdditionalAirportController extends AppBaseController
         }
 
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->update($request->all(), $id);
+        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
+        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
 
         Flash::success('Som Projects Additional Airport updated successfully.');
 
-        return redirect(route('somProjectsAdditionalAirports.index'));
+        return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]));
     }
 
     /**
@@ -153,9 +185,11 @@ class SomProjectsAdditionalAirportController extends AppBaseController
         }
 
         $this->somProjectsAdditionalAirportRepository->delete($id);
+        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
+        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
 
         Flash::success('Som Projects Additional Airport deleted successfully.');
 
-        return redirect(route('somProjectsAdditionalAirports.index'));
+        return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]));
     }
 }

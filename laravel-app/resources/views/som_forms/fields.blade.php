@@ -1,3 +1,4 @@
+{{ Form::hidden('active', $somForms->active == 'on' ? 1 : 0) }}
 <!-- Name Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">

@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
-                       href="{{ route('somProjectsAdditionalAirports.create') }}">
+                       href="{{ route('somProjectsAdditionalAirports.create', ['project_id' => $projectId]) }}">
                         Add Additional Airports
                     </a>
                 </div>

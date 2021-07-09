@@ -6,7 +6,7 @@
 
 <!-- Year Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('year', 'Year:') !!}
+    {!! Form::label('year', 'Year*') !!}
     {!! Form::text('year', null, ['class' => 'form-control','id'=>'year']) !!}
 </div>
 

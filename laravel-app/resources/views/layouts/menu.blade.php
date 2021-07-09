@@ -1,3 +1,18 @@
+
+<li class="nav-item">
+    <a href="{{ route('cmsDashboards.index') }}"
+       class="nav-link {{ Request::is('cmsDashboards*') ? 'active' : '' }}">
+        <p title='Dashboard'><i class="fa fa-palette"></i> Dashboard</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('somForms.index') }}"
+       class="nav-link {{ Request::is('somForms*') ? 'active' : '' }}">
+        <p title='Home'><i class="fa fa-home"></i> Home</p>
+    </a>
+</li>
+
 <li class="nav-item">
     <a href="{{ route('somProjects.index') }}"
        class="nav-link {{ Request::is('somProjects*') ? 'active' : '' }}">
@@ -5,7 +20,19 @@
     </a>
 </li>
 
+<li class="nav-item">
+    <a href="{{ route('somAirports.index') }}"
+       class="nav-link {{ Request::is('somAirports*') ? 'active' : '' }}">
+        <p title="Airports"><i class="fa fa-fighter-jet"></i> Airports</p>
+    </a>
+</li>
 
+<li class="nav-item">
+    <a href="{{ route('somCountries.index') }}"
+       class="nav-link {{ Request::is('somCountries*') ? 'active' : '' }}">
+        <p title="Countries"><i class="fa fa-globe"></i> Countries</p>
+    </a>
+</li>
 
 <li class="nav-item">
     <a href="{{ route('somNews.index') }}"
@@ -14,6 +41,12 @@
     </a>
 </li>
 
+<li class="nav-item">
+    <a href="{{ route('cmsUsers.index') }}"
+       class="nav-link {{ Request::is('cmsUsers*') ? 'active' : '' }}">
+        <p title="User Management"><i class="fa fa-users"></i> User Management</p>
+    </a>
+</li>
 
 <li class="nav-item">
     <a href="{{ route('somDepartments.index') }}"
@@ -22,21 +55,14 @@
     </a>
 </li>
 
-
+<!-- 
 <li class="nav-item">
     <a href="{{ route('somCountryInfos.index') }}"
        class="nav-link {{ Request::is('somCountryInfos*') ? 'active' : '' }}">
         <p>Country Infos</p>
     </a>
-</li>
+</li> -->
 
-
-<li class="nav-item">
-    <a href="{{ route('somCountries.index') }}"
-       class="nav-link {{ Request::is('somCountries*') ? 'active' : '' }}">
-        <p title="Countries"><i class="fa fa-globe"></i> Countries</p>
-    </a>
-</li>
 
 
 <!--
