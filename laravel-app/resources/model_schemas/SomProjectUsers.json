@@ -53,7 +53,7 @@
     },
     {
         "type": "relation",
-        "relation": "mt1,CmsUser,cms_users_id"
+        "relation": "mt1,CmsUsers,cms_users_id"
     },
     {
         "type": "relation",
