@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'model' => App\Models\CmsUser::class,
+    'model' => App\Models\CmsUsers::class,
 
     /*
     |--------------------------------------------------------------------------

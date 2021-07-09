@@ -74,6 +74,8 @@ class LoginController extends Controller
         //Rol Inactive ID
         $rolInactive = 2;
 
+        echo json_encode($user);
+        die();
         //If users exists and not is inactive can login
         if($user!=null && $user->id_cms_privileges!=$rolInactive){
             //TODO: Sharepoint logic

@@ -48,7 +48,7 @@
                 @csrf
 
                 <div class="input-group mb-3">
-                    <input type="email"
+                    <input type="text"
                            name="email"
                            value="{{ old('email') }}"
                            placeholder="Email"
