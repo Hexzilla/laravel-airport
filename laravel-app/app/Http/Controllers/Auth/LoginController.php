@@ -74,8 +74,6 @@ class LoginController extends Controller
         //Rol Inactive ID
         $rolInactive = 2;
 
-        echo json_encode($user);
-        die();
         //If users exists and not is inactive can login
         if($user!=null && $user->id_cms_privileges!=$rolInactive){
             //TODO: Sharepoint logic
@@ -121,9 +119,6 @@ class LoginController extends Controller
             //TODO: Debug, this is failing authentication
             // Searching for a user:
             $usersLdap = Adldap::search()->where('userprincipalname', '=', $user->email)->get();
-            echo json_encode($usersLdap);
-            die();
-
             if($usersLdap!=null && $usersLdap[0] != null){
                 //Save photo
                 $photo_img = $usersLdap[0]->thumbnailphoto[0];
@@ -153,7 +148,7 @@ class LoginController extends Controller
                 Session::put('admin_privileges_name',$priv->name);
                 Session::put('admin_lock',0);
                 Session::put('theme_color',$priv->theme_color);
-                Session::put("appname", $_ENV['appname']);
+                Session::put("appname", env('APP_NAME'));
                 Session::put("last_login_timestamp",Carbon::now()->timestamp);
 
                 //CRUDBooster::insertLog(trans("crudbooster.log_login",['email'=>$user->email,'ip'=>RqFacade::server('REMOTE_ADDR')]));
