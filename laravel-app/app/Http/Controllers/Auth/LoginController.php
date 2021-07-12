@@ -119,6 +119,8 @@ class LoginController extends Controller
             //TODO: Debug, this is failing authentication
             // Searching for a user:
             $usersLdap = Adldap::search()->where('userprincipalname', '=', $user->email)->get();
+            // echo var_dump($usersLdap);
+            // die();
             if($usersLdap!=null && $usersLdap[0] != null){
                 //Save photo -- TODO: Set default route if user photo is not found.
                 $photo_img = $usersLdap[0]->thumbnailphoto[0];
@@ -157,7 +159,7 @@ class LoginController extends Controller
 
                 if($loginadmin == null || $loginadmin==false){
                     echo "<script type='text/javascript'>window.top.location='/admin';</script>";
-                    return redirect('/admin');
+                    return redirect(RouteServiceProvider::ADMIN);
                 } else {
                     echo "<script type='text/javascript'>window.top.location='".RouteServiceProvider::ADMIN."';</script>";
                     return redirect(RouteServiceProvider::ADMIN);
