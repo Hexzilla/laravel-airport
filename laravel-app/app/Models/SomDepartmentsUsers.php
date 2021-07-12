@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @package App\Models
  * @version July 5, 2021, 9:24 am UTC
  *
- * @property \App\Models\CmsUser $cmsUsers
+ * @property \App\Models\CmsUsers $cmsUsers
  * @property \App\Models\SomDepartment $somDepartments
  * @property \Illuminate\Database\Eloquent\Collection $somFormTasks
  * @property integer $som_departments_id
@@ -23,7 +23,7 @@ class SomDepartmentsUsers extends Model
     use HasFactory;
 
     public $table = 'som_departments_users';
-    
+
     public $timestamps = false;
 
 
@@ -60,7 +60,7 @@ class SomDepartmentsUsers extends Model
      **/
     public function cmsUsers()
     {
-        return $this->belongsTo(\App\Models\CmsUser::class, 'cms_users_id');
+        return $this->belongsTo(\App\Models\CmsUsers::class, 'cms_users_id');
     }
 
     /**

@@ -23,3 +23,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/news', [SomNewsController::class, 'news']);
 });
 
+Route::get('encrypt/{text}', [App\Http\Controllers\EncryptController::class, 'encrypt'], function ($text) {
+    return $text;
+});
