@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="somProjects-table">
+    <table class="table table-striped table-bordered datatable" id="somProjects-table">
         <thead>
             <tr>
                 <th>Master</th>
@@ -27,7 +27,10 @@
                 <td>{{ $somProjects->name }}
                     <!--Name-->
                 </td>
-                <td>{{ $somProjects->sub_name }}
+                <td>
+                    @if($somProjects->sub_name)
+                    {{ substr($somProjects->sub_name,0,20) }}...
+                    @endif
                     <!--Description-->
                 </td>
                 <td>{{ $somProjects->somProjectsModel->name }}

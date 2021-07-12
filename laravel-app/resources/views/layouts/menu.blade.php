@@ -1,6 +1,6 @@
 <li class="nav-item">
     <a href="{{ route('somProjects.index') }}"
-       class="nav-link {{ Request::is('projects*') ? 'active' : '' }}">
+       class="nav-link {{ Request::is('somProjects*','somProjectUsers*') ? 'active' : '' }}">
         <p title="Projects"><i class="fa fa-box"></i> Projects</p>
     </a>
 </li>
@@ -9,7 +9,7 @@
 
 <li class="nav-item">
     <a href="{{ route('somNews.index') }}"
-       class="nav-link {{ Request::is('news*') ? 'active' : '' }}">
+       class="nav-link {{ Request::is('somNews*') ? 'active' : '' }}">
         <p title="News"><i class="far fa-newspaper"></i> News</p>
     </a>
 </li>
@@ -17,7 +17,7 @@
 
 <li class="nav-item">
     <a href="{{ route('somDepartments.index') }}"
-       class="nav-link {{ Request::is('departments*') ? 'active' : '' }}">
+       class="nav-link {{ Request::is('somDepartments*') ? 'active' : '' }}">
         <p title="Departments"><i class="fa fa-folder"></i> Departments</p>
     </a>
 </li>
@@ -25,15 +25,15 @@
 
 <li class="nav-item">
     <a href="{{ route('somCountryInfos.index') }}"
-       class="nav-link {{ Request::is('countryInfos*') ? 'active' : '' }}">
-        <p>Country Infos</p>
+       class="nav-link {{ Request::is('somCountryInfos*') ? 'active' : '' }}">
+        <p><i class="fa fa-info"></i> Country Infos</p>
     </a>
 </li>
 
 
 <li class="nav-item">
     <a href="{{ route('somCountries.index') }}"
-       class="nav-link {{ Request::is('countries*') ? 'active' : '' }}">
+       class="nav-link {{ Request::is('somCountries*') ? 'active' : '' }}">
         <p title="Countries"><i class="fa fa-globe"></i> Countries</p>
     </a>
 </li>

@@ -4,14 +4,23 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
+                <div class="col-sm-12 text-right">
+                    <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somCountryInfos')}}">Country Info</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="javascript:void(0)">View Som Country Info</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Som Country Info Details</h1>
+                    <h5><i class="fa fa-info"></i> View Som Country Info</h5>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                       href="{{ route('somCountryInfos.index') }}">
-                        Back
-                    </a>
+                           href="{{url('somCountryInfos')}}">
+                            Back
+                        </a>
                 </div>
             </div>
         </div>

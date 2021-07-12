@@ -1,9 +1,9 @@
 <div class="table-responsive">
-    <table class="table" id="somProjectsPhases-table">
+    <table class="table table-striped table-bordered datatable" id="somProjectsPhases-table">
         <thead>
             <tr>
-                <th>Phase</th>     
-                <th>Order</th>        
+                <th>Phase</th>
+                <th>Order</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>

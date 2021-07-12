@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="somProjectUsers-table">
+    <table class="table table-striped table-bordered datatable" id="somProjectUsers-table">
         <thead>
             <tr>
                 <th>Som Projects Id</th>

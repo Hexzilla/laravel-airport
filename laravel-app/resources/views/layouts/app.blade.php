@@ -12,7 +12,7 @@
 
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
           rel="stylesheet">
-          
+
     <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css"
           integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ=="
@@ -92,6 +92,7 @@
         <section class="content">
             @yield('content')
         </section>
+
     </div>
 
     <!-- Main Footer -->
@@ -107,15 +108,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
         integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
         crossorigin="anonymous"></script>
+{{-- <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> --}}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
         crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
-        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" 
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
         crossorigin="anonymous"></script>
-        
+
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
 <!-- AdminLTE App -->
@@ -136,17 +139,199 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
         integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
         crossorigin="anonymous"></script>
-        
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" integrity="sha512-J+763o/bd3r9iW+gFEqTaeyi+uAphmzkE/zU8FxY6iAvD3nQKXa+ZAWkBI9QS9QkYEKddQoiy0I5GDxKf/ORBA==" crossorigin="anonymous"></script>
 
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<style>
+    .card{
+        padding: 10px !important;
+    }
+</style>
 <script>
     $(function () {
         bsCustomFileInput.init();
     });
-    
+
     $("input[data-bootstrap-switch]").each(function(){
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
+    $(document).ready(function () {
+        $('#somProjectUsers-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somProjects-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somProjectsAdditionalAirports-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somProjectsPhases-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somProjectsPartners-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+
+        $('#somProjectsAdvisors-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somNews-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somDepartments-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somCountryInfos-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+        $('#somCountries-table').dataTable({
+            language: {
+                search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",
+                searchPlaceholder: "Search..."
+            },
+            "oLanguage": {
+                "sLengthMenu": "_MENU_",
+            },
+            'aoColumns': [
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+                { bSearchable: true, bSortable: true },
+            ]
+        });
+    });
+
 </script>
 
 @yield('third_party_scripts')

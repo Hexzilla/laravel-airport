@@ -24,7 +24,7 @@
 
 <div class="form-group col-sm-6">
     {!! Form::Label('som_status_id', 'Som Status Id:') !!}
-    {!! Form::select('som_status_id', $items, $selectedID, ['class' => 'form-control']) !!}
+    {!! Form::select('som_status_id',[1,2,3,4,5],2, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Description -->
@@ -133,7 +133,7 @@
     </script>
 @endpush
 
-{{-- 
+{{--
 
 <!-- Pr Length Field -->
 <div class="form-group col-sm-6">

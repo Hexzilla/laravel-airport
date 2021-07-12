@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="somCountryInfos-table">
+    <table class="table table-striped table-bordered datatable" id="somCountryInfos-table">
         <thead>
             <tr>
                 <th>Som Country Id</th>

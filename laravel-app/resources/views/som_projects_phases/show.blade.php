@@ -4,14 +4,24 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
+                <div class="col-sm-12 text-right">
+                    <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somProjects')}}">Project</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{ URL::previous() }}">Project Phases</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="javascript:void(0)">Som Projects Phases Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Som Projects Phases Details</h1>
+                    <h5><i class="fas fa-glass-martini"></i> Som Projects Phases Details</h5>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                       href="{{ route('somProjectsPhases.index') }}">
-                        Back
-                    </a>
+                           href="{{ URL::previous() }}">
+                            Back
+                        </a>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="somProjectsPartners-table">
+    <table class="table table-striped table-bordered datatable" id="somProjectsPartners-table">
         <thead>
             <tr>
                 <th>Name</th>

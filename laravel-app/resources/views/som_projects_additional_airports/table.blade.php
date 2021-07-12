@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="somProjectsAdditionalAirports-table">
+    <table class="table table-striped table-bordered datatable" id="somProjectsAdditionalAirports-table">
         <thead>
             <tr>
                 <th>Airport</th>
