@@ -19,3 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+Route::get('encrypt/{text}', [App\Http\Controllers\EncryptController::class, 'encrypt'], function ($text) {
+    return $text;
+});
