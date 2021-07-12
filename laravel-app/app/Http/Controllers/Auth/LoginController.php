@@ -106,9 +106,9 @@ class LoginController extends Controller
             // }
 
             $priv = DB::table("cms_privileges")->where("id",$user->id_cms_privileges)->first();
-            if (ISSET($user->photo)) {
-                $user->photo = $photurl;
-            }
+            // if (ISSET($user->photo)) {
+            //     $user->photo = $photourl;
+            // }
 
             $roles = DB::table('cms_privileges_roles')
             ->where('id_cms_privileges',$user->id_cms_privileges)
@@ -159,8 +159,8 @@ class LoginController extends Controller
                     echo "<script type='text/javascript'>window.top.location='/admin';</script>";
                     return redirect('/admin');
                 } else {
-                    echo "<script type='text/javascript'>window.top.location='".$redirectTo."';</script>";
-                    return redirect($redirectTo);
+                    echo "<script type='text/javascript'>window.top.location='".RouteServiceProvider::ADMIN."';</script>";
+                    return redirect(RouteServiceProvider::ADMIN);
                 }
 
             }
