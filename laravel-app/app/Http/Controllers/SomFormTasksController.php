@@ -12,8 +12,6 @@ use App\Models\SomFormTasks;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Response;
 
 class SomFormTasksController extends AppBaseController
@@ -63,12 +61,16 @@ class SomFormTasksController extends AppBaseController
         $somFormTasks->som_forms_id = $somforms_id;
         $somFormTasks->order = 1;
         $somFormTasks->som_status_id = 0;
-        $arrType[] = 'Please select a Type';
+        $arrType['-1'] = 'Please select a Type';
         $arrType = $arrType + config( 'constants.taskTypes');
         
         $arrRole = array();
         $arrRole[] = 'Please select a Privilege';
-        $RoleRows = $this->cmsPrivilegesRepository->all([], null, null, ['id', 'name'])->toArray();
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $roleFilter = array($roleLegal, $roleFinance, $roleEditor);
+        $RoleRows = $this->cmsPrivilegesRepository->find($roleFilter)->toArray();
         foreach($RoleRows as $row)
         {
             $arrRole[$row['id']] = $row['name'];
@@ -146,19 +148,33 @@ class SomFormTasksController extends AppBaseController
             return redirect(route('somFormTasks.index'));
         }
         //get select Role items
-        $items = $this->cmsPrivilegesRepository->all([], null, null, ['id', 'name'])->toArray();
-        $role = Arr::pluck($items,'name','id');
-
+        $arrRole = array();
+        $arrRole[] = 'Please select a Privilege';
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $roleFilter = array($roleLegal, $roleFinance, $roleEditor);
+        $RoleRows = $this->cmsPrivilegesRepository->find($roleFilter)->toArray();
+        foreach($RoleRows as $row)
+        {
+            $arrRole[$row['id']] = $row['name'];
+        }
         //get select Department items
-        $DepartItems = $this->somDepartmentsRepository->all([], null, null, ['id', 'name'])->toArray();
-        $arrDepart = Arr::pluck($DepartItems,'name','id');
+        $arrDepart = array();
+        $arrDepart[] = 'Please select a Department';
+        $DepartRows = $this->somDepartmentsRepository->all([], null, null, ['id','name'])->toArray();
+        foreach($DepartRows as $row)
+        {
+            $arrDepart[$row['id']] = $row['name'];
+        }
 
-        $arrType = config( 'constants.taskTypes');
+        $arrType['-1'] = 'Please select a Type';
+        $arrType = $arrType + config( 'constants.taskTypes');
 
         return view('som_form_tasks.edit')
             ->with('somFormTasks', $somFormTasks)
             ->with('arrType', $arrType)
-            ->with('arrRole', $role)
+            ->with('arrRole', $arrRole)
             ->with('arrDepart', $arrDepart);
     }
 

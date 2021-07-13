@@ -87,18 +87,18 @@ class SomCountry extends Model
      * @var array
      */
     public static $rules = [
-        'country' => 'nullable|string|max:45',
+        'country' => 'nullable|string|max:45|min:0',
         'country_code' => 'nullable|string|max:2',
         'description' => 'nullable|string|max:500',
-        'politics' => 'nullable|integer',
-        'regulatory' => 'nullable|integer',
-        'corruption' => 'nullable|integer',
-        'business_easyness' => 'nullable|integer',
-        'spain_affinity' => 'nullable|integer',
+        'politics' => 'nullable|integer|min:0|max:5',
+        'regulatory' => 'nullable|integer|min:0|max:5',
+        'corruption' => 'nullable|integer|min:0|max:5',
+        'business_easyness' => 'nullable|integer|min:0|max:5',
+        'spain_affinity' => 'nullable|integer|min:0|max:5',
         'aena_strategy_align' => 'nullable|string|max:3',
-        'tourism_activity' => 'nullable|numeric',
+        'tourism_activity' => 'nullable|numeric|min:0|max:100',
         'country_risk' => 'nullable|string|max:10',
-        'imports_exports' => 'nullable|numeric',
+        'imports_exports' => 'nullable|numeric|min:0|max:99999999',
         'version_date' => 'nullable',
         'exchange_rate' => 'nullable|string|max:50'
     ];

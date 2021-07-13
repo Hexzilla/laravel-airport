@@ -101,7 +101,7 @@ class SomFormTasks extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:500',
+        'name' => 'required|string|max:500|min:3',
         'duedate' => 'nullable',
         'task_completion_date' => 'nullable',
         'request_date' => 'nullable',
@@ -109,14 +109,14 @@ class SomFormTasks extends Model
         'tooltip' => 'nullable|string|max:2000',
         'support_doc_url' => 'nullable|string|max:1000',
         'support_doc_description' => 'nullable|string|max:255',
-        'som_status_id' => 'nullable|integer',
+        'som_status_id' => 'nullable|integer|min:0',
         'som_forms_id' => 'required|integer',
-        'order' => 'required|integer',
+        'order' => 'required|integer|min:0',
         'som_departments_users_id' => 'nullable|integer',
-        'som_departments_id' => 'required|integer',
-        'is_sub_task' => 'required|integer',
+        'som_departments_id' => 'nullable|integer|min:0',
+        'is_sub_task' => 'required|integer|min:0',
         'cms_users_id' => 'nullable|integer',
-        'cms_privileges_role_id' => 'required|integer',
+        'cms_privileges_role_id' => 'required|integer|min:1',
         'consultable_user_name' => 'nullable|string|max:200',
         'consultable_user_email' => 'nullable|string|max:200'
     ];
