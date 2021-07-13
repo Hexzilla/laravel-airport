@@ -59,7 +59,7 @@ class LoginController extends Controller
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
         return $this->authenticated($request, $this->guard()->user())
-                ?: redirect()->intended($this->redirectPath());
+            ?: redirect()->intended($this->redirectPath());
     }
 
     /**
@@ -75,7 +75,7 @@ class LoginController extends Controller
         $rolInactive = 2;
 
         //If users exists and not is inactive can login
-        if($user!=null && $user->id_cms_privileges!=$rolInactive){
+        if ($user != null && $user->id_cms_privileges != $rolInactive) {
             //TODO: Sharepoint logic
             //Get Sharepoint Token
             // $sharepointUrl=env('SHAREPOINT_URL');
@@ -105,29 +105,29 @@ class LoginController extends Controller
             //     Session::put("SharepointAuthCtx", null);
             // }
 
-            $priv = DB::table("cms_privileges")->where("id",$user->id_cms_privileges)->first();
+            $priv = DB::table("cms_privileges")->where("id", $user->id_cms_privileges)->first();
             // if (ISSET($user->photo)) {
             //     $user->photo = $photourl;
             // }
 
             $roles = DB::table('cms_privileges_roles')
-            ->where('id_cms_privileges',$user->id_cms_privileges)
-            ->join('cms_moduls','cms_moduls.id','=','id_cms_moduls')
-            ->select('cms_moduls.name','cms_moduls.path','is_visible','is_create','is_read','is_edit','is_delete')
-            ->get();
+                ->where('id_cms_privileges', $user->id_cms_privileges)
+                ->join('cms_moduls', 'cms_moduls.id', '=', 'id_cms_moduls')
+                ->select('cms_moduls.name', 'cms_moduls.path', 'is_visible', 'is_create', 'is_read', 'is_edit', 'is_delete')
+                ->get();
 
             //TODO: Debug, this is failing authentication
             // Searching for a user:
             $usersLdap = Adldap::search()->where('userprincipalname', '=', $user->email)->get();
             // echo var_dump($usersLdap);
             // die();
-            if($usersLdap!=null && $usersLdap[0] != null){
+            if ($usersLdap != null && $usersLdap[0] != null) {
                 //Save photo -- TODO: Set default route if user photo is not found.
                 $photo_img = $usersLdap[0]->thumbnailphoto[0];
-                if(ISSET($photo_img) && strlen($photo_img)>50){
+                if (isset($photo_img) && strlen($photo_img) > 50) {
                     $finfo = new finfo(FILEINFO_MIME);
                     $mime = $finfo->buffer($photo_img);
-                    $extension = explode(';',explode('/', $mime )[1])[0];
+                    $extension = explode(';', explode('/', $mime)[1])[0];
 
                     $file_path = "uploads/{$user->id}/thumbnail";
 
@@ -135,46 +135,42 @@ class LoginController extends Controller
                     $filename =  "user.{$extension}";
                     $photo_url = "/{$file_path}/{$filename}";
 
-                    Storage::put($file_path."/".$filename, $photo_img);
-                    DB::table('cms_users')->where("id",$user->id)->update(['photo' => $photo_url]);
+                    Storage::put($file_path . "/" . $filename, $photo_img);
+                    DB::table('cms_users')->where("id", $user->id)->update(['photo' => $photo_url]);
                 }
 
                 //Load user info into session
-                Session::put('admin_id',$user->id);
-                Session::put('admin_is_superadmin',$priv->is_superadmin);
-                Session::put('admin_name',$user->name);
-                Session::put('admin_photo',$photo_url);
-                Session::put('admin_privileges_roles',$roles);
-                Session::put("admin_privileges",$user->id_cms_privileges);
-                Session::put('admin_privileges_name',$priv->name);
-                Session::put('admin_lock',0);
-                Session::put('theme_color',$priv->theme_color);
+                Session::put('admin_id', $user->id);
+                Session::put('admin_is_superadmin', $priv->is_superadmin);
+                Session::put('admin_name', $user->name);
+                Session::put('admin_photo', $photo_url);
+                Session::put('admin_privileges_roles', $roles);
+                Session::put("admin_privileges", $user->id_cms_privileges);
+                Session::put('admin_privileges_name', $priv->name);
+                Session::put('admin_lock', 0);
+                Session::put('theme_color', $priv->theme_color);
                 Session::put("appname", env('APP_NAME'));
-                Session::put("last_login_timestamp",Carbon::now()->timestamp);
+                Session::put("last_login_timestamp", Carbon::now()->timestamp);
 
                 //CRUDBooster::insertLog(trans("crudbooster.log_login",['email'=>$user->email,'ip'=>RqFacade::server('REMOTE_ADDR')]));
 
                 //Check redirect to Front or Backoffice
                 $loginadmin = Session::get('loginadmin');
 
-                if($loginadmin == null || $loginadmin==false){
-                    echo "<script type='text/javascript'>window.top.location='/admin';</script>";
+                if ($loginadmin == null || $loginadmin == false) {
                     return redirect(RouteServiceProvider::ADMIN);
                 } else {
-                    echo "<script type='text/javascript'>window.top.location='".RouteServiceProvider::ADMIN."';</script>";
                     return redirect(RouteServiceProvider::ADMIN);
                 }
-
             }
             //Dont have user info-> return error
             else {
-
+                //echo "User info not found";
                 SomLogger::error("ERR1009", "User info not found");
                 return redirect('/login');
             }
-        }
-        else{
-
+        } else {
+            //echo "User info not found";
             SomLogger::error("ERR1009", "User info not found");
             return redirect('/login');
         }

@@ -6,7 +6,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\CreateSomDepartmentsRequest;
 use App\Http\Requests\UpdateSomDepartmentsRequest;
 use App\Repositories\SomDepartmentsRepository;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Adldap\Laravel\Facades\Adldap;
@@ -194,9 +193,8 @@ class SomDepartmentsController extends AppBaseController
 
                 SomLogger::debug("DBG1001", "User:\t cn: {$userName}, displayname: {$userDisplayName}, userprincipalname: {$userEmail}, title: {$userTitle}");
 
-                $user = DB::table('cms_users')->where("email", $userEmail)->first();
-
                 //If not exists user in DB
+                $user = DB::table('cms_users')->where("email", $userEmail)->first();
                 if ($user == null) {
                     SomLogger::debug("DBG1001", "Create user {$userName} - {$userEmail}");
                     //Create User
@@ -236,15 +234,9 @@ class SomDepartmentsController extends AppBaseController
             //TODO: Redirect with flash message
             //TODO: Redirect back to departments page
             Flash::error($e->getMessage());
-            return redirect(str_replace('/load','', request()->fullUrl()));
-            //CRUDBooster::redirect(str_replace('/load','',Request::fullUrl()), trans('crudbooster.denied_privilege').$e->getMessage());
+            return redirect(route('somDepartments.index'));
         }
-
-        //$alertType = "success";
-        //TODO: Redirect back to departments page
-        //TODO: Redirect with flash message
         Flash::success('The data import was successful.');
-        return redirect(str_replace('/load','', request()->fullUrl()));
-        //CRUDBooster::redirect(str_replace('/load','',Request::fullUrl()), trans('crudbooster.alert_add_data_success'), $alertType);
+        return redirect(route('somDepartments.index'));
     }
 }
