@@ -74,19 +74,13 @@ class SomProjectsAirportController extends AppBaseController
 
         $data['countries'] = array();
         $somCountries = $this->somCountryRepository->all();
-        $cnt = 0;
-        $data['countries'][$cnt] = "Please select a Country";
         foreach ($somCountries as $somCountry) {
-            // $cnt ++;
             $data['countries'][$somCountry->country] = $somCountry->country;
         }     
 
         $data['airport_types'] = array();
         $airport_types = $this->somProjectsAirportTypeRepository->all();
-        $cnt = 0;   
-        $data['airport_types'][$cnt] = "Please select a Type of airport";
         foreach ($airport_types as $airport_type) {
-            $cnt ++;
             $data['airport_types'][$airport_type->id] = $airport_type->name;
         }
 
@@ -214,6 +208,10 @@ class SomProjectsAirportController extends AppBaseController
             $data['version_date'] = $request->input('version_date');
         }  
         if($request->file()) {
+            $this->validate($request, [
+                'file' => 'mimes:jpeg,jpg,png,gif', //only allow this type extension file.
+            ]);
+
             $fileName = time().'_'.$request->file->getClientOriginalName();
             $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');            
             $data['img_url'] = '/storage/app/public/' .$filePath;            
@@ -269,19 +267,13 @@ class SomProjectsAirportController extends AppBaseController
         $data['id'] = $id;
         $data['countries'] = array();
         $somCountries = $this->somCountryRepository->all();
-        $cnt = 0;
-        $data['countries'][$cnt] = "Please select a Country";
         foreach ($somCountries as $somCountry) {
-            // $cnt ++;
             $data['countries'][$somCountry->country] = $somCountry->country;
         }     
 
         $data['airport_types'] = array();
         $airport_types = $this->somProjectsAirportTypeRepository->all();
-        $cnt = 0;   
-        $data['airport_types'][$cnt] = "Please select a Type of airport";
         foreach ($airport_types as $airport_type) {
-            $cnt ++;
             $data['airport_types'][$airport_type->id] = $airport_type->name;
         }
 
@@ -313,6 +305,20 @@ class SomProjectsAirportController extends AppBaseController
         }
 
         $somProjectsAirport = $this->somProjectsAirportRepository->update($request->all(), $id);
+
+        $data = array();
+        if($request->file()) {
+            $this->validate($request, [
+                'file' => 'mimes:jpeg,jpg,png,gif', //only allow this type extension file.
+            ]);
+
+            $fileName = time().'_'.$request->file->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');            
+            $data['img_url'] = '/storage/app/public/' .$filePath; 
+            $this->somProjectsAirportRepository->updateData($id, $data);           
+        }     
+
+        
 
         Flash::success('Som Projects Airport updated successfully.');
 

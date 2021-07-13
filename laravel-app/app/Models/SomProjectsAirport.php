@@ -163,15 +163,15 @@ class SomProjectsAirport extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'nullable|string|max:245|min:3',
-        'address' => 'nullable|string|max:245|min:5',
+        'name' => 'required|string|max:245|min:3',
+        'address' => 'required|string|max:245|min:5',
         'city' => 'nullable|string|max:45',
         'country' => 'nullable|string|max:45',
         'lat' => 'nullable|numeric|min:0',
         'long' => 'nullable|numeric|min:0',
         'iata_oaci' => 'nullable|string|max:45|min:1',
         'som_projects_airport_type_id' => 'nullable|integer|min:0',
-        'size' => 'nullable|numeric|min:0',
+        'size' => 'required|numeric|min:0',
         'revenues_aeronautical' => 'nullable|numeric|min:0',
         'revenues_non_aeronautical' => 'nullable|numeric|min:0',
         'total_revenues' => 'nullable|numeric|min:0',
@@ -204,12 +204,6 @@ class SomProjectsAirport extends Model
         'version_date' => 'nullable'
     ];
 
-    public static $create_rule = [
-        'id' => 'required|integer',
-        'name' => 'required|string|max:245|min:3',
-        'address' => 'required|string|max:245|min:5',
-        'size' => 'required|numeric|min:0',
-    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

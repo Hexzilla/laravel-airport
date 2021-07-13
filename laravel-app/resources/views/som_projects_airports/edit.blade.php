@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($somProjectsAirport, ['route' => ['somAirports.update', $somProjectsAirport->id], 'method' => 'patch']) !!}
+            {!! Form::model($somProjectsAirport, ['route' => ['somAirports.update', $somProjectsAirport->id],'enctype' =>'multipart/form-data', 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <!-- <div class="row"> -->

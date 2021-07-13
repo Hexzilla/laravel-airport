@@ -25,8 +25,8 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'somNews.store']) !!}
-
+            {!! Form::open(['route' => 'somNews.store', 'id' => 'formCreate']) !!}
+            
             <div class="card-header">
                 <span><i class="far fa-newspaper ml-2"></i> Add News</span>
             </div>
@@ -39,8 +39,9 @@
                 <div class="row">
                     <div class="offset-sm-2 col-sm-10">
                         <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
-                        <a href="#" class="btn btn-secondary">Save & Add More</a>
-                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                        <!-- <a href="#" class="btn btn-secondary">Save & Add More</a> -->
+                        {!! Form::submit('Save & Add More', ['class' => 'btn btn-secondary','name' => 'sub2']) !!}
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary','name' => 'sub1']) !!}
                     </div>
                 </div>    
             </div>
@@ -48,5 +49,5 @@
             {!! Form::close() !!}
 
         </div>
-    </div>
+    </div>    
 @endsection

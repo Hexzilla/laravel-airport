@@ -88,7 +88,17 @@
         {!! Form::label('aena_strategy_align', 'Location aligned with Aena international strategy') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::text('aena_strategy_align', null, ['class' => 'form-control','maxlength' => 3]) !!}
+        {!! Form::text('aena_strategy_align', null, ['class' => 'form-control','maxlength' => 3,'maxlength' => 3]) !!}
+    </div>
+</div>
+
+<!-- Country Risk Field -->
+<div class="form-group row">
+    <div class="col-sm-2 col-form-label text-right">
+        {!! Form::label('country_risk', 'Country Risk') !!}
+    </div>
+    <div class="col-sm-10">
+        {!! Form::text('country_risk', null, ['class' => 'form-control','maxlength' => 10,'maxlength' => 10]) !!}
     </div>
 </div>
 
@@ -99,16 +109,6 @@
     </div>
     <div class="col-sm-10">
         {!! Form::number('tourism_activity', null, ['class' => 'form-control']) !!}
-    </div>
-</div>
-
-<!-- Country Risk Field -->
-<div class="form-group row">
-    <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('country_risk', 'Country Risk') !!}
-    </div>
-    <div class="col-sm-10">
-        {!! Form::text('country_risk', null, ['class' => 'form-control','maxlength' => 10]) !!}
     </div>
 </div>
 

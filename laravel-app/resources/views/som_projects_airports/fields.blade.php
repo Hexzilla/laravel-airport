@@ -170,7 +170,7 @@
     <div class="col-sm-10">
         <!-- {!! Form::text('img_url', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!} -->
         <div class="custom-file">
-            <input type="file" name="file" class="custom-file-input" id="chooseFile">
+            <input type="file" name="file" class="custom-file-input" id="chooseFile" accept="image/x-png,image/gif,image/jpg,image/jpeg">
             <label class="custom-file-label" for="chooseFile">Select file</label>
         </div>
     </div>

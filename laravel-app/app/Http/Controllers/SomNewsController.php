@@ -60,7 +60,12 @@ class SomNewsController extends AppBaseController
 
         Flash::success('News saved successfully.');
 
-        return redirect(route('somNews.index'));
+        // return redirect(route('somNews.index'));
+        if(!empty($request->input('sub1'))){ //save
+            return redirect(route('somNews.index'));
+        }else{ //save and more add
+            return redirect(route('somNews.create'));
+        } 
     }
 
     /**
