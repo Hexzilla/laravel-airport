@@ -179,9 +179,6 @@ class SomDepartmentsController extends AppBaseController
 
             $usersLdap = $query->get();
 
-            //echo json_decode($usersLdap);
-            //die();
-
             //Iterate over users:
             SomLogger::debug("DBG1001", "Processing Users...");
             foreach ($usersLdap as $u) {
@@ -211,7 +208,7 @@ class SomDepartmentsController extends AppBaseController
                         'status' => 'Active',
                         'job_title' => $userTitle,
                     ];
-                    $userId = DB::table(config('crudbooster.USER_TABLE'))->insertGetId($newUser);
+                    $userId = DB::table('cms_users')->insertGetId($newUser);
                 } else {
                     SomLogger::debug("DBG1001", "User {$userName} - {$userEmail} already exists");
                     $userId = $user->id;
@@ -232,20 +229,22 @@ class SomDepartmentsController extends AppBaseController
                     $photoUrl = "/{$file_path}/{$filename}";
 
                     Storage::put($file_path . "/" . $filename, $userPhoto);
-                    DB::table(config('crudbooster.USER_TABLE'))->where("id", $userId)->update(['photo' => $photoUrl]);
+                    DB::table('cms_users')->where("id", $userId)->update(['photo' => $photoUrl]);
                 }
             }
         } catch (\Exception $e) {
             //TODO: Redirect with flash message
+            //TODO: Redirect back to departments page
             Flash::error($e->getMessage());
-            return redirect(str_replace('/load','',Request::fullUrl()));
+            return redirect(str_replace('/load','', request()->fullUrl()));
             //CRUDBooster::redirect(str_replace('/load','',Request::fullUrl()), trans('crudbooster.denied_privilege').$e->getMessage());
         }
 
         //$alertType = "success";
+        //TODO: Redirect back to departments page
         //TODO: Redirect with flash message
         Flash::success('The data import was successful.');
-        return redirect(str_replace('/load','',Request::fullUrl()));
+        return redirect(str_replace('/load','', request()->fullUrl()));
         //CRUDBooster::redirect(str_replace('/load','',Request::fullUrl()), trans('crudbooster.alert_add_data_success'), $alertType);
     }
 }

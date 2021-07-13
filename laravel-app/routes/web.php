@@ -27,6 +27,10 @@ Route::get('/admin', [
     AdminController::class, 'index'
 ])->name('admin');
 
+Route::get('/getLoad', [
+    App\Http\Controllers\SomDepartmentsController::class, 'getLoad'
+])->name('getLoad');
+
 Route::resource('cmsApiCustoms', App\Http\Controllers\CmsApiCustomController::class);
 
 Route::resource('cmsApiKeys', App\Http\Controllers\CmsApiKeyController::class);

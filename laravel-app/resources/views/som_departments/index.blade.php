@@ -7,8 +7,12 @@
                 <div class="col-sm-6">
                     <h1>Som Departments</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
+                <div class="col-sm-12">
+                    <a class="btn btn-primary float-left"
+                       href="{{ route('getLoad') }}">
+                        Load Users from AD
+                    </a>
+                    <a class="btn btn-primary ml-2"
                        href="{{ route('somDepartments.create') }}">
                         Add New
                     </a>
@@ -29,7 +33,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>
