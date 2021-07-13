@@ -25,6 +25,6 @@ class CreateSomCountryRequest extends FormRequest
      */
     public function rules()
     {
-        return SomCountry::$rules;
+        return SomCountry::$create_rule;
     }
 }

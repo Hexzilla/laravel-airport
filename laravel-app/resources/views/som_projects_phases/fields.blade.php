@@ -1,5 +1,8 @@
 <!-- Som Projects Id Field -->
-{{ Form::hidden('som_projects_id', 'som_projects_id') }}
+{{ Form::hidden('som_projects_id', $projectId) }}
+
+<!-- Som Edited Id Field -->
+{{ Form::hidden('som_projects_phases_id', $som_projects_phases_id) }}
 
 <!-- Som Phases Id Field -->
 <div class="form-group row">
@@ -8,7 +11,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('som_phases_id', null, ['class' => 'form-control']) !!}
+        {!! Form::select('som_phases_id', $somPhaseArray, $selectedPhaseItem['som_phases_id'], ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -30,6 +33,6 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('som_status_id', null, ['class' => 'form-control']) !!}
+        {!! Form::select('som_status_id',$somStatusArray, $selectedPhaseItem['som_status_id'], ['class' => 'form-control']) !!}
     </div>
 </div>

@@ -29,7 +29,11 @@ class SomFormsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somForms = $this->somFormsRepository->all();
+        $milestones_id = $request->get('milestones_id');
+        if( !empty($milestones_id) )
+            $somForms = $this->somFormsRepository->all(['som_phases_milestones_id'=>$milestones_id]);
+        else
+            $somForms = $this->somFormsRepository->all();
 
         return view('som_forms.index')
             ->with('somForms', $somForms);
@@ -42,7 +46,9 @@ class SomFormsController extends AppBaseController
      */
     public function create()
     {
-        return view('som_forms.create');
+        $somForms = $this->somFormsRepository->all();
+        return view('som_forms.create')
+            ->with('somForms', $somForms);
     }
 
     /**

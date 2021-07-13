@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Som Projects Airport</h1>
+                    <h1><i class="fa fa-fighter-jet ml-2"></i> Add Airport</h1>
                 </div>
             </div>
         </div>
@@ -17,13 +17,17 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'somProjectsAirports.store']) !!}
+            {!! Form::open(['route' => 'somProjectsAirports.store','enctype' =>'multipart/form-data']) !!}
+
+            <div class="card-header">
+                <span><i class="fa fa-fighter-jet ml-2"></i> Add Airport</span>
+            </div>
 
             <div class="card-body">
 
-                <div class="row">
+                <!-- <div class="row"> -->
                     @include('som_projects_airports.fields')
-                </div>
+                <!-- </div> -->
 
             </div>
 

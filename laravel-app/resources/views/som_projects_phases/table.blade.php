@@ -15,6 +15,10 @@
                 <td width="120">
                     {!! Form::open(['route' => ['somProjectsPhases.destroy', $somProjectsPhases->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
+                        <a href="{{ route('somProjectsMilestones.index', ['phases_id'=>$somProjectsPhases->id]) }}" class='btn btn-default btn-xs'>
+                            <i class="fas fa-film" title='Milestones'></i>
+                        </a>
+
                         <a href="{{ route('somProjectsPhases.edit', [$somProjectsPhases->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

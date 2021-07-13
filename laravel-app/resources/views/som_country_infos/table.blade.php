@@ -2,7 +2,7 @@
     <table class="table" id="somCountryInfos-table">
         <thead>
             <tr>
-                <th>Som Country Id</th>
+                <th>Som Country</th>
         <th>Year</th>
         <th>Population</th>
         <th>Inflation</th>
@@ -13,7 +13,11 @@
         <tbody>
         @foreach($somCountryInfos as $somCountryInfo)
             <tr>
-                <td>{{ $somCountryInfo->som_country_id }}</td>
+                @if (!empty($somCountryInfo->som_country_id))
+                    <td>{{ $data['countries'][$somCountryInfo->som_country_id] }}</td>
+                @else
+                    <td></td>
+                @endif                
             <td>{{ $somCountryInfo->year }}</td>
             <td>{{ $somCountryInfo->population }}</td>
             <td>{{ $somCountryInfo->inflation }}</td>

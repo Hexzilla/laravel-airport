@@ -24,7 +24,7 @@
 
 <div class="form-group col-sm-6">
     {!! Form::Label('som_status_id', 'Som Status Id:') !!}
-    {!! Form::select('som_status_id', $items, $selectedID, ['class' => 'form-control']) !!}
+    {!! Form::select('som_status_id', $statusArray, $sel_status, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Description -->

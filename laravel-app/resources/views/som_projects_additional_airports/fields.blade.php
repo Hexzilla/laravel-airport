@@ -1,6 +1,9 @@
 <!-- Som Project Id Field -->
 {{ Form::hidden('som_project_id', $somProjectsId) }} 
 
+<!-- Som Edited Id Field -->
+{{ Form::hidden('som_project_additional_airporty_id', $somEditId) }} 
+
 <!-- Som Airport Id Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">

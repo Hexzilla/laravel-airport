@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormApprovalsRequest;
 use App\Http\Requests\UpdateSomFormApprovalsRequest;
 use App\Repositories\SomFormApprovalsRepository;
+use App\Repositories\SomFormsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -14,10 +15,12 @@ class SomFormApprovalsController extends AppBaseController
 {
     /** @var  SomFormApprovalsRepository */
     private $somFormApprovalsRepository;
+    private $somFormsRepository;
 
-    public function __construct(SomFormApprovalsRepository $somFormApprovalsRepo)
+    public function __construct(SomFormApprovalsRepository $somFormApprovalsRepo, SomFormsRepository $somFromsRepo)
     {
         $this->somFormApprovalsRepository = $somFormApprovalsRepo;
+        $this->somFormsRepository = $somFromsRepo;
     }
 
     /**
@@ -94,13 +97,29 @@ class SomFormApprovalsController extends AppBaseController
     {
         $somFormApprovals = $this->somFormApprovalsRepository->find($id);
 
+        $somFormApprovalsArray = $somFormApprovals->toArray();
+        $selectedFormId = $somFormApprovalsArray['som_forms_id'];
+
+        $somForms= $this->somFormsRepository->all([], null, null, ['id', 'name']);
+        
+        $formsIds = array('' => '**Please Select a formId');
+        foreach($somForms->toArray() as $rows)
+        {
+            $formsIds[$rows['id']] = $rows['name']."(".$rows['id'].")";
+        }
+
+
+
         if (empty($somFormApprovals)) {
             Flash::error('Som Form Approvals not found');
 
             return redirect(route('somFormApprovals.index'));
         }
 
-        return view('som_form_approvals.edit')->with('somFormApprovals', $somFormApprovals);
+        return view('som_form_approvals.edit')
+            ->with('somFormApprovals', $somFormApprovals)
+            ->with('somFormsIds', $formsIds)
+            ->with('selectedId', $selectedFormId);
     }
 
     /**

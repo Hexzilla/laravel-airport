@@ -46,7 +46,7 @@ class SomCountryInfo extends Model
     protected $casts = [
         'id' => 'integer',
         'som_country_id' => 'integer',
-        'year' => 'date',
+        'year' => 'string',
         'population' => 'decimal:2',
         'inflation' => 'decimal:2',
         'gpd_evolution' => 'decimal:2'
@@ -58,7 +58,7 @@ class SomCountryInfo extends Model
      * @var array
      */
     public static $rules = [
-        'som_country_id' => 'nullable|integer',
+        'som_country_id' => 'required|integer',
         'year' => 'required',
         'population' => 'nullable|numeric',
         'inflation' => 'nullable|numeric',

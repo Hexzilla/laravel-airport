@@ -29,10 +29,15 @@ class SomProjectsMilestonesController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
+        $phases_id = $request->get('phases_id');
+        if(!empty($phases_id))
+            $somProjectsMilestones = $this->somProjectsMilestonesRepository->all(['som_projects_phases_id'=>$phases_id]);
+        else
+            $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
 
         return view('som_projects_milestones.index')
-            ->with('somProjectsMilestones', $somProjectsMilestones);
+                ->with('somProjectsPhaseId', $phases_id)
+                ->with('somProjectsMilestones', $somProjectsMilestones);
     }
 
     /**
@@ -40,9 +45,12 @@ class SomProjectsMilestonesController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_projects_milestones.create');
+        $phases_id = $request->get('phases_id');
+        return view('som_projects_milestones.create')
+                ->with('somProjectsMilestones', array())
+                ->with('somProjectsPhaseId', $phases_id);
     }
 
     /**
@@ -60,7 +68,8 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones saved successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 
     /**
@@ -99,8 +108,10 @@ class SomProjectsMilestonesController extends AppBaseController
 
             return redirect(route('somProjectsMilestones.index'));
         }
-
-        return view('som_projects_milestones.edit')->with('somProjectsMilestones', $somProjectsMilestones);
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return view('som_projects_milestones.edit')
+                ->with('somProjectsPhaseId', $phases_id)
+                ->with('somProjectsMilestones', $somProjectsMilestones);
     }
 
     /**
@@ -125,7 +136,8 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones updated successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 
     /**
@@ -151,6 +163,7 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones deleted successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 }

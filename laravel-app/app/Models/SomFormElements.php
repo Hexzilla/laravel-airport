@@ -90,12 +90,12 @@ class SomFormElements extends Model
         'template_url_description' => 'nullable|string|max:255',
         'lastupdate' => 'nullable',
         'comment' => 'nullable|string|max:255',
-        'som_forms_id' => 'required|integer',
+        'som_forms_id' => 'nullable|integer',
         'order_elements' => 'required|integer',
         'is_mandatory' => 'required|boolean',
-        'is_sub_element' => 'nullable|boolean',
+        'is_sub_element' => 'required|integer',
         'tooltip' => 'nullable|string|max:2000',
-        'cms_privileges_role_id' => 'nullable|integer'
+        'cms_privileges_role_id' => 'required|integer'
     ];
 
     /**
