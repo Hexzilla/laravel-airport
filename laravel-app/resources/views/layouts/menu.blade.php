@@ -30,7 +30,7 @@
 <li class="nav-item">
     <a href="{{ route('somCountries.index') }}"
        class="nav-link {{ Request::is('somCountries*') ? 'active' : '' }}">
-        <p title="Countries"><i class="fa fa-globe"></i> Countries</p>
+        <p title="Country"><i class="fa fa-globe"></i> Country</p>
     </a>
 </li>
 
@@ -55,7 +55,7 @@
     </a>
 </li>
 
-<!-- 
+<!--
 <li class="nav-item">
     <a href="{{ route('somCountryInfos.index') }}"
        class="nav-link {{ Request::is('somCountryInfos*') ? 'active' : '' }}">
