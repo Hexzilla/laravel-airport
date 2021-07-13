@@ -1,109 +1,103 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('name', 'Name:') !!}
-    {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('name', 'Name :') !!}
+    {!! Form::text('name', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
 <!-- Img Url Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('img_url', 'Img Url:') !!}
-    {!! Form::text('img_url', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000]) !!}
+    {!! Form::label('img_url', 'Image :') !!}<br/>
+    {!! Form::file('img_url',null, ['class' => 'form-control required','maxlength' => 2000,'maxlength' => 2000,'accept'=>'image/*']) !!}
 </div>
 
 <!-- Documentation Folder Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('documentation_folder', 'Documentation Folder:') !!}
-    {!! Form::text('documentation_folder', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
-</div>
-
-<!-- Som Status Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('som_status_id', 'Som Status Id:') !!}
-    {!! Form::number('som_status_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('documentation_folder', 'Documentation Folder :') !!}
+    {!! Form::text('documentation_folder', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <div class="form-group col-sm-6">
-    {!! Form::Label('som_status_id', 'Som Status Id:') !!}
-    {!! Form::select('som_status_id',[1,2,3,4,5],2, ['class' => 'form-control']) !!}
+    {!! Form::Label('som_status_id', 'Som Status :') !!}
+    {!! Form::select('som_status_id',$SomStatus,null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Description -->
 <div class="form-group col-sm-6">
-    {!! Form::label('sub_name', 'Sub Name:') !!}
-    {!! Form::text('sub_name', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!}
+    {!! Form::label('sub_name', 'Sub Name :') !!}
+    {!! Form::text('sub_name', null, ['class' => 'form-control required','maxlength' => 1000,'maxlength' => 1000]) !!}
 </div>
 
 <!-- Som Projects Airport Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_projects_airport_id', 'Som Projects Airport Id:') !!}
-    {!! Form::number('som_projects_airport_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('som_projects_airport_id', 'Som Projects Airport :') !!}
+    {!! Form::select('som_projects_airport_id', $SomProjectsAirport,null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Som Country Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_country_id', 'Som Country Id:') !!}
-    {!! Form::number('som_country_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('som_country_id', 'Som Country :') !!}
+    {!! Form::select('som_country_id', $SomCountry,null,['class' => 'form-control required']) !!}
 </div>
 
 <!-- Grantor Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('grantor', 'Grantor:') !!}
-    {!! Form::text('grantor', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('grantor', 'Grantor :') !!}
+    {!! Form::text('grantor', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 <!--TODO MISSING transaction type-->
 <!-- Email Legal Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('email_legal', 'Email Legal:') !!}
-    {!! Form::text('email_legal', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
+    {!! Form::label('email_legal', 'Email Legal :') !!}
+    {!! Form::text('email_legal', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <!-- Email Finance Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('email_finance', 'Email Finance:') !!}
-    {!! Form::text('email_finance', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
+    {!! Form::label('email_finance', 'Email Finance :') !!}
+    {!! Form::text('email_finance', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <!-- Som Project Process Type Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_project_process_type_id', 'Som Project Process Type Id:') !!}
-    {!! Form::number('som_project_process_type_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('som_project_process_type_id', 'Som Project Process Type:') !!}
+    {!! Form::select('som_project_process_type_id', $SomProjectProcessType,null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Som Projects Asset Type Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_projects_asset_type_id', 'Som Projects Asset Type Id:') !!}
-    {!! Form::number('som_projects_asset_type_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('som_projects_asset_type_id', 'Som Projects Asset Type :') !!}
+    {!! Form::select('som_projects_asset_type_id',$SomProjectsAssetType,null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Equity Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('equity', 'Equity:') !!}
-    {!! Form::number('equity', null, ['class' => 'form-control']) !!}
+    {!! Form::label('equity', 'Equity :') !!}
+    {!! Form::number('equity', null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
 </div>
 
 <!-- Percentage Participation Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('percentage_participation', 'Percentage Participation:') !!}
-    {!! Form::number('percentage_participation', null, ['class' => 'form-control']) !!}
+    {!! Form::label('percentage_participation', 'Percentage Participation :') !!}
+    {!! Form::number('percentage_participation', null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
 </div>
 
 <!-- Bid Presentation Date Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('bid_presentation_date', 'Bid Presentation Date:') !!}
-    {!! Form::text('bid_presentation_date', null, ['class' => 'form-control','id'=>'bid_presentation_date']) !!}
+    {!! Form::label('bid_presentation_date', 'Bid Presentation Date :') !!}
+    {!! Form::text('bid_presentation_date', null, ['class' => 'form-control required','id'=>'bid_presentation_date']) !!}
 </div>
 
 <!--TODO start execution date field? -->
 <!-- Concession Date Start Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('concession_date_start', 'Concession Date Start:') !!}
-    {!! Form::text('concession_date_start', null, ['class' => 'form-control','id'=>'concession_date_start']) !!}
+    {!! Form::label('concession_date_start', 'Concession Date Start :') !!}
+    {!! Form::text('concession_date_start', null, ['class' => 'form-control required','id'=>'concession_date_start']) !!}
 </div>
 <!--TODO concession duration? -->
 <!-- Contract Scope Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('contract_scope', 'Contract Scope:') !!}
-    {!! Form::text('contract_scope', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::label('contract_scope', 'Contract Scope :') !!}
+    {!! Form::text('contract_scope', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
 

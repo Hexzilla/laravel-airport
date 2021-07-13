@@ -9,7 +9,11 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
-
+use App\Models\SomStatus;
+use App\Models\SomProjectsAirport;
+use App\Models\SomCountry;
+use App\Models\SomProjectProcessType;
+use App\Models\SomProjectsAssetType;
 class SomProjectsController extends AppBaseController
 {
     /** @var  SomProjectsRepository */
@@ -17,6 +21,7 @@ class SomProjectsController extends AppBaseController
 
     public function __construct(SomProjectsRepository $somProjectsRepo)
     {
+        $this->middleware('auth');
         $this->somProjectsRepository = $somProjectsRepo;
     }
 
@@ -30,9 +35,7 @@ class SomProjectsController extends AppBaseController
     public function index(Request $request)
     {
         $somProjects = $this->somProjectsRepository->all();
-
-        return view('som_projects.index')
-            ->with('somProjects', $somProjects);
+        return view('som_projects.index')->with('somProjects', $somProjects);
     }
 
     /**
@@ -42,7 +45,17 @@ class SomProjectsController extends AppBaseController
      */
     public function create()
     {
-        return view('som_projects.create');
+        try{
+            $SomStatus =  SomStatus::pluck('name','id')->toArray();
+            $SomProjectsAirport = SomProjectsAirport::pluck('name','id')->toArray();
+            $SomCountry = SomCountry::pluck('country','id')->toArray();
+            $SomProjectProcessType = SomProjectProcessType::pluck('name','id')->toArray();
+            $SomProjectsAssetType = SomProjectsAssetType::pluck('name','id')->toArray();
+            return view('som_projects.create',compact('SomStatus','SomProjectsAirport','SomCountry','SomProjectProcessType','SomProjectsAssetType'));
+        }catch(\Exception $e){
+            Flash::error('Something want wrong !');
+            return back();
+        }
     }
 
     /**
@@ -92,15 +105,17 @@ class SomProjectsController extends AppBaseController
      */
     public function edit($id)
     {
+        $SomStatus =  SomStatus::pluck('name','id')->toArray();
+        $SomProjectsAirport = SomProjectsAirport::pluck('name','id')->toArray();
+        $SomCountry = SomCountry::pluck('country','id')->toArray();
+        $SomProjectProcessType = SomProjectProcessType::pluck('name','id')->toArray();
+        $SomProjectsAssetType = SomProjectsAssetType::pluck('name','id')->toArray();
         $somProjects = $this->somProjectsRepository->find($id);
-
         if (empty($somProjects)) {
             Flash::error('Som Projects not found');
-
             return redirect(route('somProjects.index'));
         }
-
-        return view('som_projects.edit')->with('somProjects', $somProjects);
+        return view('som_projects.edit',compact('SomStatus','SomProjectsAirport','SomCountry','SomProjectProcessType','SomProjectsAssetType','somProjects'));
     }
 
     /**

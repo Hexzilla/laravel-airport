@@ -16,7 +16,7 @@
                     <div class="col-sm-12 text-right">
                         <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                         <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somProjects')}}">Project</a>
-                        <i class="fa fa-angle-right" style="color: black;"></i> Edit Som Projects
+                        <i class="fa fa-angle-right" style="color: blue;"></i> Edit Som Projects
                     </div>
 
                 </div>
@@ -30,7 +30,7 @@
 
         <div class="card">
 
-            {!! Form::model($somProjects, ['route' => ['somProjects.update', $somProjects->id], 'method' => 'patch']) !!}
+            {!! Form::model($somProjects, ['route' => ['somProjects.update', $somProjects->id], 'method' => 'patch','class'=>'formValidate']) !!}
 
             <div class="card-body">
                 <div class="row">

@@ -29,7 +29,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'somProjects.store']) !!}
+            {!! Form::open(['route' => 'somProjects.store','class'=>'formValidate']) !!}
 
             <div class="card-body">
 

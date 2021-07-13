@@ -15,7 +15,7 @@
                     <div class="col-sm-12 text-right">
                         <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                         <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somCountries')}}">Som Countries</a>
-                        <i class="fa fa-angle-right" style="color: black;"></i>  View Som Country
+                        <i class="fa fa-angle-right" style="color: blue;"></i>  View Som Country
                     </div>
 
                 </div>

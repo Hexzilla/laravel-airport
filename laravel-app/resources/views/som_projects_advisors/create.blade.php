@@ -16,7 +16,7 @@
                         <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                         <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somProjects')}}">Project</a>
                         <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{ URL::previous() }}">Projects Advisors</a>
-                        <i class="fa fa-angle-right" style="color: black;"></i> Create Projects Advisors
+                        <i class="fa fa-angle-right" style="color: blue;"></i> Create Projects Advisors
                     </div>
 
                 </div>

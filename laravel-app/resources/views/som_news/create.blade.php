@@ -14,7 +14,7 @@
                     <div class="col-sm-12 text-right">
                         <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                         <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{ route('somNews.index') }}">News</a>
-                        <i class="fa fa-angle-right" style="color: black;"></i> Add News
+                        <i class="fa fa-angle-right" style="color: blue;"></i> Add News
                     </div>
 
                 </div>
