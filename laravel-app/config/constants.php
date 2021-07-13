@@ -2,14 +2,14 @@
 
 return [
     'elementTypes' => [
-        '1' => 'Element',
-        '2' => 'Sub-Element',
-        '3' => 'Element(Only Header)'
+        '0' => 'Element',
+        '1' => 'Sub-Element',
+        '2' => 'Element(Only Header)'
     ],
     'taskTypes' => [
-        '1' => 'Task',
-        '2' => 'Sub-Task',
-        '3' => 'Task(Only Header)'
+        '0' => 'Task',
+        '1' => 'Sub-Task',
+        '2' => 'Task(Only Header)'
     ]
 ];
 

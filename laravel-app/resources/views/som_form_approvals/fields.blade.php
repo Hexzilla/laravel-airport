@@ -17,7 +17,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::select('som_forms_id', $somFormsIds, $somforms_id, ['class' => 'form-control']) !!}
+        {!! Form::select('som_forms_id', $somFormsIds, $selectedId, ['class' => 'form-control']) !!}
     </div>
 </div>
 

@@ -113,10 +113,10 @@ class SomFormTasks extends Model
         'som_forms_id' => 'required|integer',
         'order' => 'required|integer',
         'som_departments_users_id' => 'nullable|integer',
-        'som_departments_id' => 'required|integer',
-        'is_sub_task' => 'required|integer',
+        'som_departments_id' => 'nullable|integer',
+        'is_sub_task' => 'nullable|integer',
         'cms_users_id' => 'nullable|integer',
-        'cms_privileges_role_id' => 'required|integer',
+        'cms_privileges_role_id' => 'nullable|integer',
         'consultable_user_name' => 'nullable|string|max:200',
         'consultable_user_email' => 'nullable|string|max:200'
     ];

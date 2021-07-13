@@ -72,7 +72,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-9">
-    {!! Form::select('cms_privileges_role_id', $arrRole, $selectedRolId, ['class' => 'form-control']) !!}
+    {!! Form::select('cms_privileges_role_id', $cmsPrivilegesRoles, $selectedRolId, ['class' => 'form-control']) !!}
     </div>
 </div>
 

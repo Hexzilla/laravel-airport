@@ -32,7 +32,7 @@
     </div>
     <div class="col-sm-10">
         <div class="form-check">
-            {!! Form::checkbox('is_inactive', 1, !empty($somForms->is_inactive) ? true : false , array('id' => 'is_inactive', 'class' => 'form-check-input')) !!}
+            {!! Form::checkbox('is_inactive', 1, null , array('id' => 'is_inactive', 'class' => 'form-check-input')) !!}
         </div>
     </div>
 </div>

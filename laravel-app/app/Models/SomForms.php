@@ -73,9 +73,9 @@ class SomForms extends Model
         'active' => 'nullable|integer',
         'som_phases_milestones_id' => 'required|integer',
         'order_form' => 'required|integer',
-        'som_milestones_forms_types_id' => 'required|integer|min:1',
+        'som_milestones_forms_types_id' => 'required|integer',
         'som_status_id' => 'nullable|integer',
-        'is_inactive' => 'nullable|boolean'
+        'is_inactive' => 'required|boolean'
     ];
 
     /**
