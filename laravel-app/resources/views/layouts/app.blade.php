@@ -144,12 +144,18 @@
 
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
 <style>
     .card{
         padding: 10px !important;
+    }
+    .error{
+        color:red !important;
+        font-size: 12px;
+
     }
 </style>
 <script>
@@ -161,6 +167,7 @@
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
     $(document).ready(function () {
+        $('.formValidate').validate();
         $('#somProjectUsers-table').dataTable({
             language: {
                 search: "<button disabled style='color: black;padding: 5px 10px;'><i class='fas fa-filter'></i> Sort & Filter</button><span style='padding:7px 7px 7px 0px;color: black;border: 2px solid #d8d7d7;background-color: #f9f7f7;'>_INPUT_ <i class='fas fa-search'></i></span>",

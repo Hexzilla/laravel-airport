@@ -7,7 +7,7 @@
                 <div class="col-sm-12 text-right">
                     <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                     <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somDepartments')}}">Som Departments</a>
-                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="javascript:void(0)">Edit Som Departments</a>
+                    <i class="fa fa-angle-right" style="color: black;"></i> Edit Som Departments
                 </div>
             </div>
         </div>
@@ -18,8 +18,8 @@
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                           href="{{url('somDepartments')}}">
-                            Back
+                           href="{{url('somDepartments')}}" style="color:blue;">
+                           <i class="fa fa-chevron-left"></i> Back To List Data Departments
                         </a>
                 </div>
             </div>

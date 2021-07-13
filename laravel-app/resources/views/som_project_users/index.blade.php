@@ -7,7 +7,7 @@
                 <div class="col-sm-12 text-right">
                     <i class="fa fa-tachometer-alt"></i> <a href="{{url('admin')}}">Home</a>
                     <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="{{url('somProjects')}}">Project</a>
-                    <i class="fa fa-angle-right" style="color: blue;"></i>  <a href="javascript:void(0)">Som Project Users</a>
+                    <i class="fa fa-angle-right" style="color: blue;"></i> Som Project Users
                 </div>
             </div>
         </div>
