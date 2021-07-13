@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormsRequest;
 use App\Http\Requests\UpdateSomFormsRequest;
 use App\Repositories\SomFormsRepository;
+use App\Models\SomForms;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -36,7 +37,8 @@ class SomFormsController extends AppBaseController
             $somForms = $this->somFormsRepository->all();
 
         return view('som_forms.index')
-            ->with('somForms', $somForms);
+                ->with('milestones_id', $milestones_id)
+                ->with('somForms', $somForms);
     }
 
     /**
@@ -44,11 +46,17 @@ class SomFormsController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $somForms = $this->somFormsRepository->all();
+        $somForm = new SomForms(); 
+        $milestones_id = $request->get('milestones_id');
+        $somForm->active = 1;
+        $somForm->order_form = 1;
+        $somForm->som_milestones_forms_types_id = 1;
+        $somForm->som_phases_milestones_id = $milestones_id;
         return view('som_forms.create')
-            ->with('somForms', $somForms);
+                ->with('milestones_id', $milestones_id)
+                ->with('somForms', $somForm);
     }
 
     /**
@@ -65,8 +73,8 @@ class SomFormsController extends AppBaseController
         $somForms = $this->somFormsRepository->create($input);
 
         Flash::success('Som Forms saved successfully.');
-
-        return redirect(route('somForms.index'));
+        $milestones_id = $somForms->som_phases_milestones_id;
+        return redirect(route('somForms.index',['milestones_id'=> $milestones_id]));
     }
 
     /**
@@ -85,8 +93,10 @@ class SomFormsController extends AppBaseController
 
             return redirect(route('somForms.index'));
         }
-
-        return view('som_forms.show')->with('somForms', $somForms);
+        $milestones_id = $somForms->som_phases_milestones_id;
+        return view('som_forms.show')
+                ->with('milestones_id', $milestones_id)
+                ->with('somForms', $somForms);
     }
 
     /**
@@ -105,8 +115,10 @@ class SomFormsController extends AppBaseController
 
             return redirect(route('somForms.index'));
         }
-
-        return view('som_forms.edit')->with('somForms', $somForms);
+        $milestones_id =  $somForms->som_phases_milestones_id;
+        return view('som_forms.edit')
+                ->with('milestones_id', $milestones_id )
+                ->with('somForms', $somForms);
     }
 
     /**
@@ -128,10 +140,10 @@ class SomFormsController extends AppBaseController
         }
 
         $somForms = $this->somFormsRepository->update($request->all(), $id);
-
+        $milestones_id =  $somForms->som_phases_milestones_id;
         Flash::success('Som Forms updated successfully.');
 
-        return redirect(route('somForms.index'));
+        return redirect(route('somForms.index', ['milestones_id'=>$milestones_id ]));
     }
 
     /**
@@ -152,11 +164,11 @@ class SomFormsController extends AppBaseController
 
             return redirect(route('somForms.index'));
         }
-
+        $milestones_id =  $somForms->som_phases_milestones_id;
         $this->somFormsRepository->delete($id);
 
         Flash::success('Som Forms deleted successfully.');
-
-        return redirect(route('somForms.index'));
+        
+        return redirect(route('somForms.index', ['milestones_id'=>$milestones_id]));
     }
 }
