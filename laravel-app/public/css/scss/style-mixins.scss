@@ -1,0 +1,270 @@
+@import 'style-variables';
+
+$mobile: "(min-width: 0px) and (max-width: 1023px)";
+$phablet:"(min-width: 0px) and (max-width: 770px)";
+$tablet: "(min-width: 1024px) and (max-width: 1499px)";
+$desktop: "(min-width: 1500px)";
+
+$diff-betw-desktop-tablet: 1.35;
+$diff-betw-tablet-mobile: 1.65;
+
+
+
+
+@mixin transAnim($time) {
+    -webkit-transition: all $time ease-in;
+    -moz-transition: all $time ease-in;
+    -o-transition: all $time ease-in;
+    transition: all $time ease-in;
+}
+
+.hide{
+    display:none !important;
+}
+
+.nomargin-side{
+    margin-left:0 !important;
+    margin-right:0 !important;
+}
+
+.nopadding-side{
+    padding-left:0 !important;
+    padding-right:0 !important;
+}
+@mixin square($size, $unit) {
+    @include propertySizeDynamic(height, $size/$diff-betw-tablet-mobile, $size/$diff-betw-desktop-tablet, $size, $unit);
+    @include propertySizeDynamic(width, $size/$diff-betw-tablet-mobile, $size/$diff-betw-desktop-tablet, $size, $unit);
+}
+
+/* SIZES */
+@mixin propertySizeDynamic($property, $sizeS, $sizeM, $sizeL, $unit){
+    @media #{$mobile} {
+        #{$property}: $sizeS+unquote($unit);
+    }
+    @media #{$tablet} {
+        #{$property}: $sizeM+unquote($unit);
+    }
+    @media #{$desktop} {
+        #{$property}: $sizeL+unquote($unit);
+    }
+}
+@mixin propertyDyn($property, $size, $unit){
+    @include propertySizeDynamic($property, $size/$diff-betw-tablet-mobile, $size/$diff-betw-desktop-tablet, $size, $unit);
+}
+
+.blur{
+    @include transAnim(.8s);
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);
+}
+
+.sideScroll{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    &::-webkit-scrollbar-track
+    {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #1a2732fa;
+    }
+    
+    &::-webkit-scrollbar
+    {
+        width: 6px;
+        background-color: #1a2732fa;
+    }
+    
+    &::-webkit-scrollbar-thumb
+    {
+        background-color: $green-corp;
+    }
+}
+
+.loading{
+    position: absolute;
+    left: 0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color: rgba(0, 8, 19, 0.678);
+    z-index: 9999999;
+    .loadingmodal{
+        img{
+            //@include propertyDyn(height, 70, 'px');//height: 70px;
+            @include square(70, 'px');
+            margin: 0 auto;
+        }
+
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%,-50%);
+
+        background: $green-corp;
+        border-radius: 20px;
+        @include propertyDyn(padding, 25, 'px');//padding: 25px;
+        text-align: center;
+        color: white;
+    }
+}
+
+.fullScreen{
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    background-color:  rgba(2, 38, 68, 0.8);
+    overflow-y: auto; 
+    z-index: -9999; 
+    opacity: 1; 
+    animation-duration: 0.6s;
+    padding-top: 100px;
+}
+
+.monoline{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display:block;
+}
+
+.biline{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box !important;;
+}
+
+.right-0{
+    padding-right: 0 !important;
+}
+
+.green{background-color:$green-corp !important}
+.yellow{background-color:$yellow-corp !important}
+.red{background-color:$red-corp !important}
+.greenText{color:$green-corp !important}
+.yellowText{color:$yellow-corp !important}
+.redText{color:$red-corp !important}
+.highcharts-contextbutton{
+    display:none;
+}
+
+
+
+
+
+@mixin onlyMobile(){
+    @media #{$mobile} {display:flex;}
+    @media #{$tablet} {display:none;}
+    @media #{$desktop} {display:none;}
+}
+@mixin onlyDesktop(){
+    @media #{$mobile} {
+        visibility: hidden;
+    }
+    @media #{$phablet} {
+        display: none;
+    }
+    @media #{$tablet} {display: flex;}
+}
+
+@mixin onlyFullDesktop(){
+    @media #{$mobile} {
+        display: none;
+    }
+    @media #{$phablet} {
+        display: none;
+    }
+    @media #{$tablet} {
+        display: none;
+    }
+    @media #{$desktop} {
+        display: flex;
+    }    
+}
+
+@mixin onlyFullMobile(){
+    @media #{$mobile} {
+        display: flex;
+    }
+    @media #{$phablet} {
+        display: flex;
+    }
+    @media #{$tablet} {
+        display: flex;
+    }
+    @media #{$desktop} {
+        display: none;
+    }    
+}
+
+.userDataWelcome{@include onlyDesktop();}
+.mobile{@include onlyMobile();}
+.desktop{@include onlyDesktop();}
+
+/* FONTS */
+@mixin fontFaceMultiple($name){
+    @font-face {
+        font-family: $name;
+        src: url('../fonts/#{$name}.eot?') format("eot"),
+            url('../fonts/#{$name}.woff') format("woff"),
+            url('../fonts/#{$name}.ttf') format("truetype"),
+            url('../fonts/#{$name}.svg##{$name}') format("svg");
+    }
+}
+
+@mixin fontFace($family,$src,$type) {
+    @if $type == 'otf' {
+        @font-face {
+            font-family: $family;
+            src: url('../#{$src}.otf') format('opentype');
+        }
+    } @else {               
+        @font-face {
+            font-family: $family;
+            src: url('../#{$src}.ttf') format('truetype');
+        }
+    }
+}
+
+@mixin fontsize($sizeS, $sizeM, $sizeL){
+    @media #{$mobile} {
+        font-size: $sizeS;
+    }
+    @media #{$tablet} {
+        font-size: $sizeM;
+    }
+    @media #{$desktop} {
+        font-size: $sizeL;
+    }
+}
+
+@mixin fontsizeimportant($sizeS, $sizeM, $sizeL){
+    @media #{$mobile} {
+        font-size: $sizeS !important;
+    }
+    @media #{$tablet} {
+        font-size: $sizeM !important;
+    }
+    @media #{$desktop} {
+        font-size: $sizeL !important;
+    }
+}
+
+@mixin fontsizeaut($size){
+    @include fontsize($size/$diff-betw-tablet-mobile, $size/$diff-betw-desktop-tablet, $size);
+}
+
+@mixin fontsizeautimportant($size){
+    @include fontsizeimportant($size/$diff-betw-tablet-mobile, $size/$diff-betw-desktop-tablet, $size);
+}
+
+
+
+@include fontFaceMultiple(Calibri);
+@include fontFaceMultiple(Calibri-Bold);
+@include fontFaceMultiple(Calibri-Light);
+
