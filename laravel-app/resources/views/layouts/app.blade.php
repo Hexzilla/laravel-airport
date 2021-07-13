@@ -158,7 +158,7 @@
 
     }
     .text-right{
-        color:#007bff !important;
+        /* color:#007bff !important; */
     }
     .content-header .container-fluid .btn-default{
         color:#007bff !important;
