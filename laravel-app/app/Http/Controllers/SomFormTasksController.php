@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateSomFormTasksRequest;
 use App\Repositories\SomFormTasksRepository;
 use App\Repositories\CmsPrivilegesRepository;
 use App\Repositories\SomDepartmentsRepository;
+use App\Repositories\CmsPrivilegesRolesRepository;
+use App\Models\SomFormTasks;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -23,13 +25,14 @@ class SomFormTasksController extends AppBaseController
 
     public function __construct(SomFormTasksRepository $somFormTasksRepo,
                                 CmsPrivilegesRepository $cmsPrivilegesRepo,
-                                SomDepartmentsRepository $somDepartmentsRepo
-
+                                SomDepartmentsRepository $somDepartmentsRepo,
+                                CmsPrivilegesRolesRepository $cmsPrivilegesRolesRepo
             )
     {
         $this->somFormTasksRepository = $somFormTasksRepo;
         $this->cmsPrivilegesRepository = $cmsPrivilegesRepo;
         $this->somDepartmentsRepository = $somDepartmentsRepo;
+        $this->cmsPrivilegesRolesRepo = $cmsPrivilegesRolesRepo;
     }
 
     /**
@@ -41,9 +44,10 @@ class SomFormTasksController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somFormTasks = $this->somFormTasksRepository->all();
-
+        $somforms_id = $request->get('somforms_id');
+        $somFormTasks = $this->somFormTasksRepository->all(['som_forms_id'=>$somforms_id]);
         return view('som_form_tasks.index')
+            ->with('somforms_id', $somforms_id)
             ->with('somFormTasks', $somFormTasks);
     }
 
@@ -52,9 +56,38 @@ class SomFormTasksController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_form_tasks.create');
+        $somforms_id = $request->get('somforms_id');
+        $somFormTasks = new SomFormTasks();
+        $somFormTasks->som_forms_id = $somforms_id;
+        $somFormTasks->order = 1;
+        $somFormTasks->som_status_id = 0;
+        $arrType[] = 'Please select a Type';
+        $arrType = $arrType + config( 'constants.taskTypes');
+        
+        $arrRole = array();
+        $arrRole[] = 'Please select a Privilege';
+        $RoleRows = $this->cmsPrivilegesRepository->all([], null, null, ['id', 'name'])->toArray();
+        foreach($RoleRows as $row)
+        {
+            $arrRole[$row['id']] = $row['name'];
+        }
+
+        $arrDepart = array();
+        $arrDepart[] = 'Please select a Department';
+        $DepartRows = $this->somDepartmentsRepository->all([], null, null, ['id','name'])->toArray();
+        foreach($DepartRows as $row)
+        {
+            $arrDepart[$row['id']] = $row['name'];
+        }
+
+        return view('som_form_tasks.create')
+                ->with('somforms_id', $somforms_id)
+                ->with('arrType', $arrType)
+                ->with('arrRole', $arrRole )
+                ->with('arrDepart', $arrDepart)
+                ->with('somFormTasks', $somFormTasks );
     }
 
     /**
@@ -71,8 +104,8 @@ class SomFormTasksController extends AppBaseController
         $somFormTasks = $this->somFormTasksRepository->create($input);
 
         Flash::success('Som Form Tasks saved successfully.');
-
-        return redirect(route('somFormTasks.index'));
+        $somforms_id = $somFormTasks->som_forms_id;
+        return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -92,6 +125,7 @@ class SomFormTasksController extends AppBaseController
             return redirect(route('somFormTasks.index'));
         }
 
+        $somforms_id = $somFormTasks->som_forms_id;
         return view('som_form_tasks.show')->with('somFormTasks', $somFormTasks);
     }
 
@@ -149,8 +183,8 @@ class SomFormTasksController extends AppBaseController
         $somFormTasks = $this->somFormTasksRepository->update($request->all(), $id);
 
         Flash::success('Som Form Tasks updated successfully.');
-
-        return redirect(route('somFormTasks.index'));
+        $somforms_id = $somFormTasks->som_forms_id;
+        return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -171,11 +205,11 @@ class SomFormTasksController extends AppBaseController
 
             return redirect(route('somFormTasks.index'));
         }
+        $somforms_id = $somFormTasks->som_forms_id;
 
         $this->somFormTasksRepository->delete($id);
 
         Flash::success('Som Form Tasks deleted successfully.');
-
-        return redirect(route('somFormTasks.index'));
+        return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
     }
 }

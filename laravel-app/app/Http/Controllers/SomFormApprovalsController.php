@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateSomFormApprovalsRequest;
 use App\Repositories\SomFormApprovalsRepository;
 use App\Repositories\SomFormsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\SomFormApprovals;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -17,7 +18,9 @@ class SomFormApprovalsController extends AppBaseController
     private $somFormApprovalsRepository;
     private $somFormsRepository;
 
-    public function __construct(SomFormApprovalsRepository $somFormApprovalsRepo, SomFormsRepository $somFromsRepo)
+    public function __construct(
+    			SomFormApprovalsRepository $somFormApprovalsRepo, 
+    			SomFormsRepository $somFromsRepo)
     {
         $this->somFormApprovalsRepository = $somFormApprovalsRepo;
         $this->somFormsRepository = $somFromsRepo;
@@ -32,9 +35,11 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somFormApprovals = $this->somFormApprovalsRepository->all();
+        $somforms_id = $request->get('somforms_id');
+        $somFormApprovals = $this->somFormApprovalsRepository->all(['som_forms_id'=>$somforms_id]);
 
         return view('som_form_approvals.index')
+            ->with('somforms_id', $somforms_id)
             ->with('somFormApprovals', $somFormApprovals);
     }
 
@@ -43,9 +48,25 @@ class SomFormApprovalsController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_form_approvals.create');
+        $somforms_id = $request->get('somforms_id');
+        $somFormApprovals = new SomFormApprovals();
+        $somFormApprovals->som_forms_id = $somforms_id;
+        $somFormApprovals->order = 1;
+        $somFormApprovals->som_status_id = 0;
+     
+        $somForms= $this->somFormsRepository->all([], null, null, ['id', 'name'])->toArray();
+        $somFormsIds[] =  '**Please Select a formId';
+        foreach($somForms as $rows)
+        {
+            $somFormsIds[$rows['id']] = $rows['name']."(".$rows['id'].")";
+        }
+
+        return view('som_form_approvals.create')
+                ->with('somforms_id', $somforms_id)
+                ->with('somFormsIds', $somFormsIds )
+                ->with('somFormApprovals', $somFormApprovals );
     }
 
     /**
@@ -62,8 +83,8 @@ class SomFormApprovalsController extends AppBaseController
         $somFormApprovals = $this->somFormApprovalsRepository->create($input);
 
         Flash::success('Som Form Approvals saved successfully.');
-
-        return redirect(route('somFormApprovals.index'));
+        $somforms_id = $somFormApprovals->som_forms_id;
+        return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -83,7 +104,10 @@ class SomFormApprovalsController extends AppBaseController
             return redirect(route('somFormApprovals.index'));
         }
 
-        return view('som_form_approvals.show')->with('somFormApprovals', $somFormApprovals);
+        $somforms_id = $somFormApprovals->som_forms_id;
+        return view('som_form_approvals.show')
+                ->with('somforms_id', $somforms_id)
+		        ->with('somFormApprovals', $somFormApprovals);
     }
 
     /**
@@ -97,12 +121,11 @@ class SomFormApprovalsController extends AppBaseController
     {
         $somFormApprovals = $this->somFormApprovalsRepository->find($id);
 
-        $somFormApprovalsArray = $somFormApprovals->toArray();
-        $selectedFormId = $somFormApprovalsArray['som_forms_id'];
+        $somforms_id = $somFormApprovals->som_forms_id;
 
         $somForms= $this->somFormsRepository->all([], null, null, ['id', 'name']);
         
-        $formsIds = array('' => '**Please Select a formId');
+        $formsIds[] =  '**Please Select a formId';
         foreach($somForms->toArray() as $rows)
         {
             $formsIds[$rows['id']] = $rows['name']."(".$rows['id'].")";
@@ -119,7 +142,7 @@ class SomFormApprovalsController extends AppBaseController
         return view('som_form_approvals.edit')
             ->with('somFormApprovals', $somFormApprovals)
             ->with('somFormsIds', $formsIds)
-            ->with('selectedId', $selectedFormId);
+            ->with('somforms_id', $somforms_id);
     }
 
     /**
@@ -143,8 +166,8 @@ class SomFormApprovalsController extends AppBaseController
         $somFormApprovals = $this->somFormApprovalsRepository->update($request->all(), $id);
 
         Flash::success('Som Form Approvals updated successfully.');
-
-        return redirect(route('somFormApprovals.index'));
+        $somforms_id = $somFormApprovals->som_forms_id;
+        return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -165,11 +188,12 @@ class SomFormApprovalsController extends AppBaseController
 
             return redirect(route('somFormApprovals.index'));
         }
+        $somforms_id = $somFormApprovals->som_forms_id;
 
         $this->somFormApprovalsRepository->delete($id);
 
         Flash::success('Som Form Approvals deleted successfully.');
 
-        return redirect(route('somFormApprovals.index'));
+        return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
     }
 }
