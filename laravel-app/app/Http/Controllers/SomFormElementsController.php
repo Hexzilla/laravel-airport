@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormElementsRequest;
 use App\Http\Requests\UpdateSomFormElementsRequest;
 use App\Repositories\SomFormElementsRepository;
+use App\Repositories\CmsPrivilegesRolesRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -15,9 +16,15 @@ class SomFormElementsController extends AppBaseController
     /** @var  SomFormElementsRepository */
     private $somFormElementsRepository;
 
-    public function __construct(SomFormElementsRepository $somFormElementsRepo)
+     /** @var  CmsPrivilegesRolesRepository */
+     private $cmsPrivilegesRolesRepository;
+
+
+
+    public function __construct(SomFormElementsRepository $somFormElementsRepo, CmsPrivilegesRolesRepository $cmsPrivilegesRolesRepo)
     {
         $this->somFormElementsRepository = $somFormElementsRepo;
+        $this->cmsPrivilegesRolesRepository = $cmsPrivilegesRolesRepo;
     }
 
     /**
@@ -93,6 +100,7 @@ class SomFormElementsController extends AppBaseController
     public function edit($id)
     {
         $somFormElements = $this->somFormElementsRepository->find($id);
+        
 
         if (empty($somFormElements)) {
             Flash::error('Som Form Elements not found');
@@ -100,7 +108,23 @@ class SomFormElementsController extends AppBaseController
             return redirect(route('somFormElements.index'));
         }
 
-        return view('som_form_elements.edit')->with('somFormElements', $somFormElements);
+        $somFormElementsArray = $somFormElements->toArray();
+        $selectedRolId = $somFormElementsArray['cms_privileges_role_id'];
+
+        $cmsPrivilegesRoles= $this->cmsPrivilegesRolesRepository->all();
+        
+        $rolIds = array('' => '**Please Select a Cms Privileges Role');
+        foreach($cmsPrivilegesRoles->toArray() as $rows)
+        {
+            $rolIds[$rows['id']] = $rows['id'];
+        }
+
+        $elementTypes = config('constants.elementTypes');
+
+        return view('som_form_elements.edit')->with('somFormElements', $somFormElements)
+        ->with('elementTypes', $elementTypes)
+        ->with('cmsPrivilegesRoles', $rolIds)
+        ->with('selectedRolId', $selectedRolId);
     }
 
     /**

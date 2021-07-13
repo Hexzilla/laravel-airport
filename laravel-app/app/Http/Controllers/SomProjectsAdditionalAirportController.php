@@ -115,23 +115,22 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     public function edit($id)
     {
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
-       // print_r($somProjectsAdditionalAirport); exit;
         if (empty($somProjectsAdditionalAirport)) {
             Flash::error('Som Projects Additional Airport not found');
 
             return redirect(route('somProjectsAdditionalAirports.index'));
         }
 
-        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
         $somProjectsAirports= $this->somProjectsAirportRepository->all([], null, null, ['id', 'name']);
-        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
-        $selectedItem = $somProjectsAdditionalAirportArray['som_airport_id'];
+        $somProjectsId = $somProjectsAdditionalAirport->som_project_id;
+        $selectedItem = $somProjectsAdditionalAirport->som_airport_id;
         $airports = array(0 => '**Please Select a Airport');
         foreach($somProjectsAirports->toArray() as $rows)
         {
             $airports[$rows['id']] = $rows['name'];
         }
         return view('som_projects_additional_airports.edit')
+            ->with('somEditId', $id)
             ->with('somProjectsId', $somProjectsId)
             ->with('somProjectsAirports', $airports )
             ->with('selectedItem', $selectedItem)

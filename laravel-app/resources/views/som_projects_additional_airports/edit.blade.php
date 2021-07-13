@@ -15,7 +15,7 @@
 
         <div class="row">
             <div class="col-12-lg ml-2 mb-4">
-                <a href="{{ route('somProjectsAdditionalAirports.index') }}">
+                <a href="{{ route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]) }}">
                     <i class="fa fa-chevron-left"></i> Back To List Data Projects Additional Airport
                 </a>
             </div>
@@ -37,7 +37,7 @@
                 <div class="row">
                     <div class="offset-sm-2 col-sm-10">
                         {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                        <a href="{{ route('somProjectsAdditionalAirports.index') }}" class="btn btn-default">Cancel</a>
+                        <a href="{{ route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]) }}" class="btn btn-default">Cancel</a>
                     </div>
                 </div>    
             </div>

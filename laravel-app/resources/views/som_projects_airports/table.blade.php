@@ -9,7 +9,7 @@
         <th>Lat</th>
         <th>Long</th>
         <th>Iata Oaci</th>
-        <th>Som Projects Airport Type Id</th>
+        <th>Som Projects Airport Type</th>
         <th>Size</th>
         <th>Revenues Aeronautical</th>
         <th>Revenues Non Aeronautical</th>
@@ -53,8 +53,12 @@
             <td>{{ $somProjectsAirport->country }}</td>
             <td>{{ $somProjectsAirport->lat }}</td>
             <td>{{ $somProjectsAirport->long }}</td>
-            <td>{{ $somProjectsAirport->iata_oaci }}</td>
-            <td>{{ $somProjectsAirport->som_projects_airport_type_id }}</td>
+            <td>{{ $somProjectsAirport->iata_oaci }}</td>            
+            @if (!empty($somProjectsAirport->som_projects_airport_type_id))
+                <td>{{ $data['airport_types'][$somProjectsAirport->som_projects_airport_type_id] }}</td>
+            @else
+                <td></td>
+            @endif 
             <td>{{ $somProjectsAirport->size }}</td>
             <td>{{ $somProjectsAirport->revenues_aeronautical }}</td>
             <td>{{ $somProjectsAirport->revenues_non_aeronautical }}</td>
@@ -87,12 +91,12 @@
             <td>{{ $somProjectsAirport->data_year }}</td>
             <td>{{ $somProjectsAirport->version_date }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['somProjectsAirports.destroy', $somProjectsAirport->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['somAirports.destroy', $somProjectsAirport->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('somProjectsAirports.show', [$somProjectsAirport->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('somAirports.show', [$somProjectsAirport->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('somProjectsAirports.edit', [$somProjectsAirport->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('somAirports.edit', [$somProjectsAirport->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
                         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}

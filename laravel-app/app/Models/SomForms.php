@@ -69,7 +69,7 @@ class SomForms extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'nullable|string|max:255',
+        'name' => 'required|string|max:255',
         'active' => 'nullable|integer',
         'som_phases_milestones_id' => 'required|integer',
         'order_form' => 'required|integer',

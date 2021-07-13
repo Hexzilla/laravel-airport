@@ -28,9 +28,7 @@
             {!! Form::model($somFormTasks, ['route' => ['somFormTasks.update', $somFormTasks->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
                     @include('som_form_tasks.fields')
-                </div>
             </div>
 
             <div class="card-footer">

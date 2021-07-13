@@ -1,4 +1,7 @@
-{{ Form::hidden('active', $somForms->active == 'on' ? 1 : 0) }}
+{{ Form::hidden('active', $somForms->active) }}
+{{ Form::hidden('som_phases_milestones_id', $somForms->som_phases_milestones_id) }}
+{{ Form::hidden('som_milestones_forms_types_id', $somForms->som_milestones_forms_types_id) }}
+{{ Form::hidden('order_form', $somForms->order_form) }}
 <!-- Name Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
@@ -21,15 +24,15 @@
     </div>
 </div>
 
-<!-- Active Field -->
+<!-- Is_InActive Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('active', 'Active') !!}
+        {!! Form::label('is_inactive', 'Is InActive') !!}
         <span class="required">&nbsp</span>
     </div>
     <div class="col-sm-10">
         <div class="form-check">
-            {!! Form::checkbox('active', null, true, array('id' => 'active', 'class' => 'form-check-input')) !!}
+            {!! Form::checkbox('is_inactive', 1, null , array('id' => 'is_inactive', 'class' => 'form-check-input')) !!}
         </div>
     </div>
 </div>

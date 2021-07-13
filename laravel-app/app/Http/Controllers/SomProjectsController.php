@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSomProjectsRequest;
 use App\Http\Requests\UpdateSomProjectsRequest;
 use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\SomStatusRepository;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -14,10 +15,13 @@ class SomProjectsController extends AppBaseController
 {
     /** @var  SomProjectsRepository */
     private $somProjectsRepository;
-
-    public function __construct(SomProjectsRepository $somProjectsRepo)
+    private $somStatusRepository;
+    public function __construct(
+            SomProjectsRepository $somProjectsRepo,
+            SomStatusRepository $somStatusRepo)
     {
         $this->somProjectsRepository = $somProjectsRepo;
+        $this->somStatusRepository = $somStatusRepo;
     }
 
     /**
@@ -100,7 +104,16 @@ class SomProjectsController extends AppBaseController
             return redirect(route('somProjects.index'));
         }
 
-        return view('som_projects.edit')->with('somProjects', $somProjects);
+        $statusArray = array();
+        $sel_status_id = $somProjects->som_project_info_status_id;
+        $statusRows = $this->somStatusRepository->all(['type'=>'projects'], null, null, ['id','name']);
+        foreach($statusRows as $row)
+        {
+            $statusArray[$row['id']] = $row['name'];
+        }
+        return view('som_projects.edit')
+                ->with('statusArray', $statusArray)->with('sel_status', $sel_status_id)
+                ->with('somProjects', $somProjects);
     }
 
     /**

@@ -103,6 +103,12 @@ class SomCountry extends Model
         'exchange_rate' => 'nullable|string|max:50'
     ];
 
+    public static $create_rule = [
+        // 'id' => 'required|integer',
+        'country' => 'required|string|max:45',
+        'country_code' => 'required|string|max:2',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/

@@ -1,6 +1,6 @@
 <!-- Name Field -->
 <div class="form-group row">
-    <div class="col-sm-2 col-form-label text-right">
+    <div class="col-sm-2 col-form-label text-sm-right">
         {!! Form::label('name', 'Name') !!}
         <span class="required">*</span>
     </div>
@@ -12,19 +12,19 @@
 
 <!-- Som Forms Id Field -->
 <div class="form-group row">
-    <div class="col-sm-2 col-form-label text-right">
+    <div class="col-sm-2 col-form-label text-sm-right">
         {!! Form::label('som_forms_id', 'Som Forms Id') !!}
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('som_forms_id', null, ['class' => 'form-control']) !!}
+        {!! Form::select('som_forms_id', $somFormsIds, $selectedId, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 
 <!-- Order Approval Field -->
 <div class="form-group row">
-    <div class="col-sm-2 col-form-label text-right">
+    <div class="col-sm-2 col-form-label text-sm-right">
         {!! Form::label('order_approval', 'Order Approval') !!}
         <span class="required">*</span>
     </div>

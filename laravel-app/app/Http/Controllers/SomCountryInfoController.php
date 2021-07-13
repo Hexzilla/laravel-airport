@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomCountryInfoRequest;
 use App\Http\Requests\UpdateSomCountryInfoRequest;
 use App\Repositories\SomCountryInfoRepository;
+use App\Repositories\SomCountryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -14,10 +15,13 @@ class SomCountryInfoController extends AppBaseController
 {
     /** @var  SomCountryInfoRepository */
     private $somCountryInfoRepository;
+    private $somCountryRepository;
 
-    public function __construct(SomCountryInfoRepository $somCountryInfoRepo)
+    public function __construct(SomCountryInfoRepository $somCountryInfoRepo
+        ,SomCountryRepository $somCountryRepository)
     {
         $this->somCountryInfoRepository = $somCountryInfoRepo;
+        $this->somCountryRepository = $somCountryRepository;
     }
 
     /**
@@ -31,8 +35,16 @@ class SomCountryInfoController extends AppBaseController
     {
         $somCountryInfos = $this->somCountryInfoRepository->all();
 
+        $data = array();
+        $data['countries'] = array();
+        $somCountries = $this->somCountryRepository->all();        
+        foreach ($somCountries as $somCountry) {            
+            $data['countries'][$somCountry->id] = $somCountry->country;
+        }
+
         return view('som_country_infos.index')
-            ->with('somCountryInfos', $somCountryInfos);
+            ->with('somCountryInfos', $somCountryInfos)
+            ->with('data', $data);
     }
 
     /**
@@ -42,7 +54,17 @@ class SomCountryInfoController extends AppBaseController
      */
     public function create()
     {
-        return view('som_country_infos.create');
+        $data = array();
+        $data['countries'] = array();
+        $somCountries = $this->somCountryRepository->all();
+        $cnt = 0;
+        $data['countries'][$cnt] = "Please select a Country";
+        foreach ($somCountries as $somCountry) {            
+            $data['countries'][$somCountry->id] = $somCountry->country;
+        }  
+        $data['selected_country'] = 0; 
+        $data['selected_year'] = ""; 
+        return view('som_country_infos.create')->with('data', $data);
     }
 
     /**
@@ -54,12 +76,35 @@ class SomCountryInfoController extends AppBaseController
      */
     public function store(CreateSomCountryInfoRequest $request)
     {
-        $validated = $request->validated();
+        // $validated = $request->validated();
 
-        if (array_key_exists('som_country_id', $validated)) {
-            unset($validated['som_country_id']);
-        }
-        $somCountryInfo = $this->somCountryInfoRepository->create($validated);
+        // if (array_key_exists('som_country_id', $validated)) {
+        //     unset($validated['som_country_id']);
+        // }
+
+        $input = $request->rules();
+
+        $data = array();
+        if(!empty($request->input('som_country_id'))){
+            $data['som_country_id'] = $request->input('som_country_id');
+        } 
+        if(!empty($request->input('year'))){
+            $data['year'] = date("Y",strtotime($request->input('year')));
+            // $data['year'] = $request->input('year');
+        } 
+        if(!empty($request->input('inflation'))){
+            $data['inflation'] = $request->input('inflation');
+        } 
+        if(!empty($request->input('population'))){
+            $data['population'] = $request->input('population');
+        } 
+        if(!empty($request->input('gpd_evolution'))){
+            $data['gpd_evolution'] = $request->input('gpd_evolution');
+        } 
+
+        $this->somCountryInfoRepository->insertData($data);
+
+        // $somCountryInfo = $this->somCountryInfoRepository->create($validated);
 
         Flash::success('Som Country Info saved successfully.');
 
@@ -103,7 +148,19 @@ class SomCountryInfoController extends AppBaseController
             return redirect(route('somCountryInfos.index'));
         }
 
-        return view('som_country_infos.edit')->with('somCountryInfo', $somCountryInfo);
+        $data = array();
+        $data['countries'] = array();
+        $somCountries = $this->somCountryRepository->all();
+        $cnt = 0;
+        $data['countries'][$cnt] = "Please select a Country";
+        foreach ($somCountries as $somCountry) {            
+            $data['countries'][$somCountry->id] = $somCountry->country;
+        }   
+
+        $data['selected_country'] = $somCountryInfo->som_country_id;
+        $data['selected_year'] = $somCountryInfo->year;  
+
+        return view('som_country_infos.edit')->with('somCountryInfo', $somCountryInfo)->with('data', $data);
     }
 
     /**

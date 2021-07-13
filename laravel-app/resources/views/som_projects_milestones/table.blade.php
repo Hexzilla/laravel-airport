@@ -3,12 +3,12 @@
         <thead>
             <tr>
                 <th>Som Projects Phases Id</th>
-        <th>Blocking</th>
-        <th>Order</th>
-        <th>Due Date</th>
-        <th>Name</th>
-        <th>Som Status Id</th>
-        <th>Is Hidden</th>
+                <th>Blocking</th>
+                <th>Order</th>
+                <th>Due Date</th>
+                <th>Name</th>
+                <th>Som Status Id</th>
+                <th>Is Hidden</th>
                 <th colspan="3">Action</th>
             </tr>
         </thead>
@@ -25,6 +25,9 @@
                 <td width="120">
                     {!! Form::open(['route' => ['somProjectsMilestones.destroy', $somProjectsMilestones->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
+                        <a href="{{ route('somForms.index', ['milestones_id'=>$somProjectsMilestones->id]) }}" class='btn btn-default btn-xs'>
+                            <i class="fas fa-list" title='Forms'></i>
+                        </a>
                         <a href="{{ route('somProjectsMilestones.show', [$somProjectsMilestones->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>

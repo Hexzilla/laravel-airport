@@ -204,6 +204,13 @@ class SomProjectsAirport extends Model
         'version_date' => 'nullable'
     ];
 
+    public static $create_rule = [
+        'id' => 'required|integer',
+        'name' => 'required|string|max:245',
+        'address' => 'required|string|max:245',
+        'size' => 'required|numeric',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/

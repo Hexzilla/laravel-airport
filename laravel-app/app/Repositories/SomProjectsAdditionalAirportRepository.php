@@ -38,4 +38,10 @@ class SomProjectsAdditionalAirportRepository extends BaseRepository
     {
         return SomProjectsAdditionalAirport::class;
     }
+
+    public function getCountByAirportId($airport_id){
+        return $this->makeModel()
+            ->where('som_airport_id', $airport_id)
+            ->count();
+    }
 }

@@ -75,4 +75,20 @@ class SomProjectsAirportRepository extends BaseRepository
     {
         return SomProjectsAirport::class;
     }
+
+    public function getLastInsertedId(){
+        return $this->makeModel()
+            ->max('id');
+    }
+
+    public function insertData($data){
+        return $this->makeModel()
+            ->insert($data);
+    }
+
+    public function getCountByCountryId($country_id){
+        return $this->makeModel()
+            ->where('som_country_id', $country_id)
+            ->count();
+    }
 }

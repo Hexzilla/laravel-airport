@@ -5,19 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormTasksRequest;
 use App\Http\Requests\UpdateSomFormTasksRequest;
 use App\Repositories\SomFormTasksRepository;
+use App\Repositories\CmsPrivilegesRepository;
+use App\Repositories\SomDepartmentsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class SomFormTasksController extends AppBaseController
 {
     /** @var  SomFormTasksRepository */
     private $somFormTasksRepository;
+    private $cmsPrivilegesRepository;
+    private $somDepartmentsRepository;
 
-    public function __construct(SomFormTasksRepository $somFormTasksRepo)
+    public function __construct(SomFormTasksRepository $somFormTasksRepo,
+                                CmsPrivilegesRepository $cmsPrivilegesRepo,
+                                SomDepartmentsRepository $somDepartmentsRepo
+
+            )
     {
         $this->somFormTasksRepository = $somFormTasksRepo;
+        $this->cmsPrivilegesRepository = $cmsPrivilegesRepo;
+        $this->somDepartmentsRepository = $somDepartmentsRepo;
     }
 
     /**
@@ -99,8 +111,21 @@ class SomFormTasksController extends AppBaseController
 
             return redirect(route('somFormTasks.index'));
         }
+        //get select Role items
+        $items = $this->cmsPrivilegesRepository->all([], null, null, ['id', 'name'])->toArray();
+        $role = Arr::pluck($items,'name','id');
 
-        return view('som_form_tasks.edit')->with('somFormTasks', $somFormTasks);
+        //get select Department items
+        $DepartItems = $this->somDepartmentsRepository->all([], null, null, ['id', 'name'])->toArray();
+        $arrDepart = Arr::pluck($DepartItems,'name','id');
+
+        $arrType = config( 'constants.taskTypes');
+
+        return view('som_form_tasks.edit')
+            ->with('somFormTasks', $somFormTasks)
+            ->with('arrType', $arrType)
+            ->with('arrRole', $role)
+            ->with('arrDepart', $arrDepart);
     }
 
     /**

@@ -17,17 +17,17 @@
 
         <div class="card">
 
-            {!! Form::model($somProjectsAirport, ['route' => ['somProjectsAirports.update', $somProjectsAirport->id], 'method' => 'patch']) !!}
+            {!! Form::model($somProjectsAirport, ['route' => ['somAirports.update', $somProjectsAirport->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
+                <!-- <div class="row"> -->
                     @include('som_projects_airports.fields')
-                </div>
+                <!-- </div> -->
             </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somProjectsAirports.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('somAirports.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
            {!! Form::close() !!}

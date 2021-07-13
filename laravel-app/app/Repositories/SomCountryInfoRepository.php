@@ -41,4 +41,15 @@ class SomCountryInfoRepository extends BaseRepository
     {
         return SomCountryInfo::class;
     }
+
+    public function getCountByCountryId($country_id){
+        return $this->makeModel()
+            ->where('som_country_id', $country_id)
+            ->count();
+    }
+
+    public function insertData($data){
+        return $this->makeModel()
+            ->insert($data);
+    }
 }

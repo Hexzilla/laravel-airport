@@ -1,3 +1,4 @@
+{{ Form::hidden('som_forms_id', $somFormTasks->som_forms_id) }}
 <!-- Name Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
@@ -34,32 +35,32 @@
 <!-- Type Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('order', 'Type') !!}
+        {!! Form::label('is_sub_task', 'Type') !!}
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('order', null, ['class' => 'form-control']) !!}
+        {!! Form::select('is_sub_task', $arrType, $somFormTasks->som_status_id, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <!-- Role Assigned -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('order', 'Role Assigned') !!}
+        {!! Form::label('cms_privileges_role_id', 'Role Assigned') !!}
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('order', null, ['class' => 'form-control']) !!}
+        {!! Form::select('cms_privileges_role_id', $arrRole, $somFormTasks->cms_privileges_role_id, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <!-- Department -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('order', 'Department') !!}
+        {!! Form::label('som_departments_id', 'Department') !!}
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::number('order', null, ['class' => 'form-control']) !!}
+        {!! Form::select('som_departments_id', $arrDepart, $somFormTasks->som_departments_id, ['class' => 'form-control']) !!}
     </div>
 </div>

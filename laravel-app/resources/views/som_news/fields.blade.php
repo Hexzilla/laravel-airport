@@ -16,7 +16,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::text('news_description', null, ['class' => 'form-control','maxlength' => 1000,'maxlength' => 1000]) !!}
+        {!! Form::textarea('news_description', null, ['class' => 'form-control','rows' => 4, 'cols' => 50,'maxlength' => 1000,'maxlength' => 1000]) !!}
     </div>
 </div>
 

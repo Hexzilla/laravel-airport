@@ -67,5 +67,17 @@ class SomProjectsRepository extends BaseRepository
     public function model()
     {
         return SomProjects::class;
-    }
+    }   
+
+    public function getCountByAirportId($airport_id){
+        return $this->makeModel()
+            ->where('som_projects_airport_id', $airport_id)
+            ->count();
+    } 
+
+    public function getCountByCountryId($country_id){
+        return $this->makeModel()
+            ->where('som_country_id', $country_id)
+            ->count();
+    } 
 }

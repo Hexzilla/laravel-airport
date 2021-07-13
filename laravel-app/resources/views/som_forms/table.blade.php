@@ -25,6 +25,15 @@
                 <td width="120">
                     {!! Form::open(['route' => ['somForms.destroy', $somForms->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
+                    <a href="{{ route('somFormTasks.index', [$somForms->id]) }}" class='btn btn-default btn-xs'>
+                            <i class="far fa-task"></i>tasks
+                        </a>
+                        <a href="{{ route('somFormElements.index', [$somForms->id]) }}" class='btn btn-default btn-xs'>
+                            <i class="far fa-task"></i>elements
+                        </a>
+                        <a href="{{ route('somFormApprovals.index', [$somForms->id]) }}" class='btn btn-default btn-xs'>
+                            <i class="far fa-task"></i>approvals
+                        </a>
                         <a href="{{ route('somForms.show', [$somForms->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>

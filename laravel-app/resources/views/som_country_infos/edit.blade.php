@@ -20,9 +20,9 @@
             {!! Form::model($somCountryInfo, ['route' => ['somCountryInfos.update', $somCountryInfo->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
+                <!-- <div class="row"> -->
                     @include('som_country_infos.fields')
-                </div>
+                <!-- </div> -->
             </div>
 
             <div class="card-footer">
