@@ -19,11 +19,6 @@
         integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ=="
         crossorigin="anonymous" />
 
-    <!-- iCheck -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/icheck-bootstrap/3.0.1/icheck-bootstrap.min.css"
-        integrity="sha512-8vq2g5nHE062j3xor4XxPeZiPjmRDh6wlufQlfC6pdQ/9urJkU07NM0tEREeymP++NczacJ/Q59ul+/K2eYvcg=="
-        crossorigin="anonymous" />
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -35,12 +30,13 @@
 
 <body class="hold-transition login-page">
     <div class="login-box">
-        <div class="login-logo">
-            <img class="logo-aena" src={{asset('images/logo-aena-black.png')}} title="AENA GPI" />
-            <a href="{{ url('/admin') }}"><b>{{ config('app.name') }}</b></a>
-        </div>
 
         <!-- /.login-logo -->
+        <div class="login-logo">
+            <div class="row">
+                <img class="logo-aena w-50 ml-2" src={{asset('images/logo-aena-black.png')}} title="AENA GPI" />
+            </div>
+        </div>
 
         <!-- /.login-box-body -->
         <div class="card">
@@ -51,74 +47,50 @@
                 <div class="col-12">
                     <hr>
                 </div>
-                <form method="post" action="{{ url('/login') }}">
+                <form method="post" action="{{ url('/login') }}" autocomplete="false">
                     @csrf
 
-                    <div class="input-group mb-3">
-                        <div class="col-12 form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <input id="email" type="email" class="form-input form-control" name="email"
-                                value="{{ old('email') }}" placeholder="user" autocomplete="off" required autofocus
-                                readonly onfocus="this.removeAttribute('readonly');" />
-                            @if ($errors->has('email'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="input-group-append">
-                            <div class="input-group-text"><span class="fas fa-envelope"></span></div>
-                        </div>
-                        @error('email')
-                        <span class="error invalid-feedback">{{ $message }}</span>
-                        @enderror
+                    <div class="col-12 form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                        <input id="email" type="email" class="form-input form-control" name="email"
+                            value="{{ old('email') }}" placeholder="user" autocomplete="off" required autofocus readonly
+                            onfocus="this.removeAttribute('readonly');" />
+                        @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                        @endif
                     </div>
 
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" placeholder="Password"
-                            class="form-control @error('password') is-invalid @enderror">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        @error('password')
-                        <span class="error invalid-feedback">{{ $message }}</span>
-                        @enderror
+                    <div class="col-12 form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <input id="password" type="password" class="form-control form-input" placeholder="password"
+                            name="password" autocomplete="off" required readonly
+                            onfocus="this.removeAttribute('readonly');" />
 
+                        @if ($errors->has('password'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                        @endif
                     </div>
 
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">Remember Me</label>
-                            </div>
+                        <div class="col-12">
+                            <button id="submitButton" class="form-button" type="submit">login</button>
                         </div>
-
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                        </div>
-
                     </div>
                 </form>
-
-                <p class="mb-1">
-                    <a href="{{ route('password.request') }}">I forgot my password</a>
-                </p>
-                <p class="mb-0">
-                    <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
-                </p>
             </div>
-            <!-- /.login-card-body -->
         </div>
-
+        <p class="footer">
+            La información contenida en esta plataforma puede tener carácter confidencial. El trabajador se compromete a mantener absoluta confidencialidad y a no desvelar ni emplear, directa o indirectamente, la documentación, los procedimientos, proyectos, métodos, aplicaciones, análisis y cualquier otra información propia y/o de terceros a los que haya tenido acceso como consecuencia del desempeño de sus funciones.
+        </p>
     </div>
-    <!-- /.login-box -->
 
     <!-- AdminLTE App -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js"
         integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA=="
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+    </script>
 
 </body>
 
