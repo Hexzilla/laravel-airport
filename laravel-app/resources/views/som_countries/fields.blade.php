@@ -52,7 +52,7 @@
         {!! Form::label('politics', 'Politics') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::select('politics',array_merge(array('  ** Please select a Politics '), $items), null, ['class' => 'form-control']) !!}
+        {!! Form::select('politics',$items, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -62,7 +62,7 @@
         {!! Form::label('regulatory', 'Regulatory') !!}
     </div>
     <div class="col-sm-10">
-    {!! Form::select('regulatory',array_merge(array('  ** Please select a Regulatory '), $items), null, ['class' => 'form-control']) !!}
+    {!! Form::select('regulatory',$items, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -72,7 +72,7 @@
         {!! Form::label('corruption', 'Corruption') !!}
     </div>
     <div class="col-sm-10">
-    {!! Form::select('corruption',array_merge(array('  ** Please select a Corruption '), $items), null, ['class' => 'form-control']) !!}
+    {!! Form::select('corruption',$items, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -82,7 +82,7 @@
         {!! Form::label('business_easyness', 'Easy of doing business') !!}
     </div>
     <div class="col-sm-10">
-    {!! Form::select('business_easyness',array_merge(array('  ** Please select a Easy of doing business '), $items), null, ['class' => 'form-control']) !!}
+    {!! Form::select('business_easyness',$items, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -92,7 +92,7 @@
         {!! Form::label('spain_affinity', 'Afinity with Spain') !!}
     </div>
     <div class="col-sm-10">
-    {!! Form::select('spain_affinity',array_merge(array('  ** Please select a Afinity with Spain '), $items), null, ['class' => 'form-control']) !!}
+    {!! Form::select('spain_affinity',$items, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -102,7 +102,7 @@
         {!! Form::label('aena_strategy_align', 'Location aligned with Aena international strategy') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::select('aena_strategy_align',array(''=>'  ** Location aligned with Aena international strategy ','Yes' => 'Yes', 'No' => 'No'), null, ['class' => 'form-control','maxlength' => 3,'maxlength' => 3]) !!}
+        {!! Form::select('aena_strategy_align',array('Yes' => 'Yes', 'No' => 'No'), null, ['class' => 'form-control','maxlength' => 3,'maxlength' => 3]) !!}
     </div>
 </div>
 
@@ -112,7 +112,7 @@
         {!! Form::label('country_risk', 'Country Risk') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::select('country_risk' ,array(''=>'  ** Please select a Country Risk ','Low' => 'Low', 'Medium' => 'Medium', 'High'=>'High'), null, ['class' => 'form-control','maxlength' => 10,'maxlength' => 10]) !!}
+        {!! Form::select('country_risk', $items, null, ['class' => 'form-control','maxlength' => 10,'maxlength' => 10]) !!}
     </div>
 </div>
 
@@ -122,14 +122,14 @@
         {!! Form::label('tourism_activity', 'Tourism Situation (% PIB from tourism activity)') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::number('tourism_activity', null, ['class' => 'form-control']) !!}
+        {!! Form::text('tourism_activity', null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <!-- Imports Exports Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('imports_exports', 'Exports and imports') !!}
+        {!! Form::label('imports_exports', 'Exports and imports(€ bn)') !!}
     </div>
     <div class="col-sm-10">
         {!! Form::number('imports_exports', null, ['class' => 'form-control']) !!}
@@ -149,7 +149,7 @@
 @push('page_scripts')
     <script type="text/javascript">
         $('#version_date').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
+            format: 'YYYY-MM-DD',
             useCurrent: true,
             sideBySide: true
         })
@@ -210,6 +210,8 @@
 <script>
 $(document).on('click', '#browse_map', function(event) {
     event.preventDefault();
+    $("#current_country_code").val($("#country_code").val());
+    $("#current_country_name").val($("#country").val());
     $('#locationModal').modal("show");
 
 });
@@ -222,20 +224,45 @@ function set_location(){
 
 function initAutocomplete() {
     $("#searchmap").css("display","block");
-    const map = new google.maps.Map(document.getElementById("map-canvas"), {
-        center: { lat: -33.8688, lng: 151.2195 },
-        zoom: 13,
-        mapTypeId: "roadmap",
-    });
+    var init_lat = 0;//-33.8688;
+    var init_lng= 0;//151.2195;
+    var map;
+    var marker;
+    var selected_position = {lat: init_lat,lng: init_lng };
+    if($("#country").val() != ""){
+        map = new google.maps.Map(document.getElementById("map-canvas"), {
+            zoom: 4,
+        });
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: $("#country").val() })
+            .then((response) => {
+              const position = response.results[0].geometry.location;
+              map.setCenter(position);
+                selected_position = position;
+                if(marker){
+                    marker.setPosition(selected_position);
+                    if(infoWindow)
+                        infoWindow.setContent($("#country").val());
+                }
+            })
+            .catch((e) =>
+              window.alert("Geocode was not successful for the following reason: " + e)
+            );
+    }else{
+        map = new google.maps.Map(document.getElementById("map-canvas"), {
+            center: { lat: init_lat, lng: init_lng },
+            zoom: 4,
+            mapTypeId: "roadmap",
+        });
+    }
 
-    var marker = new google.maps.Marker({
-        position: {
-            lat: -33.8688,
-            lng: 151.2195
-        },
+    marker = new google.maps.Marker({
+        position: selected_position,
         map: map,
         draggable: true
     });
+
+
 
     // Create an info window to share between markers.
     const infoWindow = new google.maps.InfoWindow();
