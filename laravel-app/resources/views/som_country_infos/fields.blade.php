@@ -1,13 +1,5 @@
 <!-- Som Country Id Field -->
-<div class="form-group row">
-    <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('som_country_id', 'Som Country') !!}
-    </div>
-    <div class="col-sm-10">
-        {!! Form::select('som_country_id', $data['countries'], $data['selected_country'], ['class' => 'form-control']) !!}
-    </div>
-</div>
-
+<input type="hidden" name="som_country_id" id="som_country_id" value="{!! $somCountry_id !!}">
 <!-- Year Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">

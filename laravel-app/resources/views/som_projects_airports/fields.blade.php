@@ -3,6 +3,11 @@
         width: 468px;
         height: 350px;
     }
+    .pac-container { z-index: 100000 !important; }
+    #searchmap{
+        width: 220px;
+        margin-top: 10px;
+    }
 </style>
 
 <input type="hidden" name="id" id="id" value="{!! $data['id'] !!}">
@@ -24,22 +29,28 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-8">
-        {!! Form::text('address', null, ['class' => 'form-control','maxlength' => 245,'maxlength' => 245]) !!}
+        {!! Form::text('address', null, ['class' => 'form-control','id' => 'address','maxlength' => 245,'maxlength' => 245]) !!}
     </div>
     <div class="col-sm-2">
         <a id="browse_map" class="btn btn-default" style="background-color:#009aff;color:#fff;float:right;">Browse Map</a>
     </div>
 </div>
 
-<!-- Country Field -->
+<input type="hidden" id="lat" name="lat" >
+<input type="hidden" id="long" name="long" >
+
+<!-- Som Country Id Field -->
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
-        {!! Form::label('country', 'Country') !!}
+        {!! Form::label('som_country_id', 'Country') !!}
     </div>
     <div class="col-sm-10">
-        {!! Form::select('country', $data['countries'], $data['selected_country'], ['class' => 'form-control']) !!}
+        {!! Form::select('som_country_id', $data['countries'], $data['selected_country'], ['class' => 'form-control','onchange'=>'formatCountry()']) !!}
     </div>
 </div>
+
+<!-- Country Field -->
+<input type="hidden" id="country" name="country" value="{!! $data['countries'][$data['selected_country']] !!}" >
 
 <!-- Iata Oaci Field -->
 <div class="form-group row">
@@ -366,40 +377,17 @@
     </div>
 </div>
 
-
-<!-- Address Field -->
-<!-- <div class="form-group col-sm-6">
-    {!! Form::label('address', 'Address:') !!}
-    {!! Form::text('address', null, ['class' => 'form-control','maxlength' => 245,'maxlength' => 245]) !!}
-</div> -->
-
 <!-- City Field -->
 <!-- <div class="form-group col-sm-6">
     {!! Form::label('city', 'City:') !!}
     {!! Form::text('city', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
 </div> -->
 
-<!-- Lat Field -->
-<!-- <div class="form-group col-sm-6">
-    {!! Form::label('lat', 'Lat:') !!}
-    {!! Form::number('lat', null, ['class' => 'form-control']) !!}
-</div> -->
-
-<!-- Long Field -->
-<!-- <div class="form-group col-sm-6">
-    {!! Form::label('long', 'Long:') !!}
-    {!! Form::number('long', null, ['class' => 'form-control']) !!}
-</div> -->
-
-<!-- Som Country Id Field -->
-<!-- <div class="form-group col-sm-6">
-    {!! Form::label('som_country_id', 'Som Country Id:') !!}
-    {!! Form::number('som_country_id', null, ['class' => 'form-control']) !!}
-</div> -->
-
 <!-- location modal -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyB6K1CFUQ1RwVJ-nyXxd6W0rfiIBe12Q&libraries=places"
-  type="text/javascript"></script>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key={!! env('GOOGLE_MAPAPI_KEY') !!}&callback=initAutocomplete&libraries=places&v=weekly"
+      async
+    ></script>
 <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -407,23 +395,25 @@
             <div class="modal-header">
                 <span>Browse Map</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>                    
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="locationModalBody">
                 <div>
-                    <div class="form-group row">                        
+                    <div class="form-group row">
                         <div class="col-md-12">
-                            <input type="text" class="form-control" id="searchmap">
-                                <div id="map-canvas"></div>
+                            <input type="text" class="form-control" id="searchmap" style="display:none;">
+                            <div id="map-canvas"></div>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        {!! Form::label('long', 'Current Location:') !!}
-                        {!! Form::text('current_location', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
+                        {!! Form::label('current_location', 'Current Location:') !!}
+                        {!! Form::text('current_location', null, ['class' => 'form-control','id' =>'current_location','maxlength' => 45,'maxlength' => 45]) !!}
+                        <input type="hidden" id="current_lat" name="current_lat">
+                        <input type="hidden" id="current_lng" name="current_lng">
                     </div>
                     <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
-                         <a id="set_it" class="btn btn-default">Set It</a>
+                         <a id="set_it" class="btn btn-default" onclick="set_location()">Set It</a>
                     </div>
                 </div>
             </div>
@@ -441,44 +431,132 @@
     </script>
 
 <script>
-    $(document).on('click', '#browse_map', function(event) {
-        event.preventDefault();
-        $('#locationModal').modal("show");
-        
+$(document).on('click', '#browse_map', function(event) {
+    event.preventDefault();
+    $('#locationModal').modal("show");
+
+});
+
+function formatCountry(){
+    var som_country_id = $("#som_country_id").val();
+    var countries = @json($data['countries']);
+    $("#country").val(countries[som_country_id]);
+}
+
+function set_location(){
+    $("#address").val($("#current_location").val());
+    $("#lat").val($("#current_lat").val());
+    $("#long").val($("#current_lng").val());
+    $('#locationModal').modal("hide");
+}
+
+function initAutocomplete() {
+    $("#searchmap").css("display","block");
+    const map = new google.maps.Map(document.getElementById("map-canvas"), {
+        center: { lat: -33.8688, lng: 151.2195 },
+        zoom: 13,
+        mapTypeId: "roadmap",
     });
 
-    var map = new google.maps.Map(document.getElementById('map-canvas'),{
-        center:{
-            lat: 27.72,
-            lng: 85.36
-        },
-        zoom:15
-    });
     var marker = new google.maps.Marker({
         position: {
-            lat: 27.72,
-            lng: 85.36
+            lat: -33.8688,
+            lng: 151.2195
         },
         map: map,
         draggable: true
     });
-    var searchBox = new google.maps.places.SearchBox(document.getElementById('searchmap'));
-    google.maps.event.addListener(searchBox,'places_changed',function(){
-        var places = searchBox.getPlaces();
-        var bounds = new google.maps.LatLngBounds();
-        var i, place;
-        for(i=0; place=places[i];i++){
-            bounds.extend(place.geometry.location);
-            marker.setPosition(place.geometry.location); //set marker position new...
-        }
-        map.fitBounds(bounds);
-        map.setZoom(15);
+
+    // Create an info window to share between markers.
+    const infoWindow = new google.maps.InfoWindow();
+
+    // Create the search box and link it to the UI element.
+    const input = document.getElementById("searchmap");
+    const searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener("bounds_changed", () => {
+        // searchBox.setBounds(map.getBounds());
     });
-    google.maps.event.addListener(marker,'position_changed',function(){
+
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+            return;
+        }
+
+        // For each place, get the icon, name and location.
+        const bounds = new google.maps.LatLngBounds();
+        places.forEach((place) => {
+            if (!place.geometry || !place.geometry.location) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+            const icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25),
+            };
+
+            marker.setPosition(place.geometry.location);
+            infoWindow.setContent(place.formatted_address);
+            $("#current_location").val(place.formatted_address);
+            var lat = marker.getPosition().lat();
+            var lng = marker.getPosition().lng();
+            $("#current_lat").val(lat);
+            $("#current_lng").val(lng);
+
+            // for (var i = 0; i < place.address_components.length; i++) {
+            //     var types = place.address_components[i].types;
+            //     if(types.indexOf("country")>=0){
+            //         console.log("country code"+i+":"+place.address_components[i].short_name);//long_name
+            //         break;
+            //     }
+            // }
+
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
+        });
+        map.fitBounds(bounds);
+    });
+
+    marker.addListener("position_changed", () => {
+        infoWindow.open(marker.getMap(), marker);
+    });
+    marker.addListener("dragend", () => {
+        geocoder = new google.maps.Geocoder();
+        geocoder.geocode({latLng: marker.getPosition()}
+            ,function(results, status){
+                if (status == google.maps.GeocoderStatus.OK){
+                    infoWindow.setContent(results[0].formatted_address);
+                    $("#current_location").val(results[0].formatted_address);
+
+                    // for (var i = 0; i < results[0].address_components.length; i++) {
+                    //     var types = results[0].address_components[i].types;
+                    //     if(types.indexOf("country")>=0){
+                    //         console.log("country code"+i+":"+results[0].address_components[i].short_name);//long_name
+                    //         break;
+                    //     }
+                    // }
+                }
+            }
+        );
+
         var lat = marker.getPosition().lat();
         var lng = marker.getPosition().lng();
-        $('#lat').val(lat);
-        $('#lng').val(lng);
+        $("#current_lat").val(lat);
+        $("#current_lng").val(lng);
     });
+}
+
 </script>
 @endpush

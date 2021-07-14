@@ -23,7 +23,6 @@ return [
         'Finance'         => 10,
         'GPIAnalyst'      => 11
     ]
-
 ];
 
 ?>

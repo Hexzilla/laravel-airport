@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
-                       href="{{ route('somCountryInfos.create') }}">
+                       href="{{ route('somCountryInfos.create',['somCountry_id'=> $somCountry_id]) }}">
                         Add New
                     </a>
                 </div>

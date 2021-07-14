@@ -56,9 +56,11 @@ class SomCountryController extends AppBaseController
     {
         $max_id = $this->somCountryRepository->getLastInsertedId();
         $data = array();
-        $data['id'] = $max_id+1;        
+        $data['id'] = $max_id+1;
+        
+        $items = array(1,2,3,4,5);
 
-        return view('som_countries.create')->with('data', $data);
+        return view('som_countries.create')->with('data', $data)->with('items', $items);
     }
 
     /**
@@ -165,8 +167,9 @@ class SomCountryController extends AppBaseController
 
             return redirect(route('somCountries.index'));
         }
+        $items = array(1,2,3,4,5);
 
-        return view('som_countries.edit')->with('somCountry', $somCountry)->with('data',$data);
+        return view('som_countries.edit')->with('somCountry', $somCountry)->with('data',$data)->with('items', $items);
     }
 
     /**
