@@ -25,6 +25,6 @@ class CreateSomProjectsAirportRequest extends FormRequest
      */
     public function rules()
     {
-        return SomProjectsAirport::$create_rule;
+        return SomProjectsAirport::$rules;
     }
 }

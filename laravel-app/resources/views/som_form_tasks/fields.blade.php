@@ -28,7 +28,7 @@
         <span class="required">&nbsp;</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::text('tooltip', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000]) !!}
+        {!! Form::textarea('tooltip', null, ['class' => 'form-control','maxlength' => 2000,'maxlength' => 2000]) !!}
     </div>
 </div>
 
@@ -39,7 +39,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::select('is_sub_task', $arrType, $somFormTasks->som_status_id, ['class' => 'form-control']) !!}
+        {!! Form::select('is_sub_task', $arrType, $somFormTasks->is_sub_task, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -58,7 +58,7 @@
 <div class="form-group row">
     <div class="col-sm-2 col-form-label text-right">
         {!! Form::label('som_departments_id', 'Department') !!}
-        <span class="required">*</span>
+        <span class="required">&nbsp;</span>
     </div>
     <div class="col-sm-10">
         {!! Form::select('som_departments_id', $arrDepart, $somFormTasks->som_departments_id, ['class' => 'form-control']) !!}

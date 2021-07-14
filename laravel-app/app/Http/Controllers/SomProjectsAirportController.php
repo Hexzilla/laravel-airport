@@ -75,22 +75,22 @@ class SomProjectsAirportController extends AppBaseController
         $data['countries'] = array();
         $somCountries = $this->somCountryRepository->all();
         $cnt = 0;
-        $data['countries'][$cnt] = "Please select a Country";
+        $selected_country_id = 0;
         foreach ($somCountries as $somCountry) {
-            // $cnt ++;
-            $data['countries'][$somCountry->country] = $somCountry->country;
+            $data['countries'][$somCountry->id] = $somCountry->country;
+            if($cnt == 0){
+                $selected_country_id = $somCountry->id;
+            }
+            $cnt++;
         }     
 
         $data['airport_types'] = array();
         $airport_types = $this->somProjectsAirportTypeRepository->all();
-        $cnt = 0;   
-        $data['airport_types'][$cnt] = "Please select a Type of airport";
         foreach ($airport_types as $airport_type) {
-            $cnt ++;
             $data['airport_types'][$airport_type->id] = $airport_type->name;
         }
 
-        $data['selected_country'] = 0;
+        $data['selected_country'] = $selected_country_id;
         $data['selected_airport'] = 0;
 
         return view('som_projects_airports.create')
@@ -212,8 +212,21 @@ class SomProjectsAirportController extends AppBaseController
         }
         if(!empty($request->input('version_date'))){
             $data['version_date'] = $request->input('version_date');
+        } 
+        if(!empty($request->input('som_country_id'))){
+            $data['som_country_id'] = $request->input('som_country_id');
+        } 
+        if(!empty($request->input('lat'))){
+            $data['lat'] = $request->input('lat');
+        } 
+        if(!empty($request->input('long'))){
+            $data['long'] = $request->input('long');
         }  
         if($request->file()) {
+            $this->validate($request, [
+                'file' => 'mimes:jpeg,jpg,png,gif', //only allow this type extension file.
+            ]);
+
             $fileName = time().'_'.$request->file->getClientOriginalName();
             $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');            
             $data['img_url'] = '/storage/app/public/' .$filePath;            
@@ -269,23 +282,21 @@ class SomProjectsAirportController extends AppBaseController
         $data['id'] = $id;
         $data['countries'] = array();
         $somCountries = $this->somCountryRepository->all();
-        $cnt = 0;
-        $data['countries'][$cnt] = "Please select a Country";
         foreach ($somCountries as $somCountry) {
-            // $cnt ++;
-            $data['countries'][$somCountry->country] = $somCountry->country;
+            $data['countries'][$somCountry->id] = $somCountry->country;
         }     
 
         $data['airport_types'] = array();
         $airport_types = $this->somProjectsAirportTypeRepository->all();
-        $cnt = 0;   
-        $data['airport_types'][$cnt] = "Please select a Type of airport";
         foreach ($airport_types as $airport_type) {
-            $cnt ++;
             $data['airport_types'][$airport_type->id] = $airport_type->name;
         }
 
-        $data['selected_country'] = $somProjectsAirport->country;
+        $selected_country_id = 0;
+        if(!empty($somProjectsAirport->som_country_id)){
+            $selected_country_id = $somProjectsAirport->som_country_id;
+        }
+        $data['selected_country'] = $selected_country_id;
         $data['selected_airport'] = $somProjectsAirport->som_projects_airport_type_id;
         
         // $data['somProjectsAirport'] = $somProjectsAirport;
@@ -313,6 +324,20 @@ class SomProjectsAirportController extends AppBaseController
         }
 
         $somProjectsAirport = $this->somProjectsAirportRepository->update($request->all(), $id);
+
+        $data = array();
+        if($request->file()) {
+            $this->validate($request, [
+                'file' => 'mimes:jpeg,jpg,png,gif', //only allow this type extension file.
+            ]);
+
+            $fileName = time().'_'.$request->file->getClientOriginalName();
+            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');            
+            $data['img_url'] = '/storage/app/public/' .$filePath; 
+            $this->somProjectsAirportRepository->updateData($id, $data);           
+        }     
+
+        
 
         Flash::success('Som Projects Airport updated successfully.');
 

@@ -86,6 +86,12 @@ class SomProjectsAirportRepository extends BaseRepository
             ->insert($data);
     }
 
+    public function updateData($id, $data){
+        return $this->makeModel()
+            ->where('id', $id)
+            ->update($data);
+    }
+
     public function getCountByCountryId($country_id){
         return $this->makeModel()
             ->where('som_country_id', $country_id)

@@ -21,9 +21,7 @@
 
             <div class="card-body">
 
-                <div class="row">
                     @include('som_form_elements.fields')
-                </div>
 
             </div>
 
@@ -31,7 +29,6 @@
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
                 <a href="{{ route('somFormElements.index',['somforms_id'=>$somforms_id]) }}" class="btn btn-default">Cancel</a>
             </div>
-
             {!! Form::close() !!}
 
         </div>

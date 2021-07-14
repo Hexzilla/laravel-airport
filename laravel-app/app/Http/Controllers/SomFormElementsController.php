@@ -10,6 +10,7 @@ use App\Repositories\cmsPrivilegesRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Models\SomFormElements;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Flash;
 use Response;
 
@@ -61,34 +62,25 @@ class SomFormElementsController extends AppBaseController
         $somFormElements->som_forms_id = $somforms_id;
         $somFormElements->order = 1;
         $somFormElements->som_status_id = 0;
-        $arrType[] = 'Please select a Type';
-        $arrType = $arrType + config( 'constants.taskTypes');
-        
+
         $arrRole = array();
         $arrRole[] = 'Please select a Privilege';
-        $RoleRows = $this->cmsPrivilegesRepository->all([], null, null, ['id', 'name'])->toArray();
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $filter = array($roleEditor, $roleLegal ,$roleFinance);
+        $RoleRows = $this->cmsPrivilegesRepository->find($filter)->toArray();
         foreach($RoleRows as $row)
         {
             $arrRole[$row['id']] = $row['name'];
         }
 
-        $arrDepart = array();
-        $arrDepart[] = 'Please select a Department';
-        // $DepartRows = $this->somDepartmentsRepository->all([], null, null, ['id','name'])->toArray();
-        // foreach($DepartRows as $row)
-        // {
-        //     $arrDepart[$row['id']] = $row['name'];
-        // }
-
-        $elementTypes[] = 'Please select a Element type';
+        $elementTypes['-1'] = 'Please select a Element type';
         $elementTypes = $elementTypes + config('constants.elementTypes');
         return view('som_form_elements.create')
                 ->with('somforms_id', $somforms_id)
-                ->with('arrType', $arrType)
                 ->with('arrRole', $arrRole )
-                ->with('arrDepart', $arrDepart)
                 ->with('elementTypes', $elementTypes)
-                ->with('selectedRolId', 0)
                 ->with('somFormElements', $somFormElements );
     }
 
@@ -150,26 +142,27 @@ class SomFormElementsController extends AppBaseController
         }
 
         $somforms_id = $somFormElements->som_forms_id;
-        $somFormElementsArray = $somFormElements->toArray();
-        $selectedRolId = $somFormElementsArray['cms_privileges_role_id'];
 
-        $cmsPrivilegesRoles  = array();
-        $cmsPrivilegesRoles= $this->cmsPrivilegesRolesRepository->all();
-        $rolIds[] = '**Please Select a Cms Privileges Role';
-        foreach($cmsPrivilegesRoles->toArray() as $rows)
+        $arrRole = array();
+        $arrRole[] = 'Please select a Privilege';
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $filter = array($roleEditor, $roleLegal ,$roleFinance);
+        $RoleRows = $this->cmsPrivilegesRepository->find($filter)->toArray();
+        foreach($RoleRows as $row)
         {
-            $rolIds[$rows['id']] = $rows['id'];
+            $arrRole[$row['id']] = $row['name'];
         }
 
-        $elementTypes[] = '**Please Select a Element type';
+        $elementTypes['-1'] = 'Please select a Element type';
         $elementTypes = $elementTypes + config('constants.elementTypes');
 
         return view('som_form_elements.edit')
             ->with('somforms_id', $somforms_id)
             ->with('somFormElements', $somFormElements)
             ->with('elementTypes', $elementTypes)
-            ->with('arrRole', $rolIds)
-            ->with('selectedRolId', $selectedRolId);
+            ->with('arrRole', $RoleRows);
     }
 
     /**

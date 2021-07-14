@@ -11,6 +11,7 @@
     }
 }
 </style>
+{!! Form::hidden('som_forms_id', $somforms_id, []) !!}
 <div class="form-group row">
     <div class="col-sm-3 col-form-label text-sm-right">
         {!! Form::label('name', 'Name') !!}
@@ -72,7 +73,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-9">
-    {!! Form::select('cms_privileges_role_id', $arrRole, $selectedRolId, ['class' => 'form-control']) !!}
+    {!! Form::select('cms_privileges_role_id', $arrRole, $somFormElements->cms_privileges_role_id, ['class' => 'form-control']) !!}
     </div>
 </div>
 
