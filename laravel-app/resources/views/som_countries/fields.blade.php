@@ -3,7 +3,7 @@
         width: 468px;
         height: 350px;
     }
-    .pac-container { z-index: 100000 !important; } 
+    .pac-container { z-index: 100000 !important; }
     #searchmap{
         width: 220px;
         margin-top: 10px;
@@ -32,7 +32,7 @@
         <span class="required">*</span>
     </div>
     <div class="col-sm-10">
-        {!! Form::text('country', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}        
+        {!! Form::text('country', null, ['class' => 'form-control','maxlength' => 45,'maxlength' => 45]) !!}
     </div>
 </div>
 
@@ -178,12 +178,12 @@
             <div class="modal-header">
                 <span>Browse Map</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>                    
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="locationModalBody">
                 <div>
-                    <div class="form-group row">                        
+                    <div class="form-group row">
                         <div class="col-md-12">
                             <input type="text" class="form-control" id="searchmap" style="display:none;">
                             <div id="map-canvas"></div>
@@ -213,7 +213,7 @@ $(document).on('click', '#browse_map', function(event) {
     $("#current_country_code").val($("#country_code").val());
     $("#current_country_name").val($("#country").val());
     $('#locationModal').modal("show");
-    
+
 });
 
 function set_location(){
@@ -237,30 +237,32 @@ function initAutocomplete() {
         geocoder.geocode({ address: $("#country").val() })
             .then((response) => {
               const position = response.results[0].geometry.location;
-              map.setCenter(position);              
+              map.setCenter(position);
                 selected_position = position;
                 if(marker){
                     marker.setPosition(selected_position);
-                }                
+                    if(infoWindow)
+                        infoWindow.setContent($("#country").val());
+                }
             })
             .catch((e) =>
               window.alert("Geocode was not successful for the following reason: " + e)
-            );        
+            );
     }else{
         map = new google.maps.Map(document.getElementById("map-canvas"), {
             center: { lat: init_lat, lng: init_lng },
             zoom: 4,
             mapTypeId: "roadmap",
-        });         
+        });
     }
 
     marker = new google.maps.Marker({
         position: selected_position,
         map: map,
         draggable: true
-    });        
+    });
 
-    
+
 
     // Create an info window to share between markers.
     const infoWindow = new google.maps.InfoWindow();
@@ -271,7 +273,7 @@ function initAutocomplete() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     // Bias the SearchBox results towards current map's viewport.
     map.addListener("bounds_changed", () => {
-        // searchBox.setBounds(map.getBounds());        
+        // searchBox.setBounds(map.getBounds());
     });
 
     // Listen for the event fired when the user selects a prediction and retrieve
@@ -329,7 +331,7 @@ function initAutocomplete() {
         geocoder.geocode({latLng: marker.getPosition()}
             ,function(results, status){
                 if (status == google.maps.GeocoderStatus.OK){
-                    infoWindow.setContent(results[0].formatted_address);                    
+                    infoWindow.setContent(results[0].formatted_address);
 
                     for (var i = 0; i < results[0].address_components.length; i++) {
                         var types = results[0].address_components[i].types;
@@ -338,9 +340,9 @@ function initAutocomplete() {
                             $("#current_country_code").val(results[0].address_components[i].short_name);
                             $("#current_country_name").val(results[0].address_components[i].long_name);
                             break;
-                        }                                               
+                        }
                     }
-                } 
+                }
             }
         );
     });
