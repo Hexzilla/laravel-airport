@@ -96,13 +96,13 @@
 
 <!-- Documentation Folder Field -->
 <div class="col-sm-12">
-    {!! Form::label('documentation_folder', 'Documentation Folder:') !!}
+    {!! Form::label('documentation_folder', 'Documentation Folder Path :') !!}
     <p>{{ $somProjects->documentation_folder }}</p>
 </div>
 
 <!-- Som Status Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('som_status_id', 'Som Status Id:') !!}
+    {!! Form::label('som_status_id', 'Status:') !!}
     <p>{{ $somProjects->som_status_id }}</p>
 </div>
 

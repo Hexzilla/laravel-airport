@@ -1,7 +1,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name :') !!}
-    {!! Form::text('name', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('name',$somProjects->name ?? null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
 <!-- Img Url Field -->
@@ -12,92 +12,92 @@
 
 <!-- Documentation Folder Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('documentation_folder', 'Documentation Folder :') !!}
-    {!! Form::text('documentation_folder', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
+    {!! Form::label('documentation_folder', 'Documentation Folder Path:') !!}
+    {!! Form::text('documentation_folder', $somProjects->documentation_folder ?? null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <div class="form-group col-sm-6">
-    {!! Form::Label('som_status_id', 'Som Status :') !!}
-    {!! Form::select('som_status_id',$SomStatus,null, ['class' => 'form-control required']) !!}
+    {!! Form::Label('som_status_id', 'Status :') !!}
+    {!! Form::select('som_status_id',$SomStatus,$somProjects->som_status_id ?? null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Description -->
 <div class="form-group col-sm-6">
     {!! Form::label('sub_name', 'Sub Name :') !!}
-    {!! Form::text('sub_name', null, ['class' => 'form-control required','maxlength' => 1000,'maxlength' => 1000]) !!}
+    {!! Form::text('sub_name', $somProjects->sub_name ?? null, ['class' => 'form-control required','maxlength' => 1000,'maxlength' => 1000]) !!}
 </div>
 
 <!-- Som Projects Airport Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_projects_airport_id', 'Som Projects Airport :') !!}
-    {!! Form::select('som_projects_airport_id', $SomProjectsAirport,null, ['class' => 'form-control required']) !!}
+    {!! Form::label('som_projects_airport_id', 'Airport :') !!}
+    {!! Form::select('som_projects_airport_id', $SomProjectsAirport,$somProjects->som_projects_airport_id ?? null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Som Country Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_country_id', 'Som Country :') !!}
-    {!! Form::select('som_country_id', $SomCountry,null,['class' => 'form-control required']) !!}
+    {!! Form::label('som_country_id', 'Country :') !!}
+    {!! Form::select('som_country_id', $SomCountry,$somProjects->som_country_id ?? null,['class' => 'form-control required']) !!}
 </div>
 
 <!-- Grantor Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('grantor', 'Grantor :') !!}
-    {!! Form::text('grantor', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('grantor', $somProjects->grantor ?? null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 <!--TODO MISSING transaction type-->
 <!-- Email Legal Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('email_legal', 'Email Legal :') !!}
-    {!! Form::text('email_legal', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
+    {!! Form::text('email_legal', $somProjects->email_legal ?? null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <!-- Email Finance Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('email_finance', 'Email Finance :') !!}
-    {!! Form::text('email_finance', null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
+    {!! Form::text('email_finance', $somProjects->email_finance ?? null, ['class' => 'form-control required','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
 <!-- Som Project Process Type Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_project_process_type_id', 'Som Project Process Type:') !!}
-    {!! Form::select('som_project_process_type_id', $SomProjectProcessType,null, ['class' => 'form-control required']) !!}
+    {!! Form::label('som_project_process_type_id', 'Process Type:') !!}
+    {!! Form::select('som_project_process_type_id', $SomProjectProcessType,$somProjects->som_project_process_type_id ?? null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Som Projects Asset Type Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('som_projects_asset_type_id', 'Som Projects Asset Type :') !!}
-    {!! Form::select('som_projects_asset_type_id',$SomProjectsAssetType,null, ['class' => 'form-control required']) !!}
+    {!! Form::label('som_projects_asset_type_id', 'Asset Type :') !!}
+    {!! Form::select('som_projects_asset_type_id',$SomProjectsAssetType,$somProjects->som_projects_asset_type_id ?? null, ['class' => 'form-control required']) !!}
 </div>
 
 <!-- Equity Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('equity', 'Equity :') !!}
-    {!! Form::number('equity', null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
+    {!! Form::number('equity', $somProjects->equity ?? null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
 </div>
 
 <!-- Percentage Participation Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('percentage_participation', 'Percentage Participation :') !!}
-    {!! Form::number('percentage_participation', null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
+    {!! Form::number('percentage_participation', $somProjects->percentage_participation ?? null, ['class' => 'form-control required','min'=>0,'max'=>1000]) !!}
 </div>
 
 <!-- Bid Presentation Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('bid_presentation_date', 'Bid Presentation Date :') !!}
-    {!! Form::text('bid_presentation_date', null, ['class' => 'form-control required','id'=>'bid_presentation_date']) !!}
+    {!! Form::text('bid_presentation_date', $somProjects->bid_presentation_date ?? null, ['class' => 'form-control required','id'=>'bid_presentation_date']) !!}
 </div>
 
 <!--TODO start execution date field? -->
 <!-- Concession Date Start Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('concession_date_start', 'Concession Date Start :') !!}
-    {!! Form::text('concession_date_start', null, ['class' => 'form-control required','id'=>'concession_date_start']) !!}
+    {!! Form::text('concession_date_start', $somProjects->concession_date_start ?? null, ['class' => 'form-control required','id'=>'concession_date_start']) !!}
 </div>
 <!--TODO concession duration? -->
 <!-- Contract Scope Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('contract_scope', 'Contract Scope :') !!}
-    {!! Form::text('contract_scope', null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
+    {!! Form::text('contract_scope', $somProjects->contract_scope ?? null, ['class' => 'form-control required','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
 
