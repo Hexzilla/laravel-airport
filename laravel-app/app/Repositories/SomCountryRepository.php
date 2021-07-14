@@ -60,4 +60,10 @@ class SomCountryRepository extends BaseRepository
         return $this->makeModel()
             ->insert($data);
     }
+
+    public function getCountByCountryCode($country_code){
+        return $this->makeModel()
+            ->where('country_code', $country_code)
+            ->count();
+    }
 }

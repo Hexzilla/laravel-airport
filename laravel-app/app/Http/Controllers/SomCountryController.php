@@ -58,7 +58,7 @@ class SomCountryController extends AppBaseController
         $data = array();
         $data['id'] = $max_id+1;
         
-        $items = array(1,2,3,4,5);
+        $items = array('0' => '0', '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5',);
 
         return view('som_countries.create')->with('data', $data)->with('items', $items);
     }
@@ -81,6 +81,13 @@ class SomCountryController extends AppBaseController
         if(!empty($request->input('country_code'))){
             $data['country_code'] = $request->input('country_code');
         }
+
+        $countCountry = $this->somCountryRepository->getCountByCountryCode($request->input('country_code'));
+        if($countCountry>0){
+            Flash::error('Som Country already exist.');
+            return redirect(route('somCountries.index'));
+        }
+
         if(!empty($request->input('country'))){
             $data['country'] = $request->input('country');
         }
@@ -167,7 +174,8 @@ class SomCountryController extends AppBaseController
 
             return redirect(route('somCountries.index'));
         }
-        $items = array(1,2,3,4,5);
+        
+        $items = array('0' => '0', '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5',);
 
         return view('som_countries.edit')->with('somCountry', $somCountry)->with('data',$data)->with('items', $items);
     }
@@ -187,6 +195,12 @@ class SomCountryController extends AppBaseController
         if (empty($somCountry)) {
             Flash::error('Som Country not found');
 
+            return redirect(route('somCountries.index'));
+        }
+
+        $countCountry = $this->somCountryRepository->getCountByCountryCode($request->input('country_code'));
+        if($countCountry>0){
+            Flash::error('Som Country already exist.');
             return redirect(route('somCountries.index'));
         }
 

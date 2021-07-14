@@ -3,7 +3,7 @@
         width: 468px;
         height: 350px;
     }
-    .pac-container { z-index: 100000 !important; }
+    .pac-container { z-index: 100000 !important; } 
     #searchmap{
         width: 220px;
         margin-top: 10px;
@@ -36,8 +36,8 @@
     </div>
 </div>
 
-<input type="hidden" id="lat" name="lat" >
-<input type="hidden" id="long" name="long" >
+{!! Form::hidden('lat', null, ['class' => 'form-control','id' => 'lat','maxlength' => 245,'maxlength' => 245]) !!}
+{!! Form::hidden('long', null, ['class' => 'form-control','id' => 'long','maxlength' => 245,'maxlength' => 245]) !!}
 
 <!-- Som Country Id Field -->
 <div class="form-group row">
@@ -395,12 +395,12 @@
             <div class="modal-header">
                 <span>Browse Map</span>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>                    
                 </button>
             </div>
             <div class="modal-body" id="locationModalBody">
                 <div>
-                    <div class="form-group row">
+                    <div class="form-group row">                        
                         <div class="col-md-12">
                             <input type="text" class="form-control" id="searchmap" style="display:none;">
                             <div id="map-canvas"></div>
@@ -433,8 +433,11 @@
 <script>
 $(document).on('click', '#browse_map', function(event) {
     event.preventDefault();
+    $("#current_location").val($("#address").val());
+    $("#current_lat").val($("#lat").val());
+    $("#current_lng").val($("#long").val());
     $('#locationModal').modal("show");
-
+    
 });
 
 function formatCountry(){
@@ -443,7 +446,7 @@ function formatCountry(){
     $("#country").val(countries[som_country_id]);
 }
 
-function set_location(){
+function set_location(){    
     $("#address").val($("#current_location").val());
     $("#lat").val($("#current_lat").val());
     $("#long").val($("#current_lng").val());
@@ -452,16 +455,24 @@ function set_location(){
 
 function initAutocomplete() {
     $("#searchmap").css("display","block");
+    var init_lat = 0;//-33.8688;
+    var init_lng= 0;//151.2195;
+    if($("#lat").val()){
+        init_lat = 1*$("#lat").val();
+    }    
+    if($("#long").val()){
+        init_lng = 1*$("#long").val();
+    }
     const map = new google.maps.Map(document.getElementById("map-canvas"), {
-        center: { lat: -33.8688, lng: 151.2195 },
-        zoom: 13,
+        center: { lat: init_lat, lng: init_lng },
+        zoom: 4,
         mapTypeId: "roadmap",
     });
 
     var marker = new google.maps.Marker({
         position: {
-            lat: -33.8688,
-            lng: 151.2195
+            lat: init_lat,
+            lng: init_lng
         },
         map: map,
         draggable: true
@@ -476,7 +487,7 @@ function initAutocomplete() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     // Bias the SearchBox results towards current map's viewport.
     map.addListener("bounds_changed", () => {
-        // searchBox.setBounds(map.getBounds());
+        // searchBox.setBounds(map.getBounds());        
     });
 
     // Listen for the event fired when the user selects a prediction and retrieve
@@ -545,9 +556,9 @@ function initAutocomplete() {
                     //     if(types.indexOf("country")>=0){
                     //         console.log("country code"+i+":"+results[0].address_components[i].short_name);//long_name
                     //         break;
-                    //     }
+                    //     }                                               
                     // }
-                }
+                } 
             }
         );
 
