@@ -1,0 +1,14 @@
+{
+	"version": 3,
+	"file": "scss/style-back.css",
+	"sources": [
+		"scss/style-back.scss",
+		"scss/style-variables.scss"
+	],
+	"sourcesContent": [
+		"@import 'style-variables';\r\n\r\n.user-panel{\r\n    display: none;\r\n}\r\n\r\n.picker_colum{\r\n    width: 12px;\r\n    height: 12px;\r\n    border-radius: 10px;\r\n}\r\n\r\n.image_view{\r\n    width: auto;\r\n    height: 50px;\r\n    border-radius: 10px;\r\n}\r\n\r\n.fa-check{\r\n    color: green;\r\n}\r\n\r\n.fa-times{\r\n    color: red;\r\n}",
+		"@import url(\"//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css\");\r\n\r\n/* FRONT COLORS */\r\n$green-corp:#76AC1C;\r\n$yellow-corp: #FFCC00;\r\n$red-corp: red;\r\n$enabled-color:white;\r\n$disabled-color:gray;\r\n$blue-trans-background: rgba(0, 32, 60, 0.83);\r\n$blue-icons: #004f94;\r\n$animation-time: .2s;\r\n\r\n$break-small: 320px;\r\n$break-medium: 768px;\r\n$break-large: 1200px;\r\n\r\n/* SIZES */\r\n$top-page-padding: 20px;\r\n$left-page-padding:30px;\r\n\r\n\r\n\r\n"
+	],
+	"mappings": "ACAA,OAAO,CAAC,iFAAI;AAEZ,kBAAkB;AAclB,WAAW;;ADdX,AAAA,WAAW,CAAA;EACP,OAAO,EAAE,IAAK;CACjB;;;AAED,AAAA,aAAa,CAAA;EACT,KAAK,EAAE,IAAK;EACZ,MAAM,EAAE,IAAK;EACb,aAAa,EAAE,IAAK;CACvB;;;AAED,AAAA,WAAW,CAAA;EACP,KAAK,EAAE,IAAK;EACZ,MAAM,EAAE,IAAK;EACb,aAAa,EAAE,IAAK;CACvB;;;AAED,AAAA,SAAS,CAAA;EACL,KAAK,EAAE,KAAM;CAChB;;;AAED,AAAA,SAAS,CAAA;EACL,KAAK,EAAE,GAAI;CACd",
+	"names": []
+}

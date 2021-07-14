@@ -1,0 +1,1247 @@
+@import 'style-mixins';
+
+//colors
+$color_steel_blue_approx: #307bbb;
+$color_celeste_approx: #656565;
+$color_wild_sand_approx: rgba(26, 39, 50, 0.9803921568627451);
+$color_apple_approx: $green-corp;
+
+//@extend-elements
+//original selectors
+//.pie, .c100 .bar, .c100.p51 .fill, .c100.p52 .fill, .c100.p53 .fill, .c100.p54 .fill, .c100.p55 .fill, .c100.p56 .fill, .c100.p57 .fill, .c100.p58 .fill, .c100.p59 .fill, .c100.p60 .fill, .c100.p61 .fill, .c100.p62 .fill, .c100.p63 .fill, .c100.p64 .fill, .c100.p65 .fill, .c100.p66 .fill, .c100.p67 .fill, .c100.p68 .fill, .c100.p69 .fill, .c100.p70 .fill, .c100.p71 .fill, .c100.p72 .fill, .c100.p73 .fill, .c100.p74 .fill, .c100.p75 .fill, .c100.p76 .fill, .c100.p77 .fill, .c100.p78 .fill, .c100.p79 .fill, .c100.p80 .fill, .c100.p81 .fill, .c100.p82 .fill, .c100.p83 .fill, .c100.p84 .fill, .c100.p85 .fill, .c100.p86 .fill, .c100.p87 .fill, .c100.p88 .fill, .c100.p89 .fill, .c100.p90 .fill, .c100.p91 .fill, .c100.p92 .fill, .c100.p93 .fill, .c100.p94 .fill, .c100.p95 .fill, .c100.p96 .fill, .c100.p97 .fill, .c100.p98 .fill, .c100.p99 .fill, .c100.p100 .fill
+%extend_1 {
+	position: absolute;
+	border: 0.08em solid $color_steel_blue_approx;
+	width: 0.84em;
+	height: 0.84em;
+	clip: rect(0em, 0.5em, 1em, 0);
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 50%;
+	//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+	transform: rotate(0deg);
+}
+
+
+.rect-auto {
+	clip: rect(auto, auto, auto, auto);
+}
+.c100 {
+	position: relative;
+	font-size: 120px;
+	width: 1em;
+	height: 1em;
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 50%;
+	float: left;
+	margin: 0 0.1em 0.1em 0;
+	background-color: $color_celeste_approx;
+	&.p51 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(183.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p52 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(187.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p53 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(190.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p54 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(194.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p55 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(198deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p56 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(201.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p57 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(205.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p58 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(208.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p59 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(212.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p60 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(216deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p61 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(219.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p62 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(223.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p63 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(226.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p64 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(230.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p65 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(234deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p66 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(237.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p67 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(241.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p68 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(244.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p69 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(248.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p70 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(252deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p71 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(255.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p72 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(259.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p73 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(262.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p74 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(266.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p75 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(270deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p76 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(273.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p77 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(277.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p78 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(280.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p79 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(284.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p80 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(288deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p81 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(291.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p82 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(295.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p83 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(298.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p84 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(302.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p85 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(306deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p86 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(309.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p87 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(313.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p88 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(316.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p89 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(320.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p90 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(324deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p91 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(327.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p92 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(331.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p93 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(334.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p94 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(338.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p95 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(342deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p96 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(345.6deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p97 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(349.2deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p98 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(352.8deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p99 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(356.4deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	&.p100 {
+		.slice {
+			clip: rect(auto, auto, auto, auto);
+		}
+		.fill {
+			@extend %extend_1;
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(180deg);
+		}
+		.bar {
+			//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+			transform: rotate(360deg);
+			&:after {
+				//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+				transform: rotate(180deg);
+			}
+		}
+	}
+	.bar {
+		@extend %extend_1;
+	}
+	* {
+		//Instead of the line below you could use @include box-sizing($bs)
+		box-sizing: content-box;
+		&:before {
+			//Instead of the line below you could use @include box-sizing($bs)
+			box-sizing: content-box;
+		}
+		&:after {
+			//Instead of the line below you could use @include box-sizing($bs)
+			box-sizing: content-box;
+		}
+	}
+	&.center {
+		float: none;
+		margin: 0 auto;
+	}
+	&.big {
+		font-size: 240px;
+	}
+	&.small {
+		font-size: 80px;
+	}
+	> span {
+		position: absolute;
+		width: 100%;
+		z-index: 1;
+		left: 0;
+		top: 31px;
+		// width: 5em;
+		// line-height: 5em;
+    font-size: 22px;
+    font-weight: bold;
+		color: white;
+		display: block;
+		text-align: center;
+		white-space: nowrap;
+		//Instead of the line below you could use @include transition-property($property-1, $property-2, $property-3, $property-4, $property-5, $property-6, $property-7, $property-8, $property-9, $property-10)
+		transition-property: all;
+		//Instead of the line below you could use @include transition-duration($duration-1, $duration-2, $duration-3, $duration-4, $duration-5, $duration-6, $duration-7, $duration-8, $duration-9, $duration-10)
+		transition-duration: 0.2s;
+		//Instead of the line below you could use @include transition-timing-function($function-1, $function-2, $function-3, $function-4, $function-5, $function-6, $function-7, $function-8, $function-9, $function-10)
+		transition-timing-function: ease-out;
+	}
+	&:after {
+		position: absolute;
+		top: 0.08em;
+		left: 0.08em;
+		display: block;
+		content: " ";
+		//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+		border-radius: 50%;
+		background-color: $color_wild_sand_approx;
+		width: 0.84em;
+		height: 0.84em;
+		//Instead of the line below you could use @include transition-property($property-1, $property-2, $property-3, $property-4, $property-5, $property-6, $property-7, $property-8, $property-9, $property-10)
+		transition-property: all;
+		//Instead of the line below you could use @include transition-duration($duration-1, $duration-2, $duration-3, $duration-4, $duration-5, $duration-6, $duration-7, $duration-8, $duration-9, $duration-10)
+		transition-duration: 0.2s;
+		//Instead of the line below you could use @include transition-timing-function($function-1, $function-2, $function-3, $function-4, $function-5, $function-6, $function-7, $function-8, $function-9, $function-10)
+		transition-timing-function: ease-in;
+	}
+	.slice {
+		position: absolute;
+		width: 1em;
+		height: 1em;
+		clip: rect(0em, 1em, 1em, 0.5em);
+	}
+	&:hover {
+		cursor: default;
+		> span {     
+			font-size: 26px;
+			color: $color_steel_blue_approx;
+		}
+		&:after {
+			top: 0.04em;
+			left: 0.04em;
+			width: 0.92em;
+			height: 0.92em;
+		}
+	}
+	&.green-chart {
+    float: none;
+    margin: 0 auto;
+		.bar {
+			border-color: $color_apple_approx !important;
+		}
+		.fill {
+			border-color: $color_apple_approx !important;
+		}
+		&:hover > span {
+			color: $color_apple_approx;
+    }
+    span.top {
+      top: 13px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+	}
+	&.p1 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(3.6deg);
+	}
+	&.p2 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(7.2deg);
+	}
+	&.p3 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(10.8deg);
+	}
+	&.p4 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(14.4deg);
+	}
+	&.p5 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(18deg);
+	}
+	&.p6 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(21.6deg);
+	}
+	&.p7 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(25.2deg);
+	}
+	&.p8 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(28.8deg);
+	}
+	&.p9 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(32.4deg);
+	}
+	&.p10 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(36deg);
+	}
+	&.p11 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(39.6deg);
+	}
+	&.p12 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(43.2deg);
+	}
+	&.p13 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(46.8deg);
+	}
+	&.p14 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(50.4deg);
+	}
+	&.p15 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(54deg);
+	}
+	&.p16 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(57.6deg);
+	}
+	&.p17 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(61.2deg);
+	}
+	&.p18 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(64.8deg);
+	}
+	&.p19 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(68.4deg);
+	}
+	&.p20 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(72deg);
+	}
+	&.p21 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(75.6deg);
+	}
+	&.p22 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(79.2deg);
+	}
+	&.p23 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(82.8deg);
+	}
+	&.p24 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(86.4deg);
+	}
+	&.p25 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(90deg);
+	}
+	&.p26 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(93.6deg);
+	}
+	&.p27 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(97.2deg);
+	}
+	&.p28 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(100.8deg);
+	}
+	&.p29 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(104.4deg);
+	}
+	&.p30 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(108deg);
+	}
+	&.p31 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(111.6deg);
+	}
+	&.p32 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(115.2deg);
+	}
+	&.p33 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(118.8deg);
+	}
+	&.p34 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(122.4deg);
+	}
+	&.p35 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(126deg);
+	}
+	&.p36 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(129.6deg);
+	}
+	&.p37 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(133.2deg);
+	}
+	&.p38 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(136.8deg);
+	}
+	&.p39 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(140.4deg);
+	}
+	&.p40 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(144deg);
+	}
+	&.p41 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(147.6deg);
+	}
+	&.p42 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(151.2deg);
+	}
+	&.p43 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(154.8deg);
+	}
+	&.p44 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(158.4deg);
+	}
+	&.p45 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(162deg);
+	}
+	&.p46 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(165.6deg);
+	}
+	&.p47 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(169.2deg);
+	}
+	&.p48 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(172.8deg);
+	}
+	&.p49 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(176.4deg);
+	}
+	&.p50 .bar {
+		//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+		transform: rotate(180deg);
+	}
+}
+.pie {
+	@extend %extend_1;
+}
+.pie-fill {
+	//Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+	transform: rotate(180deg);
+}
