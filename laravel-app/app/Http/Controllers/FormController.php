@@ -11,7 +11,6 @@ use Adldap\Laravel\Facades\Adldap;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Utils\CRUDBooster;
 
 use Office365\PHP\Client\Runtime\Auth\AuthenticationContext;
 use Office365\PHP\Client\SharePoint\ClientContext;
@@ -24,6 +23,7 @@ use App\Http\Utils\SomLogger;
 use App\Http\Utils\Operation;
 use App\Http\Utils\UserPrivileges;
 use App\Http\Utils\ViewModelPrivilege;
+use CRUDBooster;
 
 class FormController extends Controller
 {
@@ -37,8 +37,6 @@ class FormController extends Controller
     {
         //check if user is logged
         $user_id = Auth::id();
-        echo var_dump($user_id);
-        die();
 
         if ($user_id == null || $user_id == '') {
             $urlactual = \URL::full();
@@ -63,9 +61,11 @@ class FormController extends Controller
                         left join som_projects_airport a on a.id = p.som_projects_airport_id
                         where f.id=:form_id and f.active=1";
 
-        $projectFormInfo = DB::select(DB::raw($queryValues), array('form_id' => $id));
 
         //If not found project info return to Home
+        $projectFormInfo = DB::select(DB::raw($queryValues), array('form_id' => $id));
+        echo var_dump($projectFormInfo);
+        die();
         if ($projectFormInfo == null) {
             SomLogger::error("ERR1007", 'Form Info not found');
             return redirect('home');

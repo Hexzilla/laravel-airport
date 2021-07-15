@@ -1012,7 +1012,7 @@ class CRUDBooster
         return true;
     }
 
-    public static function sendFCM($regID = [], $data)
+    public static function sendFCM($regID, $data)
     {
         if (!$data['title'] || !$data['content']) return 'title , content null !';
 
