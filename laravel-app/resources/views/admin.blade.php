@@ -8,3 +8,14 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+            loadPProjectInfo()
+        })
+        function loadPProjectInfo(){
+
+        }
+    </script>
+@endsection

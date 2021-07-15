@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiGetProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('encrypt/{text}', [App\Http\Controllers\EncryptController::class, 'encrypt'], function ($text) {
     return $text;
 });
+
+Route::get('/get_project/{id}', ApiGetProjectController::class, 'index')->name('get_project');
