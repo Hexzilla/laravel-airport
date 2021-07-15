@@ -35,27 +35,20 @@ class FormController extends Controller
      */
     public function load($id)
     {
-
         //check if user is logged
-        $user=Auth::user();
-        $user_id=Auth::id();
-
-        echo var_dump($user);
+        $user_id = Auth::id();
         echo var_dump($user_id);
         die();
 
-        if($user_id==null || $user_id=='') {
-            //TODO: Figure out this redirect...
-            //$urlactual =\URL::full();
-            //return redirect(CRUDBooster::adminPath()."/loginhome?return_url=".urlencode($urlactual));
+        if ($user_id == null || $user_id == '') {
+            $urlactual = \URL::full();
+            return redirect(CRUDBooster::adminPath() . "/loginhome?return_url=" . urlencode($urlactual));
         }
 
         $viewData['userid']     =   $user_id;
-        //$viewData['username']   =   CRUDBooster::myName();
-        //$viewData['userphoto']  =   '../'.CRUDBooster::myPhoto();
-
-
-        $viewData['formId']=$id;
+        $viewData['username']   =   CRUDBooster::myName();
+        $viewData['userphoto']  =   '../' . CRUDBooster::myPhoto();
+        $viewData['formId'] = $id;
 
         //1) Get Project Info
         $queryValues = "select p.name as project_name, c.country as project_country,
@@ -70,52 +63,40 @@ class FormController extends Controller
                         left join som_projects_airport a on a.id = p.som_projects_airport_id
                         where f.id=:form_id and f.active=1";
 
-        $projectFormInfo = DB::select(DB::raw($queryValues), array('form_id'=>$id));
+        $projectFormInfo = DB::select(DB::raw($queryValues), array('form_id' => $id));
 
         //If not found project info return to Home
-        if($projectFormInfo == null){
-            SomLogger::error("ERR1007",'Form Info not found');
+        if ($projectFormInfo == null) {
+            SomLogger::error("ERR1007", 'Form Info not found');
             return redirect('home');
         }
-        $projectFormInfo=collect($projectFormInfo)->first();
+        $projectFormInfo = collect($projectFormInfo)->first();
 
-        $viewData['project_form_info']=$projectFormInfo;
+        $viewData['project_form_info'] = $projectFormInfo;
 
-        $projectId=$projectFormInfo->project_id;
-        $viewData['projectId']=$projectId;
+        $projectId = $projectFormInfo->project_id;
+        $viewData['projectId'] = $projectId;
 
-
-
-        //$userRoleQuery = "SELECT id_cms_privileges FROM cms_users WHERE id=3";
-        //$resultUserRole = DB::select(DB::raw($userRoleQuery), array("userId"=>$user_id))->first();
-        //$resultUserRole = DB::select(DB::raw($userRoleQuery));
-        //$resultUserRole = $resultUserRole->first()
-        $userRole=(DB::table('som_project_users')
-                    ->where(
-                            [["cms_users_id","=",$user_id],
-                            ["som_projects_id","=",$projectId]]
-                        )->first()
-                  )->cms_privileges_id;
-
+        $userRole = (DB::table('som_project_users')
+            ->where(
+                [
+                    ["cms_users_id", "=", $user_id],
+                    ["som_projects_id", "=", $projectId]
+                ]
+            )->first())->cms_privileges_id;
 
         //Check if the user does not have a project role and is not SuperAdmin or SomAdmin
-        if($userRole==null) {
-            //&& CRUDBooster::myPrivilegeId() != UserPrivileges::SuperAdmin
-            //&& CRUDBooster::myPrivilegeId() != UserPrivileges::AdminInternal){
-            SomLogger::error("ERR1008",'Trying to access unauthorized form');
+        if (
+            $userRole == null
+            && CRUDBooster::myPrivilegeId() != UserPrivileges::SuperAdmin
+            && CRUDBooster::myPrivilegeId() != UserPrivileges::AdminInternal
+        ) {
+            SomLogger::error("ERR1008", 'Trying to access unauthorized form');
             return redirect('home');
         }
 
-        /*$shouldValidateRoleException = 0;
-
-        if ($userRole == UserPrivileges::Legal ||
-            $userRole == UserPrivileges::Finance){
-
-            $shouldValidateRoleException = 1;
-            }*/
-
         //2) Get Task List
-        $queryTaskList="select t.id, t.order, t.name, t.request_date as request_date, t.duedate, t.task_completion_date as completion_date,
+        $queryTaskList = "select t.id, t.order, t.name, t.request_date as request_date, t.duedate, t.task_completion_date as completion_date,
                         t.comment, t.support_doc_url as doc_url, t.support_doc_description as doc_description,
                         t.som_departments_users_id as responsible_id, t.som_departments_id as departments_id,
                         t.som_status_id as status_id,
@@ -152,35 +133,36 @@ class FormController extends Controller
                         order by t.order";
 
 
-        $taskList = DB::select(DB::raw($queryTaskList),
-                        array(
-                                'form_id'=>$id,
-                                'userRole'=>$userRole,
-                                'roleLegal_1'=>UserPrivileges::Legal,
-                                'roleFinance_1'=>UserPrivileges::Finance,
-                                'roleLegal_2'=>UserPrivileges::Legal,
-                                'roleFinance_2'=>UserPrivileges::Finance
-                            )
-                    );
+        $taskList = DB::select(
+            DB::raw($queryTaskList),
+            array(
+                'form_id' => $id,
+                'userRole' => $userRole,
+                'roleLegal_1' => UserPrivileges::Legal,
+                'roleFinance_1' => UserPrivileges::Finance,
+                'roleLegal_2' => UserPrivileges::Legal,
+                'roleFinance_2' => UserPrivileges::Finance
+            )
+        );
 
-        $viewData['task_list']=$taskList;
+        $viewData['task_list'] = $taskList;
 
-        $responsibleArray=array();
+        $responsibleArray = array();
 
         //Get Responsibles of each Department's Task
-        foreach($taskList as $task){
+        foreach ($taskList as $task) {
 
-            if($task->departments_id!=null && $task->departments_id!=0){
-                $queryResponsibles="SELECT u.id, u.name
+            if ($task->departments_id != null && $task->departments_id != 0) {
+                $queryResponsibles = "SELECT u.id, u.name
                                     FROM som_departments_users du inner join cms_users u on u.id=du.cms_users_id
                                     where du.som_departments_id = :dep_id
                                     order by u.name";
-                                    $responsibleArray[$task->id] = DB::select(DB::raw($queryResponsibles), array('dep_id'=>($task->departments_id)));
-            }else{
-                $queryResponsibles="SELECT u.id, u.name
+                $responsibleArray[$task->id] = DB::select(DB::raw($queryResponsibles), array('dep_id' => ($task->departments_id)));
+            } else {
+                $queryResponsibles = "SELECT u.id, u.name
                                     FROM cms_users u
                                     order by u.name";
-                                    $responsibleArray[$task->id] = DB::select(DB::raw($queryResponsibles));
+                $responsibleArray[$task->id] = DB::select(DB::raw($queryResponsibles));
             }
         }
 
@@ -188,11 +170,11 @@ class FormController extends Controller
 
 
         //Log::debug('Listado de responsables: '.json_encode($responsibleArray));
-        $viewData['responsibles_list']=$responsibleArray;
+        $viewData['responsibles_list'] = $responsibleArray;
 
 
         //3) Get Control Elements
-        $queryElementList="SELECT e.id, e.order_elements, e.name, e.lastupdate,
+        $queryElementList = "SELECT e.id, e.order_elements, e.name, e.lastupdate,
                             e.document as doc_url, e.doc_url_description as doc_description,
                             e.template, e.template_url_description as template_description,
                             e.comment, e.is_sub_element, e.tooltip, e.is_mandatory,
@@ -221,28 +203,19 @@ class FormController extends Controller
                             and f.active=1
                             order by e.order_elements";
 
-
-/*
-                            CASE WHEN e.cms_privileges_role_id IS NOT NULL AND :validateRoleException = 1 THEN
-                                CASE WHEN e.cms_privileges_role_id = :userRole THEN 1 ELSE 0 END
-                            ELSE
-                                0
-                            END as has_role_exception
-*/
-
-        $elementList = DB::select(DB::raw($queryElementList),
-                        array(
-                            'form_id'=>$id,
-                            'userRole'=>$userRole,
-                            'roleLegal_1'=>UserPrivileges::Legal,
-                            'roleFinance_1'=>UserPrivileges::Finance,
-                            'roleLegal_2'=>UserPrivileges::Legal,
-                            'roleFinance_2'=>UserPrivileges::Finance
-                        )
-                    );
-        $viewData['element_list']=$elementList;
+        $elementList = DB::select(
+            DB::raw($queryElementList),
+            array(
+                'form_id' => $id,
+                'userRole' => $userRole,
+                'roleLegal_1' => UserPrivileges::Legal,
+                'roleFinance_1' => UserPrivileges::Finance,
+                'roleLegal_2' => UserPrivileges::Legal,
+                'roleFinance_2' => UserPrivileges::Finance
+            )
+        );
+        $viewData['element_list'] = $elementList;
         //Log::debug('Listado de elements: '.json_encode($elementList));
-
 
         //4) Get Approvals List
         $queryApprovalList = "SELECT a.id, a.order_approval, a.name, ar.lastupdate,
@@ -257,120 +230,122 @@ class FormController extends Controller
                                 and f.active=1
                                 order by a.order_approval";
 
-        $approvalList = DB::select(DB::raw($queryApprovalList), array('form_id'=>$id));
-        $viewData['approval_list']=$approvalList;
+        $approvalList = DB::select(DB::raw($queryApprovalList), array('form_id' => $id));
+        $viewData['approval_list'] = $approvalList;
         //Log::debug('Listado de approvals: '.json_encode($approvalList));
 
-        $approvalStatusArray=array();
-        $approvalStatusActive=array();
+        $approvalStatusArray = array();
+        $approvalStatusActive = array();
 
-        $OkStatusId=(DB::table('som_status')
-                        ->where([["name","=","Done"],["type","=","approvals"]])->first())->id;
+        $OkStatusId = (DB::table('som_status')
+            ->where([["name", "=", "Done"], ["type", "=", "approvals"]])->first())->id;
 
         //Get Approval Status Info
-        foreach($approvalList as $index=>$approval){
-
-
+        foreach ($approvalList as $index => $approval) {
             //4.1) Check if Approval Switch is Active
 
             //If its first Approval
-            if($index==0){
+            if ($index == 0) {
 
                 //If is allowed for current user
-                if($approval->cms_privilege_id_assigned==null
-                    || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned)==true){
-                    //Activate current switch
-                    $approvalStatusActive[$index]=true;
-                }
-            }
-            //If its not checked
-            else if($approval->status_id == null){
-
-                $indexPrev=$index-1;
-
-                //If previous Approval is checked AND previous is not is_behaviour_review AND is allowed for current user
-                if($approvalList[$indexPrev]->status_id!=null
-                    && $approvalList[$indexPrev]->is_behaviour_review!=1
-                    && ($approval->cms_privilege_id_assigned==null
-                            || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned)==true)){
-
+                if (
+                    $approval->cms_privilege_id_assigned == null
+                    || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned) == true
+                ) {
                     //Activate current switch
                     $approvalStatusActive[$index] = true;
                 }
-                else{
+            }
+            //If its not checked
+            else if ($approval->status_id == null) {
+
+                $indexPrev = $index - 1;
+
+                //If previous Approval is checked AND previous is not is_behaviour_review AND is allowed for current user
+                if (
+                    $approvalList[$indexPrev]->status_id != null
+                    && $approvalList[$indexPrev]->is_behaviour_review != 1
+                    && ($approval->cms_privilege_id_assigned == null
+                        || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned) == true)
+                ) {
+
+                    //Activate current switch
+                    $approvalStatusActive[$index] = true;
+                } else {
                     //current switch is disabled
                     $approvalStatusActive[$index] = false;
                 }
             }
             //If its checked
-            else{
+            else {
 
-                $indexPrev=$index-1;
-                $approvalStatusActive[$index]=false;
+                $indexPrev = $index - 1;
+                $approvalStatusActive[$index] = false;
 
                 //If previous Approval is checked and is allowed for current user
-                if( $approvalList[$indexPrev]->status_id!=null
-                    && ($approval->cms_privilege_id_assigned==null
-                        || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned)==true) ){
+                if (
+                    $approvalList[$indexPrev]->status_id != null
+                    && ($approval->cms_privilege_id_assigned == null
+                        || $this->checkUserProjectPrivilege($projectId, $user_id, $approval->cms_privilege_id_assigned) == true)
+                ) {
 
                     //Activate current switch
-                    $approvalStatusActive[$index]=true;
+                    $approvalStatusActive[$index] = true;
                 }
 
                 //If its checked and its no is_behaviour_review
-                if($approval->is_behaviour_review!=1){
+                if ($approval->is_behaviour_review != 1) {
                     //Disable previous switch
-                    $approvalStatusActive[$indexPrev]=false;
+                    $approvalStatusActive[$indexPrev] = false;
                 }
-
             }
 
             //4.2) Get Available Status for current Approval
             //Log::debug('Status active: '.$approvalStatusActive[$index]);
 
-            $queryStatusApproval="SELECT sa.som_status_id as status_id, s.name
+            $queryStatusApproval = "SELECT sa.som_status_id as status_id, s.name
                                     FROM som_status_approvals sa
                                     inner join som_status s on sa.som_status_id=s.id
                                     where sa.som_approvals_responsible_id=:approval_resp_id
                                     order by sa.status_order";
 
-            $approvalStatusArray[$approval->id] = DB::select(DB::raw($queryStatusApproval), array('approval_resp_id'=>($approval->approval_resp_id)));
+            $approvalStatusArray[$approval->id] = DB::select(DB::raw($queryStatusApproval), array('approval_resp_id' => ($approval->approval_resp_id)));
         }
 
 
         //Log::debug('Listado de status de approvals: '.json_encode($approvalStatusArray));
-        $viewData['approval_status_list']=$approvalStatusArray;
-        $viewData['approval_status_active']=$approvalStatusActive;
+        $viewData['approval_status_list'] = $approvalStatusArray;
+        $viewData['approval_status_active'] = $approvalStatusActive;
         //Log::debug('Listado de status activados: '.json_encode($approvalStatusActive));
 
         //5) Get Previous and Next Milestones
-        $queryMilestones="select f.id, phm.name
+        $queryMilestones = "select f.id, phm.name
                             from som_forms f inner join som_phases_milestones phm on phm.id=f.som_phases_milestones_id
                             inner join som_projects_phases pph on phm.som_projects_phases_id=pph.id
                             where pph.som_projects_id=:project_id
                             and f.active=1
                             order by pph.order, phm.order";
 
-        $milestonesList= DB::select(DB::raw($queryMilestones), array('project_id'=>$projectFormInfo->project_id));
+        $milestonesList = DB::select(DB::raw($queryMilestones), array('project_id' => $projectFormInfo->project_id));
 
         //Log::debug('Listado de milestones: '.json_encode($milestonesList));
 
         $i = 0;
-        $milestoneSize=count($milestonesList);
+        $milestoneSize = count($milestonesList);
 
-        foreach($milestonesList as $milestone){
+        foreach ($milestonesList as $milestone) {
 
             //Si es Milestone Actual
-            if($milestone->id == $id){
+            if ($milestone->id == $id) {
 
                 //Si no es el primero
-                if($i>0){
-                    $viewData['prev_milestone']=$milestonesList[$i-1];
+                if ($i > 0) {
+                    $viewData['prev_milestone'] = $milestonesList[$i - 1];
                 }
 
                 //Si no es el ultimo
-                if( $i < $milestoneSize-1 ){
-                    $viewData['next_milestone']=$milestonesList[$i+1];
+                if ($i < $milestoneSize - 1) {
+                    $viewData['next_milestone'] = $milestonesList[$i + 1];
                 }
             }
 
@@ -379,24 +354,22 @@ class FormController extends Controller
 
 
         //Check Privileges
-        $viewData['taskEditAllowed']=$this->isAllowed('task', $taskList[0]->id, Operation::ValidateAccess);
-        $viewData['elementEditAllowed']=$this->isAllowed('element', $elementList[0]->id, Operation::ValidateAccess);
-        $viewData['approvalEditAllowed']=$this->isAllowed('approval', $approvalList[0]->id, Operation::Edit);
+        $viewData['taskEditAllowed'] = $this->isAllowed('task', $taskList[0]->id, Operation::ValidateAccess);
+        $viewData['elementEditAllowed'] = $this->isAllowed('element', $elementList[0]->id, Operation::ValidateAccess);
+        $viewData['approvalEditAllowed'] = $this->isAllowed('approval', $approvalList[0]->id, Operation::Edit);
 
         return view('form', $viewData);
     }
 
+    public function findUser(Request $request)
+    {
 
-
-
-    public function findUser(Request $request){
-
-        try{
+        try {
 
             $term = $request->input('search_term');
             $searchAll = true;
 
-            if (strpos($term, ' ')){
+            if (strpos($term, ' ')) {
                 $searchAll = false;
             }
 
@@ -408,10 +381,10 @@ class FormController extends Controller
                 ->where('userprincipalname', '*')
                 ->where('userprincipalname', 'contains', '@');
 
-            if ($searchAll){
+            if ($searchAll) {
                 $queryLdap->orWhere('userprincipalname', 'contains', $term)->orWhere('displayname', 'contains', $term);
-            }else{
-                foreach (explode(" ", $term) as $t){
+            } else {
+                foreach (explode(" ", $term) as $t) {
                     $queryLdap->where('displayname', 'contains', $t);
                 }
             }
@@ -422,16 +395,15 @@ class FormController extends Controller
             foreach ($queryResults as $u) {
 
                 $user = [
-                    'id'=> $u['userprincipalname'][0],
-                    'text'=> $u['displayname'][0]
+                    'id' => $u['userprincipalname'][0],
+                    'text' => $u['displayname'][0]
                 ];
-                array_push($users,$user);
+                array_push($users, $user);
             }
 
             return $users;
-
         } catch (\Exception $e) {
-            $resultRQ['api_http']=500;
+            $resultRQ['api_http'] = 500;
             $resultRQ['api_status'] = "KO";
             $resultRQ['api_message'] = "No valid request!";
         }
@@ -440,75 +412,67 @@ class FormController extends Controller
     /**
      * Recieve the form saveConsulted submission
      */
-    public function saveConsulted(Request $request){
+    public function saveConsulted(Request $request)
+    {
         $resultRQ = array();
 
-        try{
+        try {
             $taskId = $request->input('consulted_taskId');
             $name = $request->input('consulted_name');
             $email = $request->input('consulted_email');
 
 
-            if ($taskId==null){
-                $resultRQ['api_http']=500;
+            if ($taskId == null) {
+                $resultRQ['api_http'] = 500;
                 $resultRQ['api_status'] = "KO";
                 $resultRQ['api_message'] = "Task ID is missing!";
                 return $resultRQ;
             }
 
-            if ($name==null){
+            if ($name == null) {
                 $name = $email;
             }
 
-            if ($email!=null){
+            if ($email != null) {
                 DB::table('som_form_tasks')
-                ->where('id', $taskId)
-                ->update(['consultable_user_name' => $name,'consultable_user_email' => $email]);
+                    ->where('id', $taskId)
+                    ->update(['consultable_user_name' => $name, 'consultable_user_email' => $email]);
                 $resultRQ['data'] = true;
-
-            }else{
+            } else {
                 DB::table('som_form_tasks')
-                ->where('id', $taskId)
-                ->update(['consultable_user_name' => null,'consultable_user_email' => null]);
+                    ->where('id', $taskId)
+                    ->update(['consultable_user_name' => null, 'consultable_user_email' => null]);
                 $resultRQ['data'] = false;
             }
 
 
-            $resultRQ['api_http']=200;
+            $resultRQ['api_http'] = 200;
             $resultRQ['api_status'] = "OK";
             $resultRQ['api_message'] = "";
             return $resultRQ;
-
         } catch (\Exception $e) {
-            $resultRQ['api_http']=500;
+            $resultRQ['api_http'] = 500;
             $resultRQ['api_status'] = "KO";
             $resultRQ['api_message'] = "No valid request!";
         }
 
         return $resultRQ;
-
     }
 
     /**
      * Recieve the form info submission
      */
-    public function submit(Request $request){
+    public function submit(Request $request)
+    {
 
         SomLogger::debug("DBG1001", 'Submit data...');
 
-        $currentUserId=Auth::id();
+        $currentUserId = Auth::id();
 
-        $response="true";
+        $response = "true";
 
         //check if user is logged
-        if($currentUserId!=null && $currentUserId!=''){
-
-
-            //Check Privileges
-            //$taskEditAllowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsTasks,Operation::Edit, $query, $id);
-            //$elementEditAllowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsElements,Operation::Edit, $query, $id);
-            //$approvalEditAllowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsApprovals,Operation::Edit, $query, $id);
-
+        if ($currentUserId != null && $currentUserId != '') {
 
             $formType = $request->input('formType');
             //Log::debug('Form Type: '.$formType);
@@ -516,13 +480,13 @@ class FormController extends Controller
             //1) Check Form Type submited
 
             //Task: DocumentURL
-            if($formType == 'taskDocUrl'){
+            if ($formType == 'taskDocUrl') {
 
                 //Check Privileges
                 $taskId = $request->input('taskId');
                 $projectId = $request->input('projectId');
 
-                if(!$this->isAllowed('task', $taskId, Operation::Edit)){
+                if (!$this->isAllowed('task', $taskId, Operation::Edit)) {
                     return "false";
                 }
 
@@ -531,46 +495,45 @@ class FormController extends Controller
 
                 $fileName = $request->input('originalDoc');
 
-                if($request->doc!=null){
+                if ($request->doc != null) {
 
                     //Check max size
-                    if($request->doc->getSize() > env('UPLOAD_MAX_SIZE')*1000000){
+                    if ($request->doc->getSize() > env('UPLOAD_MAX_SIZE') * 1000000) {
                         return "error.maxsize";
                     }
 
                     //Check Project Folder
-                    $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+                    $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
-                    if($projectFolder==''){
-                        SomLogger::error("ERR1015","Project {$projectId} doesn't have any sharepoint folder configured");
+                    if ($projectFolder == '') {
+                        SomLogger::error("ERR1015", "Project {$projectId} doesn't have any sharepoint folder configured");
                         return "error.projectFolder";
                     }
 
                     $fileName = $request->doc->getClientOriginalName();
-                    SomLogger::debug("DBG1001","TaskDocUrl: {$projectFolder}, {$fileName} , {$description}");
+                    SomLogger::debug("DBG1001", "TaskDocUrl: {$projectFolder}, {$fileName} , {$description}");
                     //$response =  $this->uploadFileToSharepoint($request->doc, $projectFolder, "t{$taskId}_doc_{$fileName}");
                     $response =  $this->uploadFileToSharepoint($projectId, $formType, $taskId, $request->doc, "t{$taskId}_doc_{$fileName}");
 
                     //If upload has error return error
-                    if($response != 'true'){
+                    if ($response != 'true') {
                         return $response;
                     }
                 }
 
-                $queryUpdateTaskDoc="update som_form_tasks set
+                $queryUpdateTaskDoc = "update som_form_tasks set
                 support_doc_url=:doc,
                 support_doc_description=:description
                 where id=:taskId";
 
-                DB::update(DB::raw($queryUpdateTaskDoc), array('taskId'=>$taskId, 'doc'=>$fileName, 'description'=>$description));
-
+                DB::update(DB::raw($queryUpdateTaskDoc), array('taskId' => $taskId, 'doc' => $fileName, 'description' => $description));
             }
             //Task: Info
-            else if($formType == "taskInfo"){
+            else if ($formType == "taskInfo") {
 
                 //Check Privileges
                 $taskId = $request->input('taskId');
-                if(!$this->isAllowed('task', $taskId, Operation::Edit)){
+                if (!$this->isAllowed('task', $taskId, Operation::Edit)) {
                     return "false";
                 }
                 $responsibleId  = $request->input('responsibleId');
@@ -579,54 +542,53 @@ class FormController extends Controller
                 $comment = $request->input('comment');
                 $deadline = $request->input('deadline');
 
-                if($deadline!=null && $deadline!=''){
+                if ($deadline != null && $deadline != '') {
                     $deadline = DateTime::createFromFormat('d/m/Y', $deadline);
                 }
 
 
                 $na_            = $request->input('na_');
                 $done_          = $request->input('done_');
-                $oldStatusId    = null;//$request->input('oldStatusId');
+                $oldStatusId    = null; //$request->input('oldStatusId');
 
                 //Log::debug('TaskInfo: '.$taskId.' '.$responsibleId.' '.$comment.' '.json_encode($deadline));
                 //Log::debug('TaskInfo Check: NA:'.$na_.' DONE:'.$done_);
 
                 //Obtenemos oldStatusId
-                $queryOldStatus="select som_status_id as id from som_form_tasks where id=:taskId";
-                $oldStatusList= DB::select(DB::raw($queryOldStatus), array('taskId'=>$taskId));
+                $queryOldStatus = "select som_status_id as id from som_form_tasks where id=:taskId";
+                $oldStatusList = DB::select(DB::raw($queryOldStatus), array('taskId' => $taskId));
 
-                if($oldStatusList != null){
-                    $oldStatusId=(collect($oldStatusList)->first())->id;
+                if ($oldStatusList != null) {
+                    $oldStatusId = (collect($oldStatusList)->first())->id;
                 }
-                SomLogger::debug("DBG1001",'Task Old Status: '.$oldStatusId);
+                SomLogger::debug("DBG1001", 'Task Old Status: ' . $oldStatusId);
 
                 //Get Current Task Status
-                $statusId=null;
-                $statusName=null;
-                if($na_=="1"){
-                    $statusName="Not applicable";
-                }
-                else if($done_=="1"){
-                    $statusName="Done";
+                $statusId = null;
+                $statusName = null;
+                if ($na_ == "1") {
+                    $statusName = "Not applicable";
+                } else if ($done_ == "1") {
+                    $statusName = "Done";
                 }
 
-                $statusId=(DB::table('som_status')
-                            ->where([["name","=",$statusName],["type","=","tasks"]])->first())->id;
+                $statusId = (DB::table('som_status')
+                    ->where([["name", "=", $statusName], ["type", "=", "tasks"]])->first())->id;
 
-                SomLogger::debug("DBG1001",'Task New Status: '.$statusId);
+                SomLogger::debug("DBG1001", 'Task New Status: ' . $statusId);
 
 
                 //If change Task Status update Task Completion Date
-                if($oldStatusId!=$statusId){
-                    SomLogger::debug("DBG1001",'Cambiamos estado de Task');
-                    $date=null;
+                if ($oldStatusId != $statusId) {
+                    SomLogger::debug("DBG1001", 'Cambiamos estado de Task');
+                    $date = null;
 
-                    if($statusId!=null){
-                        $date=new DateTime();
+                    if ($statusId != null) {
+                        $date = new DateTime();
                     }
-                    SomLogger::debug("DBG1001",'Update Date: '.json_encode($date));
+                    SomLogger::debug("DBG1001", 'Update Date: ' . json_encode($date));
 
-                    $queryUpdateTaskInfo="update som_form_tasks set
+                    $queryUpdateTaskInfo = "update som_form_tasks set
                                             cms_users_id=:responsibleId,
                                             comment=:comment,
                                             duedate=:deadline,
@@ -634,203 +596,201 @@ class FormController extends Controller
                                             task_completion_date=:date
                                             where id=:taskId";
 
-                    DB::update(DB::raw($queryUpdateTaskInfo), array('taskId'=>$taskId, 'responsibleId'=>$responsibleId, 'comment'=>$comment, 'statusId'=>$statusId, 'deadline'=>$deadline, 'date'=>$date));
+                    DB::update(DB::raw($queryUpdateTaskInfo), array('taskId' => $taskId, 'responsibleId' => $responsibleId, 'comment' => $comment, 'statusId' => $statusId, 'deadline' => $deadline, 'date' => $date));
                 }
                 //If dont change status
-                else{
+                else {
 
-                    $queryUpdateTaskInfo="update som_form_tasks set
+                    $queryUpdateTaskInfo = "update som_form_tasks set
                                             cms_users_id=:responsibleId,
                                             comment=:comment,
                                             duedate=:deadline,
                                             som_status_id=:statusId
                                             where id=:taskId";
 
-                    DB::update(DB::raw($queryUpdateTaskInfo), array('taskId'=>$taskId, 'responsibleId'=>$responsibleId, 'comment'=>$comment, 'statusId'=>$statusId, 'deadline'=>$deadline));
+                    DB::update(DB::raw($queryUpdateTaskInfo), array('taskId' => $taskId, 'responsibleId' => $responsibleId, 'comment' => $comment, 'statusId' => $statusId, 'deadline' => $deadline));
                 }
             }
             //Element: Info
-            else if($formType == "elementInfo"){
+            else if ($formType == "elementInfo") {
 
                 //Check Privileges
                 $elementId = $request->input('elementId');
-                if(!$this->isAllowed('element', $elementId, Operation::Edit)){
+                if (!$this->isAllowed('element', $elementId, Operation::Edit)) {
                     return "false";
                 }
 
                 $comment = $request->input('comment');
-                $date=new DateTime();
+                $date = new DateTime();
 
-                $queryUpdateEleInfo="update som_form_elements set
+                $queryUpdateEleInfo = "update som_form_elements set
                                         comment=:comment,
                                         lastupdate=:date
                                         where id=:elementId";
 
-                DB::update(DB::raw($queryUpdateEleInfo), array('elementId'=>$elementId,  'comment'=>$comment, 'date'=>$date));
-
+                DB::update(DB::raw($queryUpdateEleInfo), array('elementId' => $elementId,  'comment' => $comment, 'date' => $date));
             }
             //Element: Template URL
-            else if($formType == "elementTemplateUrl"){
+            else if ($formType == "elementTemplateUrl") {
 
                 //Check Privileges
                 $elementId = $request->input('elementId');
                 $projectId = $request->input('projectId');
 
-                if(!$this->isAllowed('element', $elementId, Operation::Edit)){
+                if (!$this->isAllowed('element', $elementId, Operation::Edit)) {
                     return "false";
                 }
 
                 #$doc = $request->input('doc');
                 $description = $request->input('description');
-                $date=new DateTime();
+                $date = new DateTime();
 
                 $fileName = $request->input('originalDoc');
 
-                if($request->doc!=null){
+                if ($request->doc != null) {
                     //Check max size
-                    if($request->doc->getSize() > env('UPLOAD_MAX_SIZE')*1000000){
+                    if ($request->doc->getSize() > env('UPLOAD_MAX_SIZE') * 1000000) {
                         return "error.maxsize";
                     }
 
                     //Check Project Folder
-                    $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+                    $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
-                    if($projectFolder==''){
-                        SomLogger::error("ERR1015","Project {$projectId} doesn't have any sharepoint folder configured");
+                    if ($projectFolder == '') {
+                        SomLogger::error("ERR1015", "Project {$projectId} doesn't have any sharepoint folder configured");
                         return "error.projectFolder";
                     }
 
                     $fileName = $request->doc->getClientOriginalName();
-                    SomLogger::debug("DBG1001","ElementTemplateUrl: {$projectFolder}, {$fileName} , {$description}");
+                    SomLogger::debug("DBG1001", "ElementTemplateUrl: {$projectFolder}, {$fileName} , {$description}");
                     //$response =  $this->uploadFileToSharepoint($request->doc, $projectFolder, "ec{$elementId}_tem_{$fileName}");
                     $response =  $this->uploadFileToSharepoint($projectId, $formType, $elementId, $request->doc, "ec{$elementId}_tem_{$fileName}");
 
                     //If upload has error return error
-                    if($response != 'true'){
+                    if ($response != 'true') {
                         return $response;
                     }
                 }
 
-                $queryUpdateEleTemp="update som_form_elements set
+                $queryUpdateEleTemp = "update som_form_elements set
                                         template=:doc,
                                         template_url_description=:description,
                                         lastupdate=:date
                                         where id=:elementId";
 
 
-                DB::update(DB::raw($queryUpdateEleTemp), array('elementId'=>$elementId, 'doc'=>$fileName, 'description'=>$description, 'date'=>$date));
+                DB::update(DB::raw($queryUpdateEleTemp), array('elementId' => $elementId, 'doc' => $fileName, 'description' => $description, 'date' => $date));
             }
             //Element: Doc URL
-            else if($formType == "elementDocUrl"){
+            else if ($formType == "elementDocUrl") {
 
                 //Check Privileges
                 $elementId = $request->input('elementId');
                 $projectId = $request->input('projectId');
 
-                if(!$this->isAllowed('element', $elementId, Operation::Edit)){
+                if (!$this->isAllowed('element', $elementId, Operation::Edit)) {
                     return "false";
                 }
 
                 #$doc = $request->input('doc');
                 $description = $request->input('description');
-                $date=new DateTime();
+                $date = new DateTime();
 
                 $fileName = $request->input('originalDoc');
 
-                if($request->doc!=null){
+                if ($request->doc != null) {
 
                     //Check max size
-                    if($request->doc->getSize() > env('UPLOAD_MAX_SIZE')*1000000){
+                    if ($request->doc->getSize() > env('UPLOAD_MAX_SIZE') * 1000000) {
                         return "error.maxsize";
                     }
 
                     //Check Project Folder
-                    $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+                    $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
-                    if($projectFolder==''){
-                        SomLogger::error("ERR1015","Project {$projectId} doesn't have any sharepoint folder configured");
+                    if ($projectFolder == '') {
+                        SomLogger::error("ERR1015", "Project {$projectId} doesn't have any sharepoint folder configured");
                         return "error.projectFolder";
                     }
 
                     $fileName = $request->doc->getClientOriginalName();
-                    SomLogger::debug("DBG1001","ElementDocUrl: {$projectFolder}, {$fileName} , {$description}");
+                    SomLogger::debug("DBG1001", "ElementDocUrl: {$projectFolder}, {$fileName} , {$description}");
                     //$response =  $this->uploadFileToSharepoint($request->doc, $projectFolder, "ec{$elementId}_doc_{$fileName}");
                     $response =  $this->uploadFileToSharepoint($projectId, $formType, $elementId, $request->doc, "ec{$elementId}_doc_{$fileName}");
 
                     //If upload has error return error
-                    if($response != 'true'){
+                    if ($response != 'true') {
                         return $response;
                     }
                 }
 
-                $queryUpdateEleDoc="update som_form_elements set
+                $queryUpdateEleDoc = "update som_form_elements set
                                         document=:doc,
                                         doc_url_description=:description,
                                         lastupdate=:date
                                         where id=:elementId";
 
-                DB::update(DB::raw($queryUpdateEleDoc), array('elementId'=>$elementId, 'doc'=>$fileName, 'description'=>$description, 'date'=>$date));
+                DB::update(DB::raw($queryUpdateEleDoc), array('elementId' => $elementId, 'doc' => $fileName, 'description' => $description, 'date' => $date));
             }
             //Approval: Doc URL
-            else if($formType == "approvalDocUrl"){
+            else if ($formType == "approvalDocUrl") {
 
                 //Check Privileges
                 $approvalId = $request->input('id');
                 $projectId = $request->input('projectId');
-                if(!$this->isAllowed('approval', $approvalId, Operation::Edit)){
+                if (!$this->isAllowed('approval', $approvalId, Operation::Edit)) {
                     return "false";
                 }
 
                 $appRespId = $request->input('appRespId');
                 #$doc = $request->input('doc');
                 $description = $request->input('description');
-                $date=new DateTime();
+                $date = new DateTime();
 
                 $fileName = $request->input('originalDoc');
 
-                if($request->doc!=null){
+                if ($request->doc != null) {
 
                     //Check max size
-                    if($request->doc->getSize() > env('UPLOAD_MAX_SIZE')*1000000){
+                    if ($request->doc->getSize() > env('UPLOAD_MAX_SIZE') * 1000000) {
                         return "error.maxsize";
                     }
 
                     //Check Project Folder
-                    $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+                    $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
-                    if($projectFolder==''){
-                        SomLogger::error("ERR1015","Project {$projectId} doesn't have any sharepoint folder configured");
+                    if ($projectFolder == '') {
+                        SomLogger::error("ERR1015", "Project {$projectId} doesn't have any sharepoint folder configured");
                         return "error.projectFolder";
                     }
 
                     $fileName = $request->doc->getClientOriginalName();
-                    SomLogger::debug("DBG1001","ApprovalDocUrl: {$projectFolder}, {$fileName} , {$description}");
+                    SomLogger::debug("DBG1001", "ApprovalDocUrl: {$projectFolder}, {$fileName} , {$description}");
                     //$response =  $this->uploadFileToSharepoint($request->doc, $projectFolder, "a{$approvalId}_doc_{$fileName}");
-                    $response =  $this->uploadFileToSharepoint($projectId, $formType, $approvalId, $request->doc,"a{$approvalId}_doc_{$fileName}");
+                    $response =  $this->uploadFileToSharepoint($projectId, $formType, $approvalId, $request->doc, "a{$approvalId}_doc_{$fileName}");
 
                     //If upload has error return error
-                    if($response != 'true'){
+                    if ($response != 'true') {
                         return $response;
                     }
                 }
 
-                $queryUpdateEleInfo="update som_approvals_responsible set
+                $queryUpdateEleInfo = "update som_approvals_responsible set
                                         document_url=:doc,
                                         doc_url_description=:description,
                                         lastupdate=:date
                                         where id=:appRespId";
 
-                DB::update(DB::raw($queryUpdateEleInfo), array('appRespId'=>$appRespId, 'doc'=>$fileName, 'description'=>$description, 'date'=>$date));
-
+                DB::update(DB::raw($queryUpdateEleInfo), array('appRespId' => $appRespId, 'doc' => $fileName, 'description' => $description, 'date' => $date));
             }
             //Approval: Info
-            else if($formType == "approvalInfo"){
+            else if ($formType == "approvalInfo") {
 
-                 //Check Privileges
-                 $approvalId = $request->input('id');
-                 if(!$this->isAllowed('approval', $approvalId, Operation::Edit)){
-                     return "false";
-                 }
+                //Check Privileges
+                $approvalId = $request->input('id');
+                if (!$this->isAllowed('approval', $approvalId, Operation::Edit)) {
+                    return "false";
+                }
 
                 //Read form params
                 $formId     = $request->input('formId');
@@ -842,128 +802,111 @@ class FormController extends Controller
                 $cancel_      = $request->input('cancel_');
                 $review_      = $request->input('review_');
                 $na_          = $request->input('na_');
-                SomLogger::debug("DBG1001",'ApprovalStatus: OK:'.$ok_.' Cancel:'.$cancel_.' Review:'.$review_.' NA:'.$na_);
+                SomLogger::debug("DBG1001", 'ApprovalStatus: OK:' . $ok_ . ' Cancel:' . $cancel_ . ' Review:' . $review_ . ' NA:' . $na_);
 
                 //Get oldStatusId
                 $oldStatusId    = null;
-                $queryOldStatus="select som_status_id as id from som_approvals_responsible where id=:appRespId";
-                $oldStatusList= DB::select(DB::raw($queryOldStatus), array('appRespId'=>$appRespId));
+                $queryOldStatus = "select som_status_id as id from som_approvals_responsible where id=:appRespId";
+                $oldStatusList = DB::select(DB::raw($queryOldStatus), array('appRespId' => $appRespId));
 
-                if($oldStatusList != null){
-                    $oldStatusId=(collect($oldStatusList)->first())->id;
+                if ($oldStatusList != null) {
+                    $oldStatusId = (collect($oldStatusList)->first())->id;
                 }
-                SomLogger::debug("DBG1001",'Approval OldStatus: '.$oldStatusId);
+                SomLogger::debug("DBG1001", 'Approval OldStatus: ' . $oldStatusId);
 
                 //Get Current Status
-                $statusId=null;
+                $statusId = null;
 
-                $statusName=null;
-                if($na_=="1"){
-                    $statusName="Not applicable";
+                $statusName = null;
+                if ($na_ == "1") {
+                    $statusName = "Not applicable";
                     //$statusId=11;
-                }
-                else if($ok_=="1"){
-                    $statusName="Done";
+                } else if ($ok_ == "1") {
+                    $statusName = "Done";
                     //$statusId=6;
-                }
-                else if($cancel_=="1"){
-                    $statusName="Rejected";
+                } else if ($cancel_ == "1") {
+                    $statusName = "Rejected";
                     //$statusId=8;
-                }else if($review_=="1"){
-                    $statusName="Review";
+                } else if ($review_ == "1") {
+                    $statusName = "Review";
                     //$statusId=7;
                 }
 
-                $newStatus=(DB::table('som_status')
-                                ->where([["name","=",$statusName],["type","=","approvals"]])->first());
+                $newStatus = (DB::table('som_status')
+                    ->where([["name", "=", $statusName], ["type", "=", "approvals"]])->first());
 
-                SomLogger::debug("DBG1001",'Approval New Status: '.$newStatus->id);
+                SomLogger::debug("DBG1001", 'Approval New Status: ' . $newStatus->id);
 
 
                 //If Change Approval Status
-                if($oldStatusId!=$newStatus->id){
+                if ($oldStatusId != $newStatus->id) {
 
-                    SomLogger::debug("DBG1001",'Change Approval status');
-                    $date=null;
+                    SomLogger::debug("DBG1001", 'Change Approval status');
+                    $date = null;
 
                     //Update Approval's Date
-                    if($newStatus->id!=null){
-                        $date=new DateTime();
+                    if ($newStatus->id != null) {
+                        $date = new DateTime();
                     }
-                    SomLogger::debug("DBG1001",'Update Approval Date: '.json_encode($date));
+                    SomLogger::debug("DBG1001", 'Update Approval Date: ' . json_encode($date));
 
-                    $queryUpdateEleInfo="update som_approvals_responsible set
+                    $queryUpdateEleInfo = "update som_approvals_responsible set
                                             comment=:comment,
                                             lastupdate=:date,
                                             som_status_id=:statusId
                                             where id=:appRespId";
 
-                    DB::update(DB::raw($queryUpdateEleInfo), array('appRespId'=>$appRespId,  'comment'=>$comment, 'date'=>$date, 'statusId'=>($newStatus->id)));
+                    DB::update(DB::raw($queryUpdateEleInfo), array('appRespId' => $appRespId,  'comment' => $comment, 'date' => $date, 'statusId' => ($newStatus->id)));
 
 
                     //Si es un estado `is_behaviour_review` desactivamos todos los approvals
-                    if($newStatus->is_behaviour_review==1){
-                        SomLogger::debug("DBG1001",'is_behaviour_review: remove other approvals status');
-                        $queryUpdateReview="update som_form_approvals a
+                    if ($newStatus->is_behaviour_review == 1) {
+                        SomLogger::debug("DBG1001", 'is_behaviour_review: remove other approvals status');
+                        $queryUpdateReview = "update som_form_approvals a
                                             inner join 	som_approvals_responsible ar on ar.som_form_approvals_id = a.id
                                             set ar.som_status_id=null,
                                             ar.lastupdate=:date
                                             where a.som_forms_id=:formId
                                             and ar.som_status_id!=:statusId ";
 
-                        DB::update(DB::raw($queryUpdateReview), array('formId'=>$formId, 'date'=>null, 'statusId'=>($newStatus->id)));
+                        DB::update(DB::raw($queryUpdateReview), array('formId' => $formId, 'date' => null, 'statusId' => ($newStatus->id)));
                     }
 
                     //Si se setea nuevo estado
-                    if($newStatus->id!=null){
+                    if ($newStatus->id != null) {
 
                         //Check if must notify
                         $approval = DB::table('som_approvals_responsible')
-                                        ->where([
-                                            ['som_approvals_responsible.id',$appRespId],
-                                            ['som_approvals_responsible.cms_privilege_id_notify','<>',NULL]
-                                        ])
-                                        ->select(
-                                            'som_approvals_responsible.cms_privilege_id_notify AS id_notify'
-                                            )
-                                        ->first();
+                            ->where([
+                                ['som_approvals_responsible.id', $appRespId],
+                                ['som_approvals_responsible.cms_privilege_id_notify', '<>', NULL]
+                            ])
+                            ->select(
+                                'som_approvals_responsible.cms_privilege_id_notify AS id_notify'
+                            )
+                            ->first();
 
-                        SomLogger::debug("DBG1001",'Is Approval Notify: '.json_encode($approval));
-
-                        //Comment this line as no need to send email notifying approval task change
-                        // if($approval!=null && (CRUDBooster::getSetting('smtp_host')!="" || CRUDBooster::getSetting('smtp_host')!=null)){
-                        //     Log::info('Send Approval Notification ...');
-                        //     //Make internal call to Notifications API
-                        //     $rq = array("type" => "approval", "id" => $appRespId, "senderUserId"=>$currentUserId);
-                        //     Log::debug("Invoke sendNotification: ".json_encode($rq));
-
-                        //     $res=array();
-                        //     app(\App\Http\Controllers\ApiSendnotificationsController::class)->hook_after($rq, $res);
-                        // }
-
+                        SomLogger::debug("DBG1001", 'Is Approval Notify: ' . json_encode($approval));
                     }
+                } else {
 
-                }
-                else{
-
-                    if($approvalDate!=null && $approvalDate!=''){
+                    if ($approvalDate != null && $approvalDate != '') {
                         $approvalDate = DateTime::createFromFormat('d/m/Y', $approvalDate);
                     }
 
-                    $queryUpdateEleInfo="update som_approvals_responsible set
+                    $queryUpdateEleInfo = "update som_approvals_responsible set
                                             comment=:comment,
                                             lastupdate=:approvalDate
                                             where id=:appRespId";
 
-                    DB::update(DB::raw($queryUpdateEleInfo), array('appRespId'=>$appRespId,  'comment'=>$comment, 'approvalDate'=>$approvalDate));
+                    DB::update(DB::raw($queryUpdateEleInfo), array('appRespId' => $appRespId,  'comment' => $comment, 'approvalDate' => $approvalDate));
                 }
-
             }
             return $response;
         }
         //If user is not logged
-        else{
-            SomLogger::error("ERR1010",'User not logged');
+        else {
+            SomLogger::error("ERR1010", 'User not logged');
             return "false";
         }
     }
@@ -976,18 +919,17 @@ class FormController extends Controller
      *
      * @return true/false
      */
-    private function isAllowed($sectionType, $id, $operation){
+    private function isAllowed($sectionType, $id, $operation)
+    {
 
         $allowed = false;
 
-        if($sectionType=='task'){
-            $allowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsTasks,$operation, $query, $id);
-        }
-        else if($sectionType=='element'){
-            $allowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsElements,$operation, $query, $id);
-        }
-        else if($sectionType=='approval'){
-            $allowed=SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsApprovals,$operation, $query, $id);
+        if ($sectionType == 'task') {
+            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsTasks, $operation, $query, $id);
+        } else if ($sectionType == 'element') {
+            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsElements, $operation, $query, $id);
+        } else if ($sectionType == 'approval') {
+            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsApprovals, $operation, $query, $id);
         }
 
         //Log::debug('Check Is Allowed: '.$sectionType.' - Operation:'.$operation.' - Id: '.$id.' --> '.$allowed);
@@ -1001,20 +943,20 @@ class FormController extends Controller
      *
      * @return true/false
      */
-    private function checkUserProjectPrivilege($projectId, $userId, $privilegeId){
+    private function checkUserProjectPrivilege($projectId, $userId, $privilegeId)
+    {
 
-        $hasPrivilege=false;
+        $hasPrivilege = false;
 
-        $userPrivilege=(DB::table('som_project_users')
-                            ->where([["som_projects_id","=",$projectId],["cms_users_id","=",$userId], ["cms_privileges_id","=",$privilegeId]])
-                            ->first());
+        $userPrivilege = (DB::table('som_project_users')
+            ->where([["som_projects_id", "=", $projectId], ["cms_users_id", "=", $userId], ["cms_privileges_id", "=", $privilegeId]])
+            ->first());
 
-        if($userPrivilege!=null){
-            $hasPrivilege=true;
+        if ($userPrivilege != null) {
+            $hasPrivilege = true;
         }
 
         return $hasPrivilege;
-
     }
 
     /**
@@ -1022,11 +964,11 @@ class FormController extends Controller
      */
     private function getSharepointContext()
     {
-        $spUrl=env("SHAREPOINT_URL");
-        SomLogger::debug("DBG1001","SharePoint url: {$spUrl}");
+        $spUrl = env("SHAREPOINT_URL");
+        SomLogger::debug("DBG1001", "SharePoint url: {$spUrl}");
 
         //Get SharepointAuthCtx
-        $authCtx=Crypt::decrypt(Session::get('SharepointAuthCtx'));
+        $authCtx = Crypt::decrypt(Session::get('SharepointAuthCtx'));
         $authCtx->AuthType = CURLAUTH_NTLM;
         //initialize REST client
         $ctx = new ClientContext($spUrl, $authCtx);
@@ -1045,7 +987,7 @@ class FormController extends Controller
         $fileCreationInformation->Url = $fileName;
         $uploadFile = $ctx->getWeb()->getFolderByServerRelativeUrl($targetFolderUrl)->getFiles()->add($fileCreationInformation);
         $ctx->executeQuery();
-        SomLogger::debug("DBG1001","File {$uploadFile->getProperty('ServerRelativeUrl')} has been uploaded");
+        SomLogger::debug("DBG1001", "File {$uploadFile->getProperty('ServerRelativeUrl')} has been uploaded");
 
         return "true";
     }
@@ -1057,14 +999,14 @@ class FormController extends Controller
     {
         try {
             //If dont have SharepointToken
-            if(Session::get("SharepointAuthCtx")==null){
-                SomLogger::error("ERR1011","Error connecting to Sharepoint");
+            if (Session::get("SharepointAuthCtx") == null) {
+                SomLogger::error("ERR1011", "Error connecting to Sharepoint");
                 return "error.login";
-            }else{
+            } else {
                 //$parentFolderUrl="{$_ENV['SHAREPOINT_ROOT_FOLDER']}/{$projectFolder}";
-                $tempFolder=$_ENV["SHAREPOINT_TMP_LOCAL_FOLDER"];
-                $sharepointFolder="{$_ENV['SHAREPOINT_ROOT_FOLDER']}/{$this->getSubFolder($projectId, $typeDoc, $id)}";
-                SomLogger::debug("DBG1001","Sharepointfolder:{$sharepointFolder}");
+                $tempFolder = $_ENV["SHAREPOINT_TMP_LOCAL_FOLDER"];
+                $sharepointFolder = "{$_ENV['SHAREPOINT_ROOT_FOLDER']}/{$this->getSubFolder($projectId,$typeDoc,$id)}";
+                SomLogger::debug("DBG1001", "Sharepointfolder:{$sharepointFolder}");
 
                 //Save doc in local tmp folder
                 $doc->storeAs($tempFolder, $fileName);
@@ -1074,169 +1016,156 @@ class FormController extends Controller
                 Storage::delete("{$tempFolder}/{$fileName}");
                 return "true";
             }
-
         } catch (\ErrorException $e) {
-            SomLogger::error("ERR1012","Failed upload file to Sharepoint folder. {$e}");
+            SomLogger::error("ERR1012", "Failed upload file to Sharepoint folder. {$e}");
+            return "error.sharepoint";
+        } catch (\Exception $e) {
+            SomLogger::error("ERR1012", "Failed upload file to Sharepoint folder. {$e}");
             return "error.sharepoint";
         }
-        catch (\Exception $e) {
-            SomLogger::error("ERR1012","Failed upload file to Sharepoint folder. {$e}");
-            return "error.sharepoint";
-        }
-
     }
 
 
     /**
      * Download a document from Sharepoint
      */
-    public function downloadFile($projectId, $type, $id, $name){
+    public function downloadFile($projectId, $type, $id, $name)
+    {
 
         //check if user is logged and its allowed
-        $currentUserId=CRUDBooster::myId();
-        if($currentUserId==null || $currentUserId=='' || $projectId==''){
+        $currentUserId = CRUDBooster::myId();
+        if ($currentUserId == null || $currentUserId == '' || $projectId == '') {
             return false;
-        }
-        else{
+        } else {
 
-            $typeAllow="";
-            if($type=="taskDocUrl"){
-                $typeAllow="task";
-            }else if($type=="elementDocUrl" || $type=="elementTemplateUrl"){
-                $typeAllow="element";
-            }
-            else if($type=="approvalDocUrl"){
-                $typeAllow="approval";
-            }
-            else{
+            $typeAllow = "";
+            if ($type == "taskDocUrl") {
+                $typeAllow = "task";
+            } else if ($type == "elementDocUrl" || $type == "elementTemplateUrl") {
+                $typeAllow = "element";
+            } else if ($type == "approvalDocUrl") {
+                $typeAllow = "approval";
+            } else {
                 return false;
             }
 
-            if(!$this->isAllowed($typeAllow, $id, Operation::Edit)){
+            if (!$this->isAllowed($typeAllow, $id, Operation::Edit)) {
                 return "You don't have permissions to download the document";
             }
         }
 
         //If dont have SharepointToken
-        if(Session::get("SharepointAuthCtx")==null){
-            SomLogger::error("ERR1011","Error connecting to Sharepoint");
+        if (Session::get("SharepointAuthCtx") == null) {
+            SomLogger::error("ERR1011", "Error connecting to Sharepoint");
             return "Error connecting to Sharepoint";
-        }
-        else{
-            SomLogger::debug("DBG1001","Init Download Document. Type: {$type}, Id: {$id}, Name: {$name}");
+        } else {
+            SomLogger::debug("DBG1001", "Init Download Document. Type: {$type}, Id: {$id}, Name: {$name}");
             //$url=$_ENV["SHAREPOINT_URL"];
-            $parentFolderUrl=env("SHAREPOINT_ROOT_FOLDER");
-            $tempFolder=env("SHAREPOINT_TMP_LOCAL_FOLDER");
+            $parentFolderUrl = env("SHAREPOINT_ROOT_FOLDER");
+            $tempFolder = env("SHAREPOINT_TMP_LOCAL_FOLDER");
 
-            $fullFileName="";
+            $fullFileName = "";
 
-            if($type=="taskDocUrl"){
-                $fullFileName="t{$id}_doc_{$name}";
-            }else if($type=="elementDocUrl"){
-                $fullFileName="ec{$id}_doc_{$name}";
-            }
-            else if($type=="elementTemplateUrl"){
-                $fullFileName="ec{$id}_tem_{$name}";
-            }
-            else if($type=="approvalDocUrl"){
-                $fullFileName="a{$id}_doc_{$name}";
+            if ($type == "taskDocUrl") {
+                $fullFileName = "t{$id}_doc_{$name}";
+            } else if ($type == "elementDocUrl") {
+                $fullFileName = "ec{$id}_doc_{$name}";
+            } else if ($type == "elementTemplateUrl") {
+                $fullFileName = "ec{$id}_tem_{$name}";
+            } else if ($type == "approvalDocUrl") {
+                $fullFileName = "a{$id}_doc_{$name}";
             }
 
             //Check Project Folder
-            $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+            $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
-            $fileServerRelativeURL="{$parentFolderUrl}/{$this->getSubFolder($projectId, $type, $id)}/{$fullFileName}";
-            SomLogger::debug("DBG1001","Full filename: {$fullFileName}, ServerRelativeURL: {$fileServerRelativeURL}");
+            $fileServerRelativeURL = "{$parentFolderUrl}/{$this->getSubFolder($projectId,$type,$id)}/{$fullFileName}";
+            SomLogger::debug("DBG1001", "Full filename: {$fullFileName}, ServerRelativeURL: {$fileServerRelativeURL}");
 
             $ctx = $this->getSharepointContext();
-            if($this->downloadSPFile($ctx, $fileServerRelativeURL, "{$fullFileName}")){
-                return response()->download(storage_path("app/{$tempFolder}/{$fullFileName}"),$name)->deleteFileAfterSend(true);
-            }
-            else{
+            if ($this->downloadSPFile($ctx, $fileServerRelativeURL, "{$fullFileName}")) {
+                return response()->download(storage_path("app/{$tempFolder}/{$fullFileName}"), $name)->deleteFileAfterSend(true);
+            } else {
                 abort(500);
             }
         }
-
     }
 
 
     /**
      * Download file from Sharepoint into Local Temp folder
      */
-    function downloadSPFile(ClientContext $ctx, $fileServerRelativeURL,$fileName){
+    function downloadSPFile(ClientContext $ctx, $fileServerRelativeURL, $fileName)
+    {
         try {
-            $tempFolder=env("SHAREPOINT_TMP_LOCAL_FOLDER");
+            $tempFolder = env("SHAREPOINT_TMP_LOCAL_FOLDER");
             $fileContent = SPFile::openBinary($ctx, $fileServerRelativeURL);
 
             Storage::put("{$tempFolder}/{$fileName}", $fileContent);
-            SomLogger::debug("DBG1001",'File downloaded');
+            SomLogger::debug("DBG1001", 'File downloaded');
             return true;
         } catch (\Exception $e) {
-            SomLogger::error("ERR1013","File download failed");
+            SomLogger::error("ERR1013", "File download failed");
             return false;
         }
     }
 
-    private function getSubFolder($projectId, $typeDoc, $id){
+    private function getSubFolder($projectId, $typeDoc, $id)
+    {
 
-        SomLogger::debug("DBG1001","getSubFolder: {$projectId}, {$typeDoc}, {$id}");
+        SomLogger::debug("DBG1001", "getSubFolder: {$projectId}, {$typeDoc}, {$id}");
         //Get Project Folder
-        $projectFolder = (DB::table('som_projects')->where([["id","=",$projectId]])->first())->documentation_folder;
+        $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
         $folder = "";
-        if($typeDoc=="taskDocUrl"){
+        if ($typeDoc == "taskDocUrl") {
 
             $queryRes = DB::table('som_form_tasks')
-                                ->join('som_forms', 'som_forms.id', '=','som_form_tasks.som_forms_id')
-                                ->join('som_departments', 'som_form_tasks.som_departments_id', '=','som_departments.id')
-                                ->join('som_phases_milestones', 'som_phases_milestones.id', '=','som_forms.som_phases_milestones_id')
-                                ->join('som_projects_phases', 'som_projects_phases.id', '=','som_phases_milestones.som_projects_phases_id')
-                                ->join('som_phases', 'som_phases.id', '=','som_projects_phases.som_phases_id')
-                                ->where([["som_form_tasks.id","=",$id]])
-                                ->select('som_forms.name as form', 'som_departments.name as department', 'som_phases.name as phase')->first();
+                ->join('som_forms', 'som_forms.id', '=', 'som_form_tasks.som_forms_id')
+                ->join('som_departments', 'som_form_tasks.som_departments_id', '=', 'som_departments.id')
+                ->join('som_phases_milestones', 'som_phases_milestones.id', '=', 'som_forms.som_phases_milestones_id')
+                ->join('som_projects_phases', 'som_projects_phases.id', '=', 'som_phases_milestones.som_projects_phases_id')
+                ->join('som_phases', 'som_phases.id', '=', 'som_projects_phases.som_phases_id')
+                ->where([["som_form_tasks.id", "=", $id]])
+                ->select('som_forms.name as form', 'som_departments.name as department', 'som_phases.name as phase')->first();
 
             $folder = "{$projectFolder}/{$queryRes->phase}/{$queryRes->form}/Tareas/{$queryRes->department}";
-
-        }else if($typeDoc=="elementDocUrl" || $typeDoc=="elementTemplateUrl"){
+        } else if ($typeDoc == "elementDocUrl" || $typeDoc == "elementTemplateUrl") {
             $queryRes = DB::table('som_form_elements')
-                            ->join('cms_privileges', 'cms_privileges.id', '=', 'som_form_elements.cms_privileges_role_id')
-                            ->join('som_forms', 'som_forms.id', '=','som_form_elements.som_forms_id')
-                            ->join('som_phases_milestones', 'som_phases_milestones.id', '=','som_forms.som_phases_milestones_id')
-                            ->join('som_projects_phases', 'som_projects_phases.id', '=','som_phases_milestones.som_projects_phases_id')
-                            ->join('som_phases', 'som_phases.id', '=','som_projects_phases.som_phases_id')
-                            ->where([["som_form_elements.id","=",$id]])
-                            ->select('som_forms.name as form', 'cms_privileges.name as role', 'som_phases.name as phase')->first();
+                ->join('cms_privileges', 'cms_privileges.id', '=', 'som_form_elements.cms_privileges_role_id')
+                ->join('som_forms', 'som_forms.id', '=', 'som_form_elements.som_forms_id')
+                ->join('som_phases_milestones', 'som_phases_milestones.id', '=', 'som_forms.som_phases_milestones_id')
+                ->join('som_projects_phases', 'som_projects_phases.id', '=', 'som_phases_milestones.som_projects_phases_id')
+                ->join('som_phases', 'som_phases.id', '=', 'som_projects_phases.som_phases_id')
+                ->where([["som_form_elements.id", "=", $id]])
+                ->select('som_forms.name as form', 'cms_privileges.name as role', 'som_phases.name as phase')->first();
 
 
-            $ecRoleFolder='Aena Internacional';
+            $ecRoleFolder = 'Aena Internacional';
 
             //Check element Role
-            if($queryRes->role =='Legal'){
-                $ecRoleFolder='Legal';
-            }else if($queryRes->role =='Finance'){
-                $ecRoleFolder='Financiero';
+            if ($queryRes->role == 'Legal') {
+                $ecRoleFolder = 'Legal';
+            } else if ($queryRes->role == 'Finance') {
+                $ecRoleFolder = 'Financiero';
             }
 
             $folder = "{$projectFolder}/{$queryRes->phase}/{$queryRes->form}/Elementos de control/{$ecRoleFolder}";
-        }
-        else if($typeDoc=="approvalDocUrl"){
+        } else if ($typeDoc == "approvalDocUrl") {
 
             $queryRes = DB::table('som_form_approvals')
-                            ->join('som_forms', 'som_forms.id', '=','som_form_approvals.som_forms_id')
-                            ->join('som_phases_milestones', 'som_phases_milestones.id', '=','som_forms.som_phases_milestones_id')
-                            ->join('som_projects_phases', 'som_projects_phases.id', '=','som_phases_milestones.som_projects_phases_id')
-                            ->join('som_phases', 'som_phases.id', '=','som_projects_phases.som_phases_id')
-                            ->where([["som_form_approvals.id","=",$id]])
-                            ->select('som_forms.name as form', 'som_phases.name as phase')->first();
+                ->join('som_forms', 'som_forms.id', '=', 'som_form_approvals.som_forms_id')
+                ->join('som_phases_milestones', 'som_phases_milestones.id', '=', 'som_forms.som_phases_milestones_id')
+                ->join('som_projects_phases', 'som_projects_phases.id', '=', 'som_phases_milestones.som_projects_phases_id')
+                ->join('som_phases', 'som_phases.id', '=', 'som_projects_phases.som_phases_id')
+                ->where([["som_form_approvals.id", "=", $id]])
+                ->select('som_forms.name as form', 'som_phases.name as phase')->first();
 
             $folder = "{$projectFolder}/{$queryRes->phase}/{$queryRes->form}/Aprobaciones/";
         }
 
-        SomLogger::debug("DBG1001","SubFolder: {$folder}");
+        SomLogger::debug("DBG1001", "SubFolder: {$folder}");
 
         return $folder;
     }
-
-
-
 }
