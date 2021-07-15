@@ -23,4 +23,5 @@ Route::get('encrypt/{text}', [App\Http\Controllers\EncryptController::class, 'en
     return $text;
 });
 
-Route::get('/get_project/{id}', ApiGetProjectController::class, 'index')->name('get_project');
+
+
