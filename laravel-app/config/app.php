@@ -230,6 +230,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'CRUDBooster' => App\Http\Utils\CRUDBooster::class,
+        'SOMController' => App\Http\Controllers\SomController::class,
     ],
 
 ];

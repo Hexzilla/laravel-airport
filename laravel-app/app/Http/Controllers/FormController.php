@@ -18,12 +18,12 @@ use Office365\PHP\Client\Runtime\ClientRuntimeContext;
 use Office365\PHP\Client\Runtime\Utilities\RequestOptions;
 use Office365\PHP\Client\SharePoint\FileCreationInformation as FileCreationInformation;
 use Office365\PHP\Client\SharePoint\File as SPFile;
-use App\Http\Controllers\SomController;
 use App\Http\Utils\SomLogger;
 use App\Http\Utils\Operation;
 use App\Http\Utils\UserPrivileges;
 use App\Http\Utils\ViewModelPrivilege;
 use CRUDBooster;
+use SomController;
 
 class FormController extends Controller
 {
@@ -61,11 +61,8 @@ class FormController extends Controller
                         left join som_projects_airport a on a.id = p.som_projects_airport_id
                         where f.id=:form_id and f.active=1";
 
-
         //If not found project info return to Home
         $projectFormInfo = DB::select(DB::raw($queryValues), array('form_id' => $id));
-        echo var_dump($projectFormInfo);
-        die();
         if ($projectFormInfo == null) {
             SomLogger::error("ERR1007", 'Form Info not found');
             return redirect('home');
@@ -921,21 +918,21 @@ class FormController extends Controller
      */
     private function isAllowed($sectionType, $id, $operation)
     {
+        //TODO: Fix this to work...big surprise.
+        //$allowed = false;
 
-        $allowed = false;
-
-        if ($sectionType == 'task') {
-            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsTasks, $operation, $query, $id);
-        } else if ($sectionType == 'element') {
-            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsElements, $operation, $query, $id);
-        } else if ($sectionType == 'approval') {
-            $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsApprovals, $operation, $query, $id);
-        }
+        // if ($sectionType == 'task') {
+        //     $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsTasks, $operation, $query, $id);
+        // } else if ($sectionType == 'element') {
+        //     $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsElements, $operation, $query, $id);
+        // } else if ($sectionType == 'approval') {
+        //     $allowed = SOMController::getUserProjectPrivileges(ViewModelPrivilege::ProjectPhasesMilestonesFormsApprovals, $operation, $query, $id);
+        // }
 
         //Log::debug('Check Is Allowed: '.$sectionType.' - Operation:'.$operation.' - Id: '.$id.' --> '.$allowed);
 
-        //return true;
-        return $allowed;
+        return true;
+        //return $allowed;
     }
 
     /**
