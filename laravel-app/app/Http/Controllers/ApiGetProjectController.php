@@ -11,6 +11,7 @@ class ApiGetProjectController extends Controller
         // return json_encode('test api request');
         $project_id = $request->get('id', 46);
         $user_id = Auth::id();
+
         return $user_id;
     }
 }
