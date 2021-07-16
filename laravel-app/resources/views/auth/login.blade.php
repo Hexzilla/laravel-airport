@@ -31,18 +31,21 @@
 <body class="hold-transition login-page">
     <div class="login-box">
 
-        <!-- /.login-logo -->
-        <div class="login-logo">
-            <div class="row">
-                <img class="logo-aena w-50 ml-2" src={{asset('images/logo-aena-black.png')}} title="AENA GPI" />
-            </div>
-        </div>
+            <form method="POST" action="{{ route('login') }}" autocomplete="false">
+                @csrf
 
-        <!-- /.login-box-body -->
-        <div class="card">
-            <div class="card-body login-card-body">
-                <div class="col-12 description-text">
-                    Bienvenido a GPI (Gestor de Proyectos Internacionales)
+                <div class="input-group mb-3">
+                    <input type="text"
+                           name="email"
+                           value="{{ old('email') }}"
+                           placeholder="Email"
+                           class="form-control @error('email') is-invalid @enderror">
+                    <div class="input-group-append">
+                        <div class="input-group-text"><span class="fas fa-envelope"></span></div>
+                    </div>
+                    @error('email')
+                    <span class="error invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="col-12">
                     <hr>

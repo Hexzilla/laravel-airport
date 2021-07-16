@@ -122,6 +122,9 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+    'log' => env('APP_LOG', 'single'),
+    'log_max_files' => env('APP_LOG_MAX_FILES', 5),
+    'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +164,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Adldap\Laravel\AdldapServiceProvider::class,
+        Adldap\Laravel\AdldapAuthServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -231,6 +236,7 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'CRUDBooster' => App\Http\Utils\CRUDBooster::class,
         'SOMController' => App\Http\Controllers\SomController::class,
+        'Adldap' => Adldap\Laravel\Facades\Adldap::class,
     ],
 
 ];
