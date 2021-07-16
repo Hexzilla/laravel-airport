@@ -21,8 +21,8 @@ use Carbon\Carbon;
 use Adldap\Laravel\Facades\Adldap;
 use finfo;
 
-//use Office365\PHP\Client\Runtime\Auth\AuthenticationContext;
-//use Office365\PHP\Client\Runtime\Auth\NetworkCredentialContext;
+use Office365\Runtime\Auth\AuthenticationContext;
+use Office365\Runtime\Auth\NetworkCredentialContext;
 
 use App\Http\Utils\SomLogger;
 
@@ -78,32 +78,32 @@ class LoginController extends Controller
         if ($user != null && $user->id_cms_privileges != $rolInactive) {
             //TODO: Sharepoint logic
             //Get Sharepoint Token
-            // $sharepointUrl=env('SHAREPOINT_URL');
-            // $sharepointOnPrem=env('SHAREPOINT_ON_PREM');
+            $sharepointUrl=env('SHAREPOINT_URL');
+            $sharepointOnPrem=env('SHAREPOINT_ON_PREM');
 
-            // try{
+            try{
 
-            //     if($sharepointOnPrem){
-            //         list($log_user, $log_domain) = explode('@', $request->email);
-            //         list($domain_auth, $dumb) = explode('.', $log_domain);
-            //         //$sp_user="aena.es\\".str_replace("@aena.es", "", $request->email);
-            //         $sp_user="{$domain_auth}\\{$log_user}";
-            //         SomLogger::debug("DBG1002", "Check SharepointOnPrem credentials for user: {$sp_user}");
-            //         $authCtx = new NetworkCredentialContext($sp_user, $request->password);
-            //         Session::put("SharepointAuthCtx", Crypt::encrypt($authCtx));
-            //     }
-            //     else{
-            //         SomLogger::debug("DBG1002", "Check Sharepoint credentials for user: {$request->email}");
-            //         $authCtx = new AuthenticationContext($sharepointUrl);
-            //         $authCtx->acquireTokenForUser($request->email, $request->password);
-            //         Session::put("SharepointAuthCtx", Crypt::encrypt($authCtx));
-            //     }
+                if($sharepointOnPrem){
+                    list($log_user, $log_domain) = explode('@', $request->email);
+                    list($domain_auth, $dumb) = explode('.', $log_domain);
+                    //$sp_user="aena.es\\".str_replace("@aena.es", "", $request->email);
+                    $sp_user="{$domain_auth}\\{$log_user}";
+                    SomLogger::debug("DBG1002", "Check SharepointOnPrem credentials for user: {$sp_user}");
+                    $authCtx = new NetworkCredentialContext($sp_user, $request->password);
+                    Session::put("SharepointAuthCtx", Crypt::encrypt($authCtx));
+                }
+                else{
+                    SomLogger::debug("DBG1002", "Check Sharepoint credentials for user: {$request->email}");
+                    $authCtx = new AuthenticationContext($sharepointUrl);
+                    $authCtx->acquireTokenForUser($request->email, $request->password);
+                    Session::put("SharepointAuthCtx", Crypt::encrypt($authCtx));
+                }
 
-            // }
-            // catch (\Exception $e) {
-            //     SomLogger::error("ERR1002", "User {$request->email} cant login into Sharepoint");
-            //     Session::put("SharepointAuthCtx", null);
-            // }
+            }
+            catch (\Exception $e) {
+                SomLogger::error("ERR1002", "User {$request->email} cant login into Sharepoint");
+                Session::put("SharepointAuthCtx", null);
+            }
 
             $priv = DB::table("cms_privileges")->where("id", $user->id_cms_privileges)->first();
             // if (ISSET($user->photo)) {
