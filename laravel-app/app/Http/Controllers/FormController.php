@@ -22,7 +22,7 @@ use App\Http\Utils\SomLogger;
 use App\Http\Utils\Operation;
 use App\Http\Utils\UserPrivileges;
 use App\Http\Utils\ViewModelPrivilege;
-use CRUDBooster;
+use App\Http\Utils\CRUDBooster;
 use SomController;
 
 class FormController extends Controller
@@ -1028,9 +1028,8 @@ class FormController extends Controller
      */
     public function downloadFile($projectId, $type, $id, $name)
     {
-
         //check if user is logged and its allowed
-        $currentUserId = CRUDBooster::myId();
+        $currentUserId = Auth::user()->id;
         if ($currentUserId == null || $currentUserId == '' || $projectId == '') {
             return false;
         } else {
@@ -1053,9 +1052,13 @@ class FormController extends Controller
 
         //If dont have SharepointToken
         if (Session::get("SharepointAuthCtx") == null) {
+            echo 'Sharepoint token expired...';
+            die();
             SomLogger::error("ERR1011", "Error connecting to Sharepoint");
             return "Error connecting to Sharepoint";
         } else {
+            echo 'First line of else...';
+            die();
             SomLogger::debug("DBG1001", "Init Download Document. Type: {$type}, Id: {$id}, Name: {$name}");
             //$url=$_ENV["SHAREPOINT_URL"];
             $parentFolderUrl = env("SHAREPOINT_ROOT_FOLDER");
@@ -1072,7 +1075,8 @@ class FormController extends Controller
             } else if ($type == "approvalDocUrl") {
                 $fullFileName = "a{$id}_doc_{$name}";
             }
-
+            echo $fullFileName;
+            die();
             //Check Project Folder
             $projectFolder = (DB::table('som_projects')->where([["id", "=", $projectId]])->first())->documentation_folder;
 
@@ -1081,6 +1085,8 @@ class FormController extends Controller
 
             $ctx = $this->getSharepointContext();
             if ($this->downloadSPFile($ctx, $fileServerRelativeURL, "{$fullFileName}")) {
+                echo response()->download(storage_path("app/{$tempFolder}/{$fullFileName}"), $name)->deleteFileAfterSend(true);
+                die();
                 return response()->download(storage_path("app/{$tempFolder}/{$fullFileName}"), $name)->deleteFileAfterSend(true);
             } else {
                 abort(500);
@@ -1095,13 +1101,16 @@ class FormController extends Controller
     function downloadSPFile(ClientContext $ctx, $fileServerRelativeURL, $fileName)
     {
         try {
+            echo 'Hello';
             $tempFolder = env("SHAREPOINT_TMP_LOCAL_FOLDER");
             $fileContent = SPFile::openBinary($ctx, $fileServerRelativeURL);
-
+            die();
             Storage::put("{$tempFolder}/{$fileName}", $fileContent);
             SomLogger::debug("DBG1001", 'File downloaded');
             return true;
         } catch (\Exception $e) {
+            echo $e;
+            die();
             SomLogger::error("ERR1013", "File download failed");
             return false;
         }
