@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiGetProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SomNewsController;
@@ -26,3 +27,6 @@ Route::middleware('api')->group(function () {
 Route::get('encrypt/{text}', [App\Http\Controllers\EncryptController::class, 'encrypt'], function ($text) {
     return $text;
 });
+
+
+
