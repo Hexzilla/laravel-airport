@@ -1090,16 +1090,11 @@ class FormController extends Controller
     {
         try {
             $tempFolder = env("SHAREPOINT_TMP_LOCAL_FOLDER");
-            echo $fileServerRelativeURL;
-            die();
             $fileContent = SPFile::openBinary($ctx, $fileServerRelativeURL);
-
             Storage::put("{$tempFolder}/{$fileName}", $fileContent);
             SomLogger::debug("DBG1001", 'File downloaded');
             return true;
         } catch (\Exception $e) {
-            echo $e;
-            die();
             SomLogger::error("ERR1013", "File download failed");
             return false;
         }
