@@ -57,7 +57,7 @@ function openDeleteModal(id){
 
 $(function () {
     var table = $('.data-table').DataTable({
-        processing: true,
+        processing: false,
         serverSide: false,
         ajax: "{{ route('somProjects.index') }}",
         columns: [
