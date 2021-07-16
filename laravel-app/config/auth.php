@@ -42,7 +42,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'session',
             'provider' => 'users',
             'hash' => false,
         ],
@@ -67,7 +67,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'ldap', // was 'eloquent'
             'model' => App\Models\CmsUsers::class,
         ],
 

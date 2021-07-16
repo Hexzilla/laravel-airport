@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EncryptController;
+use App\Http\Controllers\FormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,17 @@ Auth::routes();
 Route::get('/admin', [
     AdminController::class, 'index'
 ])->name('admin');
+
+Route::get('form/{id}', [App\Http\Controllers\FormController::class, 'load'], function ($id) {
+    return $id;
+});
+Route::post('form/submit', [App\Http\Controllers\FormController::class, 'submit']);
+Route::post('form/saveConsulted', [App\Http\Controllers\FormController::class, 'saveConsulted']);
+Route::post('form/findUser', [App\Http\Controllers\FormController::class, 'findUser']);
+Route::get('downloadDoc/{projectId}/{type}/{id}/{name}',[App\Http\Controllers\FormController::class, 'downloadFile']);
+Route::get('/getLoad', [
+    App\Http\Controllers\SomDepartmentsController::class, 'getLoad'
+])->name('getLoad');
 
 Route::resource('cmsApiCustoms', App\Http\Controllers\CmsApiCustomController::class);
 
