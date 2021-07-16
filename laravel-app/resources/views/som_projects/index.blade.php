@@ -8,22 +8,48 @@
                     <h1><i class="fa fa-box"></i> Projects</h1>
                 </div>
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('somProjects.create') }}">
-                        Add Project
-                    </a>
+                    <div class="float-right">                                                
+                        <a href="{{ route('somForms.index') }}">
+                            <i class="fa fa-palette"></i> Home
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-chevron-right"></i> Projects
+                        </a>                        
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
     <div class="content px-3">
+        <div class="row ml-1">
+            <div class="col-md-6 mb-4">
+                <a href="{{ route('somForms.index') }}">
+                    <i class="fa fa-chevron-left"></i> Home
+                </a>
+            </div>
+            <div class="col-md-6 mb-4">
+                <a class="btn btn-primary float-right"
+                   href="{{ route('somProjects.create') }}">
+                    Add Project
+                </a>
+            </div>
+        </div>
 
         @include('flash::message')
 
         <div class="clearfix"></div>
 
         <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-3">
+                        <span><i class="fa fa-globe ml-2"></i> Projects List</span>
+                    </div>
+                    @include('layouts.bradecrumbs')
+                    <div class="col-md-3"></div>
+                </div>
+                
+            </div>
             <div class="card-body p-0">
                 @include('som_projects.table')
 

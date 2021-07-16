@@ -61,6 +61,7 @@ class SomProjectsAdditionalAirportController extends AppBaseController
             $airports[$rows['id']] = $rows['name'];
         }
         return view('som_projects_additional_airports.create')
+                    ->with('somEditId', 0)
                     ->with('somProjectsId', $somProjectsId)
                     ->with('somProjectsAirports', $airports)
                     ->with('selectedItem', 0);

@@ -66,4 +66,13 @@ class SomCountryRepository extends BaseRepository
             ->where('country_code', $country_code)
             ->count();
     }
+
+    public function getCountByCountryCodeAndId($country_code, $id){
+        return $this->makeModel()
+            ->where('country_code', $country_code)
+            ->where('id','<>', $id)
+            ->count();
+    }
+
+
 }

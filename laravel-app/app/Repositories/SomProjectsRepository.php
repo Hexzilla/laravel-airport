@@ -67,7 +67,23 @@ class SomProjectsRepository extends BaseRepository
     public function model()
     {
         return SomProjects::class;
-    }   
+    }  
+
+    public function getAllData(){
+        $select  = array();
+        $select[0] = 'som_projects.*';
+        $select[1] = 'som_projects_model.name as som_project_model_name';
+        $select[2] = 'som_project_process_type.name as som_project_process_type_name';
+        $select[3] = 'som_country.country as som_country_name';
+        $select[4] = 'som_project_info_status.name as som_project_info_status_name';
+        $result = $this->makeModel()
+            ->leftJoin('som_projects_model', 'som_projects.som_projects_model_id', 'som_projects_model.id')
+            ->leftJoin('som_project_process_type','som_projects.som_project_process_type_id','som_project_process_type.id')
+            ->leftJoin('som_country','som_projects.som_country_id','som_country.id')
+            ->leftJoin('som_project_info_status','som_projects.som_project_info_status_id','som_project_info_status.id')
+            ->get($select);
+        return $result;
+    } 
 
     public function getCountByAirportId($airport_id){
         return $this->makeModel()

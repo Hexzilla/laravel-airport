@@ -80,6 +80,7 @@ class SomProjectsPhasesController extends AppBaseController
 
 
         return view('som_projects_phases.create')
+                    ->with('som_projects_phases_id', 0)
                     ->with('somPhaseArray', $phases)
                     ->with('somStatusArray', $status)
                     ->with('selectedPhaseItem', 0)

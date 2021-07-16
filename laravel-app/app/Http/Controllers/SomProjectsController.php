@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsController extends AppBaseController
 {
     /** @var  SomProjectsRepository */
@@ -33,10 +35,61 @@ class SomProjectsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjects = $this->somProjectsRepository->all();
+        if ($request->ajax()) {
 
-        return view('som_projects.index')
-            ->with('somProjects', $somProjects);
+            $data = $this->somProjectsRepository->getAllData();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('is_template_project', function ($request) {
+                    $html = "";
+                    if ($request->is_template_project){
+                        $html = '<i class="fas fa-key"></i>';
+                    }
+                    return $html; 
+                })
+                ->editColumn('img_url', function ($request) {
+                    $html = "<img src=\"".$request->img_url."\" alt=\"".$request->name."\">";
+                    return $html; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group'>";
+
+                    //button Users                   
+                    $action .= "<a href=\"". route('somProjectUsers.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                        <i class='fas fa-users'></i>Users</a>";
+
+                    //button Additional Airports 
+                    $action .= "<a href=\"". route('somProjectsAdditionalAirports.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'><i class='fas fa-plane'></i>Additional Airports</a>";
+
+                    //button Phases
+                    $action .= "<a href=\"". route('somProjectsPhases.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='fas fa-film'></i>Phases</a>";
+
+                    //button Partners
+                    $action .= "<a href=\"". route('somProjectsPartners.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='far fa-object-group'></i>Partners</a>";
+
+                    //button Advisors
+                    $action .= "<a href=\"". route('somProjectsAdvisors.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='fas fa-users'></i>Advisors</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjects.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['is_template_project','img_url','action'])                
+                ->make(true);
+        }
+        return view('som_projects.index');
     }
 
     /**
