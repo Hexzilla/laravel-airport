@@ -11,10 +11,10 @@
                 <th>Asset Type</th>
                 <th>Location</th>
                 <th>Status</th>
-                <th>Action</th> 
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody>        
+        <tbody>
         </tbody>
     </table>
 </div>
@@ -35,9 +35,9 @@
                     {!! Form::open(['route' => ['somProjects.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <span>Are you sure?</span>                            
+                            <span>Are you sure?</span>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
                         {!! Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs']) !!}
                     </div>
@@ -55,20 +55,20 @@ function openDeleteModal(id){
     $('#deleteModal').modal("show");
 }
 
-$(function () { 
+$(function () {
     var table = $('.data-table').DataTable({
         processing: true,
-        serverSide: true,
+        serverSide: false,
         ajax: "{{ route('somProjects.index') }}",
-        columns: [   
-            {data: 'is_template_project', name: 'is_template_project'}, 
-            {data: 'img_url', name: 'img_url'},  
-            {data: 'name', name: 'name'}, 
-            {data: 'sub_name', name: 'sub_name'}, 
-            {data: 'som_project_model_name', name: 'som_project_model_name'},
-            {data: 'som_project_process_type_name', name: 'som_project_process_type_name'},
-            {data: 'som_country_name', name: 'som_country_name'},
-            {data: 'som_project_info_status_name', name: 'som_project_info_status_name'},            
+        columns: [
+            {data: 'is_template_project', name: 'is_template_project', orderable: true, searchable: true},
+            {data: 'img_url', name: 'img_url', orderable: false, searchable: false},
+            {data: 'name', name: 'name', orderable: true, searchable: true},
+            {data: 'sub_name', name: 'sub_name', orderable: true, searchable: true},
+            {data: 'som_project_model_name', name: 'som_project_model_name', orderable: true, searchable: true},
+            {data: 'som_project_process_type_name', name: 'som_project_process_type_name', orderable: true, searchable: true},
+            {data: 'som_country_name', name: 'som_country_name', orderable: true, searchable: true},
+            {data: 'som_project_info_status_name', name: 'som_project_info_status_name', orderable: true, searchable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
