@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
+
 class SomNewsController extends AppBaseController
 {
     /** @var  SomNewsRepository */
@@ -29,10 +32,50 @@ class SomNewsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somNews = $this->somNewsRepository->all();
+        if ($request->ajax()) {
 
-        return view('som_news.index')
-            ->with('somNews', $somNews);
+            $data = $this->somNewsRepository->all();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('date_from', function ($request) {
+                    $date_from = "";
+                    if(!empty($request->date_from)){
+                        $date_from = date('Y-m-d', strtotime($request->date_from));
+                    }
+                    return $date_from; 
+                })
+                ->editColumn('date_until', function ($request) {
+                    $date_until = "";
+                    if(!empty($request->date_until)){
+                        $date_until = date('Y-m-d', strtotime($request->date_until));
+                    }
+                    return $date_until; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    // $action .= "<a href=\"".route('somNews.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somNews.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
+
+        return view('som_news.index');
     }
 
     /**

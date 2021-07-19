@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsAirportController extends AppBaseController
 {
     /** @var  SomProjectsAirportRepository */
@@ -45,20 +47,42 @@ class SomProjectsAirportController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsAirports = $this->somProjectsAirportRepository->all();
+        if ($request->ajax()) {
+            $data = $this->somProjectsAirportRepository->getAllData();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('version_date', function ($request) {
+                    $version_date = "";
+                    if(!empty($request->version_date)){
+                        $version_date = date('Y-m-d', strtotime($request->version_date));
+                    }
+                    return $version_date; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
 
-        $data = array();
+                    //button show                
+                    $action .= "<a href=\"".route('somAirports.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
 
-        $data['airport_types'] = array();
+                    //button edit                     
+                    $action .= "<a href=\"".route('somAirports.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
 
-        $airport_types = $this->somProjectsAirportTypeRepository->all();
-        foreach ($airport_types as $airport_type) {
-            $data['airport_types'][$airport_type->id] = $airport_type->name;
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
         }
 
-        return view('som_projects_airports.index')
-            ->with('somProjectsAirports', $somProjectsAirports)
-            ->with('data', $data);
+        return view('som_projects_airports.index');
     }
 
     /**
@@ -255,7 +279,7 @@ class SomProjectsAirportController extends AppBaseController
         if (empty($somProjectsAirport)) {
             Flash::error('Som Projects Airport not found');
 
-            return redirect(route('somProjectsAirports.index'));
+            return redirect(route('somAirports.index'));
         }
 
         return view('som_projects_airports.show')->with('somProjectsAirport', $somProjectsAirport);

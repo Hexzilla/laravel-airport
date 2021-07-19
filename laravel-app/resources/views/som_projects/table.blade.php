@@ -57,18 +57,18 @@ function openDeleteModal(id){
 
 $(function () { 
     var table = $('.data-table').DataTable({
-        processing: true,
-        serverSide: true,
+        processing: false,
+        serverSide: false,
         ajax: "{{ route('somProjects.index') }}",
         columns: [   
-            {data: 'is_template_project', name: 'is_template_project'}, 
-            {data: 'img_url', name: 'img_url'},  
-            {data: 'name', name: 'name'}, 
-            {data: 'sub_name', name: 'sub_name'}, 
-            {data: 'som_project_model_name', name: 'som_project_model_name'},
-            {data: 'som_project_process_type_name', name: 'som_project_process_type_name'},
-            {data: 'som_country_name', name: 'som_country_name'},
-            {data: 'som_project_info_status_name', name: 'som_project_info_status_name'},            
+            {data: 'is_template_project', name: 'is_template_project', orderable: true, searchable: true}, 
+            {data: 'img_url', name: 'img_url', orderable: true, searchable: true},  
+            {data: 'name', name: 'name', orderable: true, searchable: true}, 
+            {data: 'sub_name', name: 'sub_name', orderable: true, searchable: true}, 
+            {data: 'som_project_model_name', name: 'som_project_model_name', orderable: true, searchable: true},
+            {data: 'som_project_process_type_name', name: 'som_project_process_type_name', orderable: true, searchable: true},
+            {data: 'som_country_name', name: 'som_country_name', orderable: true, searchable: true},
+            {data: 'som_project_info_status_name', name: 'som_project_info_status_name', orderable: true, searchable: true},            
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });

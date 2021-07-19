@@ -13,6 +13,14 @@
 
     <div class="content px-3">
 
+        <div class="row ml-1">
+            <div class="col-md-12 mb-4">
+                <a href="{{ route('cmsDashboards.index') }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Dashboard
+                </a>
+            </div>
+        </div>
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">

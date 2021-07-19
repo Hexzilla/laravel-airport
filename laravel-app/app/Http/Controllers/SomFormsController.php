@@ -5,20 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormsRequest;
 use App\Http\Requests\UpdateSomFormsRequest;
 use App\Repositories\SomFormsRepository;
+use App\Repositories\SomProjectsMilestonesRepository;
 use App\Models\SomForms;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomFormsController extends AppBaseController
 {
     /** @var  SomFormsRepository */
     private $somFormsRepository;
+    private $somProjectsMilestonesRepository;
 
-    public function __construct(SomFormsRepository $somFormsRepo)
+    public function __construct(SomFormsRepository $somFormsRepo,
+                                SomProjectsMilestonesRepository $somProjectsMilestonesRepo)
     {
         $this->somFormsRepository = $somFormsRepo;
+        $this->somProjectsMilestonesRepository = $somProjectsMilestonesRepo;
     }
 
     /**
@@ -31,14 +37,89 @@ class SomFormsController extends AppBaseController
     public function index(Request $request)
     {
         $milestones_id = $request->get('milestones_id');
-        if( !empty($milestones_id) )
-            $somForms = $this->somFormsRepository->all(['som_phases_milestones_id'=>$milestones_id]);
-        else
-            $somForms = $this->somFormsRepository->all();
+            
+        $bradecrumbs = array();
+        $bradecrumbs[0] = array();         
+        $bradecrumbs[0]['id'] = 0;
+        $bradecrumbs[0]['name'] = "";
+        $bradecrumbs[1] = array();
+        $bradecrumbs[1]['id'] = 0;
+        $bradecrumbs[1]['name'] = "";
+        $bradecrumbs[2] = array();
+        $bradecrumbs[2]['id'] = 0;
+        $bradecrumbs[2]['name'] = "";
+
+        if(!empty($milestones_id)){
+            $bradeAry = $this->somProjectsMilestonesRepository->getBradecrumbsById($milestones_id);          
+               
+            //projects        
+            $bradecrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
+            $bradecrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            //phases            
+            $bradecrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
+            $bradecrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            //milestones 
+            $bradecrumbs[2]['id'] = $milestones_id;
+            $bradecrumbs[2]['name'] = $bradeAry[0]['name']; 
+        }
+
+        if ($request->ajax()) {
+
+            if( !empty($milestones_id) ){
+                $data = $this->somFormsRepository->all(['som_phases_milestones_id'=>$milestones_id]);
+            }
+            else{
+                $data = $this->somFormsRepository->all();
+            }
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('is_inactive', function ($request) {
+                    $html = "";
+                    if(!empty($request->is_inactive)){
+                        $html = $request->is_inactive;
+                    }
+                    return $html; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button tasks
+                    $action .= "<a href=\"".route('somFormTasks.index', ['somforms_id'=>$row->id])."\" class='btn btn-default btn-xs'>
+                        <i class='far fa-task'></i>tasks</a>";
+
+                    //button elements
+                    $action .= "<a href=\"".route('somFormElements.index', ['somforms_id'=>$row->id])."\" class='btn btn-default btn-xs'>
+                        <i class='far fa-task'></i>elements</a>";
+
+                    //button approvals
+                    $action .= "<a href=\"".route('somFormApprovals.index', ['somforms_id'=>$row->id])."\" class='btn btn-default btn-xs'>
+                        <i class='far fa-task'></i>approvals</a>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somForms.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somForms.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
 
         return view('som_forms.index')
                 ->with('milestones_id', $milestones_id)
-                ->with('somForms', $somForms);
+                ->with('bradecrumbs', $bradecrumbs);
     }
 
     /**

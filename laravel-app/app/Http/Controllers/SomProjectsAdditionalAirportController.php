@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsAdditionalAirportController extends AppBaseController
 {
     /** @var  SomProjectsAdditionalAirportRepository */
@@ -37,12 +39,39 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     {
         //JOIN BY PROJECT_ID---
         $projectId = $request->input('project_id');
-        $somProjectsAdditionalAirports = $this->somProjectsAdditionalAirportRepository->all(['som_project_id' => $projectId]);
         //---------------------
 
+        if ($request->ajax()) {
+
+            $data = $this->somProjectsAdditionalAirportRepository->getAllData($projectId);
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    // $action .= "<a href=\"".route('somProjectsAdditionalAirports.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectsAdditionalAirports.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
+
         return view('som_projects_additional_airports.index')
-            ->with('projectId', $projectId)
-            ->with('somProjectsAdditionalAirports', $somProjectsAdditionalAirports);
+            ->with('projectId', $projectId);
     }
 
     /**

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomCountryInfoController extends AppBaseController
 {
     /** @var  SomCountryInfoRepository */
@@ -33,20 +35,38 @@ class SomCountryInfoController extends AppBaseController
      */
     public function index(Request $request)
     {        
-        $somCountryInfos = $this->somCountryInfoRepository->all();
-
-        $data = array();
-        $data['countries'] = array();
-        $somCountries = $this->somCountryRepository->all();        
-        foreach ($somCountries as $somCountry) {            
-            $data['countries'][$somCountry->id] = $somCountry->country;
-        }
-
         $somCountry_id = $request->get("somCountry_id");
 
+        if ($request->ajax()) {
+
+            $data = $this->somCountryInfoRepository->getAllData();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somCountryInfos.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somCountryInfos.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }        
+
         return view('som_country_infos.index')
-            ->with('somCountryInfos', $somCountryInfos)
-            ->with('data', $data)
             ->with('somCountry_id',$somCountry_id);
     }
 

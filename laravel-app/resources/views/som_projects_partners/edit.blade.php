@@ -13,13 +13,13 @@
 
     <div class="content px-3">
 
-        {{--<div class="row">--}}
-            {{--<div class="col-12-lg ml-2 mb-4">--}}
-                {{--<a href="{{ route('somProjectsPartners.index') }}">--}}
-                    {{--<i class="fa fa-chevron-left"></i> Back To List Data Projects Partners--}}
-                {{--</a>--}}
-            {{--</div>--}}
-        {{--</div>--}}
+        <div class="row">
+            <div class="col-12-lg ml-2 mb-4">
+                <a href="{{ route('somProjectsPartners.index',['project_id' => $somProjectID]) }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Projects Partners
+                </a>
+            </div>
+        </div>
 
         @include('adminlte-templates::common.errors')
 
@@ -34,7 +34,7 @@
             <div class="card-footer">
                 <div class="row">
                     <div class="offset-sm-2 col-sm-10">
-                        <a href="{{ route('somProjectsPartners.index') }}" class="btn btn-default">
+                        <a href="{{ route('somProjectsPartners.index',['project_id' => $somProjectID]) }}" class="btn btn-default">
                             <i class="fa fa-chevron-left"></i>
                             back
                         </a>

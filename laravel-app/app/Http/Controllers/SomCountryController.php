@@ -57,7 +57,7 @@ class SomCountryController extends AppBaseController
                 })
                 ->addColumn('action', function($row){
                     $action ="";
-                    $action .= "<div class='btn-group'>";
+                    $action .= "<div class='btn-group' style='float:right;'>";
 
                     //button addtional infomation                    
                     $action .= "<a href=\"".route("somCountryInfos.index",['somCountry_id'=> $row->id])."\" class='btn btn-default btn-xs'><i class='fa fa-info-circle'></i> Additional Infomation</a>";

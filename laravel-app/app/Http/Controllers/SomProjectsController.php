@@ -34,7 +34,7 @@ class SomProjectsController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
+    {        
         if ($request->ajax()) {
 
             $data = $this->somProjectsRepository->getAllData();
@@ -54,7 +54,7 @@ class SomProjectsController extends AppBaseController
                 })
                 ->addColumn('action', function($row){
                     $action ="";
-                    $action .= "<div class='btn-group'>";
+                    $action .= "<div class='btn-group' style='float:right;'>";
 
                     //button Users                   
                     $action .= "<a href=\"". route('somProjectUsers.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
@@ -99,7 +99,16 @@ class SomProjectsController extends AppBaseController
      */
     public function create()
     {
-        return view('som_projects.create');
+        $statusArray = array();
+        $sel_status_id = 0;
+        $statusRows = $this->somStatusRepository->all(['type'=>'projects'], null, null, ['id','name']);
+        foreach($statusRows as $row)
+        {
+            $statusArray[$row['id']] = $row['name'];
+        }
+        return view('som_projects.create')
+                    ->with('statusArray', $statusArray)
+                    ->with('sel_status', $sel_status_id);
     }
 
     /**
@@ -165,7 +174,8 @@ class SomProjectsController extends AppBaseController
             $statusArray[$row['id']] = $row['name'];
         }
         return view('som_projects.edit')
-                ->with('statusArray', $statusArray)->with('sel_status', $sel_status_id)
+                ->with('statusArray', $statusArray)
+                ->with('sel_status', $sel_status_id)
                 ->with('somProjects', $somProjects);
     }
 

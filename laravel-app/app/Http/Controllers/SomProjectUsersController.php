@@ -9,6 +9,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+use DataTables;
 
 class SomProjectUsersController extends AppBaseController
 {
@@ -29,10 +30,39 @@ class SomProjectUsersController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectUsers = $this->somProjectUsersRepository->all();
+        $project_id = $request->input('project_id');
+
+        if ($request->ajax()) {
+
+            $data = $this->somProjectUsersRepository->all();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somProjectUsers.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectUsers.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
 
         return view('som_project_users.index')
-            ->with('somProjectUsers', $somProjectUsers);
+                    ->with('project_id', $project_id);
     }
 
     /**
@@ -40,9 +70,11 @@ class SomProjectUsersController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_project_users.create');
+        $project_id = $request->input('project_id');
+        return view('som_project_users.create')
+                    ->with('project_id', $project_id);
     }
 
     /**
@@ -100,7 +132,9 @@ class SomProjectUsersController extends AppBaseController
             return redirect(route('somProjectUsers.index'));
         }
 
-        return view('som_project_users.edit')->with('somProjectUsers', $somProjectUsers);
+        return view('som_project_users.edit')
+                ->with('somProjectUsers', $somProjectUsers)
+                ->with('project_id',$somProjectUsers->som_projects_id);
     }
 
     /**

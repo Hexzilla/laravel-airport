@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><i class='fa fa-globe'></i>Som Countries</h1>
+                    <h1><i class='fa fa-globe'></i> Som Countries</h1>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
-                        <a href="{{ route('somForms.index') }}">
+                        <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
@@ -25,7 +25,7 @@
         
         <div class="row ml-1">
             <div class="col-md-6 mb-4">
-                <a href="{{ route('somForms.index') }}">
+                <a href="#">
                     <i class="fa fa-chevron-left"></i> Home
                 </a>
             </div>
@@ -47,11 +47,10 @@
                     <div class="col-md-3">
                         <span><i class="fa fa-globe ml-2"></i> Country List</span>
                     </div>
-                    @include('layouts.bradecrumbs')
-                    <div class="col-md-3"></div>
-                </div>
-                
+                    <div class="col-md-9"></div>
+                </div>                
             </div>
+
             <div class="card-body p-0">
                 @include('som_countries.table')
 
