@@ -37,9 +37,9 @@ class SomFormsController extends AppBaseController
     public function index(Request $request)
     {
         $milestones_id = $request->get('milestones_id');
-
+            
         $breadcrumbs = array();
-        $breadcrumbs[0] = array();
+        $breadcrumbs[0] = array();         
         $breadcrumbs[0]['id'] = 0;
         $breadcrumbs[0]['name'] = "";
         $breadcrumbs[1] = array();
@@ -50,17 +50,17 @@ class SomFormsController extends AppBaseController
         $breadcrumbs[2]['name'] = "";
 
         if(!empty($milestones_id)){
-            $bradeAry = $this->somProjectsMilestonesRepository->getbreadcrumbsById($milestones_id);
-
-            //projects
-            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
+            $bradeAry = $this->somProjectsMilestonesRepository->getbreadcrumbsById($milestones_id);          
+               
+            //projects        
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
             $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
-            //phases
+            //phases            
             $breadcrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
             $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
-            //milestones
+            //milestones 
             $breadcrumbs[2]['id'] = $milestones_id;
-            $breadcrumbs[2]['name'] = $bradeAry[0]['name'];
+            $breadcrumbs[2]['name'] = $bradeAry[0]['name']; 
         }
 
         if ($request->ajax()) {
@@ -79,7 +79,7 @@ class SomFormsController extends AppBaseController
                     if(!empty($request->is_inactive)){
                         $html = $request->is_inactive;
                     }
-                    return $html;
+                    return $html; 
                 })
                 ->addColumn('action', function($row){
                     $action ="";
@@ -97,12 +97,12 @@ class SomFormsController extends AppBaseController
                     $action .= "<a href=\"".route('somFormApprovals.index', ['somforms_id'=>$row->id])."\" class='btn btn-default btn-xs'>
                         <i class='far fa-task'></i>approvals</a>";
 
-                    //button show
+                    //button show                
                     $action .= "<a href=\"".route('somForms.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";
+                    $action .= "</a>";   
 
-                    //button edit
+                    //button edit                     
                     $action .= "<a href=\"".route('somForms.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
@@ -111,9 +111,9 @@ class SomFormsController extends AppBaseController
                     $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
-                    return $action;
-                })
-                ->rawColumns(['action'])
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
                 ->make(true);
         }
 
@@ -129,7 +129,7 @@ class SomFormsController extends AppBaseController
      */
     public function create(Request $request)
     {
-        $somForm = new SomForms();
+        $somForm = new SomForms(); 
         $milestones_id = $request->get('milestones_id');
         $somForm->active = 1;
         $somForm->order_form = 1;
@@ -249,7 +249,7 @@ class SomFormsController extends AppBaseController
         $this->somFormsRepository->delete($id);
 
         Flash::success('Som Forms deleted successfully.');
-
+        
         return redirect(route('somForms.index', ['milestones_id'=>$milestones_id]));
     }
 }

@@ -8,14 +8,14 @@
                     <h1><i class='fa fa-tasks'></i> Som Form Tasks</h1>
                 </div>
                 <div class="col-sm-6">
-                    <div class="float-right">
+                    <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
                             <i class="fa fa-chevron-right"></i> Form Tasks
-                        </a>
-                    </div>
+                        </a>                        
+                    </div>                        
                 </div>
             </div>
         </div>
@@ -53,10 +53,10 @@
                         </a>  /
                         <a href="{{ route('somProjectsMilestones.index' , ['phases_id'=>$breadcrumbs[1]['id'] ]) }}">
                             {!! $breadcrumbs[1]['name'] !!}
-                        </a>  /
+                        </a>  / 
                         <a href="{{ route('somForms.index', ['milestones_id'=>$breadcrumbs[2]['id'] ]) }}">
                             {!! $breadcrumbs[2]['name'] !!}
-                        </a>  /
+                        </a>  / 
                         <span>{!! $breadcrumbs[3]['name'] !!}</span>
                     </div>
                     <div class="col-md-3"></div>
@@ -70,7 +70,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-
+                        
                     </div>
                 </div>
             </div>

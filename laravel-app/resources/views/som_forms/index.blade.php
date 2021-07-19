@@ -8,14 +8,14 @@
                     <h1><i class='fas fa-list'></i> Som Forms</h1>
                 </div>
                 <div class="col-sm-6">
-                    <div class="float-right">
+                    <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
                             <i class="fa fa-chevron-right"></i> Som Forms
-                        </a>
-                    </div>
+                        </a>                        
+                    </div>                        
                 </div>
             </div>
         </div>
@@ -52,21 +52,21 @@
                         </a>  /
                         <a href="{{ route('somProjectsMilestones.index' , ['phases_id'=>$breadcrumbs[1]['id'] ]) }}">
                             {!! $breadcrumbs[1]['name'] !!}
-                        </a>  /
-                        <span>{!! $breadcrumbs[2]['name'] !!}</span>
+                        </a>  / 
+                        <span>{!! $breadcrumbs[2]['name'] !!}</span> 
                     </div>
                     <div class="col-md-3"></div>
                 </div>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card">            
             <div class="card-body p-0">
                 @include('som_forms.table')
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-
+                        
                     </div>
                 </div>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomProjectsAdvisorsRequest;
 use App\Http\Requests\UpdateSomProjectsAdvisorsRequest;
 use App\Repositories\SomProjectsAdvisorsRepository;
+use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -16,10 +17,13 @@ class SomProjectsAdvisorsController extends AppBaseController
 {
     /** @var  SomProjectsAdvisorsRepository */
     private $somProjectsAdvisorsRepository;
+    private $somProjectsRepository;
 
-    public function __construct(SomProjectsAdvisorsRepository $somProjectsAdvisorsRepo)
+    public function __construct(SomProjectsAdvisorsRepository $somProjectsAdvisorsRepo,
+                                SomProjectsRepository $somProjectsRepo)
     {
         $this->somProjectsAdvisorsRepository = $somProjectsAdvisorsRepo;
+        $this->somProjectsRepository = $somProjectsRepo;   
     }
 
     /**
@@ -32,6 +36,12 @@ class SomProjectsAdvisorsController extends AppBaseController
     public function index(Request $request)
     {
         $somProjectsID = $request->input('project_id');
+
+        $somProjects = $this->somProjectsRepository->find($somProjectsID);
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somProjects['id'];
+        $breadcrumbs[0]['name'] = $somProjects['name'];
 
         if ($request->ajax()) {
 
@@ -63,7 +73,8 @@ class SomProjectsAdvisorsController extends AppBaseController
         }
 
         return view('som_projects_advisors.index')
-            ->with('somProjectID',$somProjectsID);
+            ->with('somProjectID',$somProjectsID)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**

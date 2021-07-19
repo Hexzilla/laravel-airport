@@ -52,7 +52,7 @@ class SomFormTasksController extends AppBaseController
         // $somFormTasks = $this->somFormTasksRepository->all(['som_forms_id'=>$somforms_id]);
 
         $breadcrumbs = array();
-        $breadcrumbs[0] = array();
+        $breadcrumbs[0] = array();         
         $breadcrumbs[0]['id'] = 0;
         $breadcrumbs[0]['name'] = "";
         $breadcrumbs[1] = array();
@@ -66,19 +66,19 @@ class SomFormTasksController extends AppBaseController
         $breadcrumbs[3]['name'] = "";
 
         if(!empty($somforms_id)){
-            $bradeAry = $this->somFormsRepository->getbreadcrumbsById($somforms_id);
+            $bradeAry = $this->somFormsRepository->getbreadcrumbsById($somforms_id); 
 
-            //projects
-            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
+            //projects        
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
             $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
-            //phases
+            //phases            
             $breadcrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
             $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
-            //milestones
-            $breadcrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id'];
-            $breadcrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name'];
+            //milestones 
+            $breadcrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id']; 
+            $breadcrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name']; 
             //forms
-            $breadcrumbs[3]['id'] = $somforms_id;
+            $breadcrumbs[3]['id'] = $somforms_id; 
             $breadcrumbs[3]['name'] = $bradeAry[0]['name'];
         }
 
@@ -92,12 +92,12 @@ class SomFormTasksController extends AppBaseController
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
-                    //button show
+                    //button show                
                     $action .= "<a href=\"".route('somFormTasks.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";
+                    $action .= "</a>";   
 
-                    //button edit
+                    //button edit                     
                     $action .= "<a href=\"".route('somFormTasks.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
@@ -106,12 +106,12 @@ class SomFormTasksController extends AppBaseController
                     $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
-                    return $action;
-                })
-                ->rawColumns(['action'])
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
                 ->make(true);
         }
-
+        
         return view('som_form_tasks.index')
             ->with('somforms_id', $somforms_id)
             ->with('breadcrumbs', $breadcrumbs);
@@ -131,7 +131,7 @@ class SomFormTasksController extends AppBaseController
         $somFormTasks->som_status_id = 0;
         $arrType['-1'] = 'Please select a Type';
         $arrType = $arrType + config( 'constants.taskTypes');
-
+        
         $arrRole = array();
         $arrRole[] = 'Please select a Privilege';
         $roleEditor = config('constants.UserPrivileges.Editor');

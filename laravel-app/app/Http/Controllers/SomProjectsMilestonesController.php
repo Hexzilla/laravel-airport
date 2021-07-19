@@ -42,7 +42,7 @@ class SomProjectsMilestonesController extends AppBaseController
         //     $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
 
         $breadcrumbs = array();
-        $breadcrumbs[0] = array();
+        $breadcrumbs[0] = array();         
         $breadcrumbs[0]['id'] = 0;
         $breadcrumbs[0]['name'] = "";
         $breadcrumbs[1] = array();
@@ -50,10 +50,10 @@ class SomProjectsMilestonesController extends AppBaseController
         $breadcrumbs[1]['name'] = "";
 
         if(!empty($phases_id)){
-            $bradeAry = $this->somProjectsPhasesRepository->getbreadcrumbsById($phases_id);
-
+            $bradeAry = $this->somProjectsPhasesRepository->getbreadcrumbsById($phases_id);          
+                      
             $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
-            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];            
             $breadcrumbs[1]['id'] = $phases_id;
             $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
         }
@@ -72,21 +72,21 @@ class SomProjectsMilestonesController extends AppBaseController
                     if(!empty($request->due_date)){
                         $due_date = date('Y-m-d', strtotime($request->due_date));
                     }
-                    return $due_date;
+                    return $due_date; 
                 })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
-                    //button Forms
+                    //button Forms                    
                     $action .= "<a href=\"".route( "somForms.index", ['milestones_id'=> $row->id] )."\" class='btn btn-default btn-xs'><i class='fas fa-list' title='Forms'></i> Forms</a>";
 
-                    //button show
+                    //button show                
                     $action .= "<a href=\"".route('somProjectsMilestones.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";
+                    $action .= "</a>";   
 
-                    //button edit
+                    //button edit                     
                     $action .= "<a href=\"".route('somProjectsMilestones.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
@@ -95,9 +95,9 @@ class SomProjectsMilestonesController extends AppBaseController
                     $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
-                    return $action;
-                })
-                ->rawColumns(['action'])
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
                 ->make(true);
         }
 

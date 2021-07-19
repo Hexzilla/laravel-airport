@@ -1,32 +1,66 @@
-<div class="table-responsive">
-    <table class="table" id="somDepartmentsUsers-table">
+<div class="table-responsive" style="padding: 10px;">
+    <table class="table table-bordered data-table" id="somDepartmentsUsers-table">
         <thead>
             <tr>
-                <th>Som Departments Id</th>
-        <th>Cms Users Id</th>
-                <th colspan="3">Action</th>
+                <th>Departments</th>
+                <th>Users</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($somDepartmentsUsers as $somDepartmentsUsers)
-            <tr>
-                <td>{{ $somDepartmentsUsers->som_departments_id }}</td>
-            <td>{{ $somDepartmentsUsers->cms_users_id }}</td>
-                <td width="120">
-                    {!! Form::open(['route' => ['somDepartmentsUsers.destroy', $somDepartmentsUsers->id], 'method' => 'delete']) !!}
-                    <div class='btn-group'>
-                        <a href="{{ route('somDepartmentsUsers.show', [$somDepartmentsUsers->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-eye"></i>
-                        </a>
-                        <a href="{{ route('somDepartmentsUsers.edit', [$somDepartmentsUsers->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
-                        </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                    </div>
-                    {!! Form::close() !!}
-                </td>
-            </tr>
-        @endforeach
+        
         </tbody>
     </table>
 </div>
+
+<!-- ============================== delete modal ================================== -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Delete Item</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="deleteModalBody">
+                <div>
+                    {!! Form::open(['route' => ['somDepartmentsUsers.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
+                    <input type="hidden" name="som_departments_id" id="som_departments_id" value="{!! $som_departments_id !!}">
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <span>Are you sure?</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
+                        {!! Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function openDeleteModal(id){
+    $("#delete_form").attr("action","/somDepartmentsUsers/"+id);
+    $('#deleteModal').modal("show");
+}
+
+$(function () {
+
+    var table = $('.data-table').DataTable({
+        processing: false,
+        serverSide: false,
+        ajax: "{{ route('somDepartmentsUsers.index', ['som_departments_id'=>$som_departments_id]) }}",
+        columns: [
+            {data: 'som_departments_name', name: 'som_departments_name', orderable: true, searchable: true},
+            {data: 'cms_users_name', name: 'cms_users_name', orderable: true, searchable: true},           
+            {data: 'action', name: 'action', orderable: false, searchable: false,sWidth:'10%'},
+        ]
+    });
+});
+</script>

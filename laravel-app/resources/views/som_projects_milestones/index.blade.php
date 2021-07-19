@@ -8,14 +8,14 @@
                     <h1><i class='fas fa-film'></i> Phases Milestones</h1>
                 </div>
                 <div class="col-sm-6">
-                    <div class="float-right">
+                    <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
                             <i class="fa fa-chevron-right"></i> Phases Milestones
-                        </a>
-                    </div>
+                        </a>                        
+                    </div>                        
                 </div>
             </div>
         </div>
@@ -50,8 +50,8 @@
                     <div class="col-md-6 breadcrumbs-menu">
                         <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$breadcrumbs[0]['id'] ]) }}">
                             {!! $breadcrumbs[0]['name'] !!}
-                        </a>  /
-                        <span>{!! $breadcrumbs[1]['name'] !!}</span>
+                        </a>  / 
+                        <span>{!! $breadcrumbs[1]['name'] !!}</span> 
                     </div>
                     <div class="col-md-3"></div>
                 </div>
@@ -64,7 +64,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-
+                        
                     </div>
                 </div>
             </div>
