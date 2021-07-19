@@ -8,11 +8,14 @@ use App\Repositories\SomFormTasksRepository;
 use App\Repositories\CmsPrivilegesRepository;
 use App\Repositories\SomDepartmentsRepository;
 use App\Repositories\CmsPrivilegesRolesRepository;
+use App\Repositories\SomFormsRepository;
 use App\Models\SomFormTasks;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+
+use DataTables;
 
 class SomFormTasksController extends AppBaseController
 {
@@ -20,17 +23,20 @@ class SomFormTasksController extends AppBaseController
     private $somFormTasksRepository;
     private $cmsPrivilegesRepository;
     private $somDepartmentsRepository;
+    private $somFormsRepository;
 
     public function __construct(SomFormTasksRepository $somFormTasksRepo,
                                 CmsPrivilegesRepository $cmsPrivilegesRepo,
                                 SomDepartmentsRepository $somDepartmentsRepo,
-                                CmsPrivilegesRolesRepository $cmsPrivilegesRolesRepo
+                                CmsPrivilegesRolesRepository $cmsPrivilegesRolesRepo,
+                                SomFormsRepository $somFormsRepo
             )
     {
         $this->somFormTasksRepository = $somFormTasksRepo;
         $this->cmsPrivilegesRepository = $cmsPrivilegesRepo;
         $this->somDepartmentsRepository = $somDepartmentsRepo;
         $this->cmsPrivilegesRolesRepo = $cmsPrivilegesRolesRepo;
+        $this->somFormsRepository = $somFormsRepo;
     }
 
     /**
@@ -43,10 +49,72 @@ class SomFormTasksController extends AppBaseController
     public function index(Request $request)
     {
         $somforms_id = $request->get('somforms_id');
-        $somFormTasks = $this->somFormTasksRepository->all(['som_forms_id'=>$somforms_id]);
+        // $somFormTasks = $this->somFormTasksRepository->all(['som_forms_id'=>$somforms_id]);
+
+        $bradecrumbs = array();
+        $bradecrumbs[0] = array();         
+        $bradecrumbs[0]['id'] = 0;
+        $bradecrumbs[0]['name'] = "";
+        $bradecrumbs[1] = array();
+        $bradecrumbs[1]['id'] = 0;
+        $bradecrumbs[1]['name'] = "";
+        $bradecrumbs[2] = array();
+        $bradecrumbs[2]['id'] = 0;
+        $bradecrumbs[2]['name'] = "";
+        $bradecrumbs[3] = array();
+        $bradecrumbs[3]['id'] = 0;
+        $bradecrumbs[3]['name'] = "";
+
+        if(!empty($somforms_id)){
+            $bradeAry = $this->somFormsRepository->getBradecrumbsById($somforms_id); 
+
+            //projects        
+            $bradecrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
+            $bradecrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            //phases            
+            $bradecrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
+            $bradecrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            //milestones 
+            $bradecrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id']; 
+            $bradecrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name']; 
+            //forms
+            $bradecrumbs[3]['id'] = $somforms_id; 
+            $bradecrumbs[3]['name'] = $bradeAry[0]['name'];
+        }
+
+        if ($request->ajax()) {
+
+            $data = $this->somFormTasksRepository->all(['som_forms_id'=>$somforms_id]);
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somFormTasks.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somFormTasks.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
+        
         return view('som_form_tasks.index')
             ->with('somforms_id', $somforms_id)
-            ->with('somFormTasks', $somFormTasks);
+            ->with('bradecrumbs', $bradecrumbs);
     }
 
     /**

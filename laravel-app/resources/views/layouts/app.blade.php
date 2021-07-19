@@ -51,7 +51,6 @@
             /*color: #05b1e4;*/
             font-size: 19px;
             font-weight: 500;
-            cursor: pointer;
         }
     </style>
 

@@ -1,48 +1,81 @@
-<div class="table-responsive">
-    <table class="table" id="cmsUsers-table">
+<div class="table-responsive" style="padding: 10px;">
+    <table class="table table-bordered data-table" id="cmsUsers-table">
         <thead>
             <tr>
                 <th>Name</th>
-        <th>Photo</th>
-        <th>Email</th>
-        <th>Password</th>
-        <th>Id Cms Privileges</th>
-        <th>Created At</th>
-        <th>Updated At</th>
-        <th>Status</th>
-        <th>Job Title</th>
-        <th>Objectguid</th>
-                <th colspan="3">Action</th>
+                <th>Photo</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Id Cms Privileges</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Status</th>
+                <th>Job Title</th>
+                <th>Objectguid</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-        @foreach($cmsUsers as $cmsUsers)
-            <tr>
-                <td>{{ $cmsUsers->name }}</td>
-            <td>{{ $cmsUsers->photo }}</td>
-            <td>{{ $cmsUsers->email }}</td>
-            <td>{{ $cmsUsers->password }}</td>
-            <td>{{ $cmsUsers->id_cms_privileges }}</td>
-            <td>{{ $cmsUsers->created_at }}</td>
-            <td>{{ $cmsUsers->updated_at }}</td>
-            <td>{{ $cmsUsers->status }}</td>
-            <td>{{ $cmsUsers->job_title }}</td>
-            <td>{{ $cmsUsers->objectguid }}</td>
-                <td width="120">
-                    {!! Form::open(['route' => ['cmsUsers.destroy', $cmsUsers->id], 'method' => 'delete']) !!}
-                    <div class='btn-group'>
-                        <a href="{{ route('cmsUsers.show', [$cmsUsers->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-eye"></i>
-                        </a>
-                        <a href="{{ route('cmsUsers.edit', [$cmsUsers->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
-                        </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                    </div>
-                    {!! Form::close() !!}
-                </td>
-            </tr>
-        @endforeach
+        
         </tbody>
     </table>
 </div>
+
+<!-- ============================== delete modal ================================== -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Delete Item</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="deleteModalBody">
+                <div>
+                    {!! Form::open(['route' => ['cmsUsers.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <span>Are you sure?</span>                            
+                        </div>
+                    </div>                    
+                    <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
+                        {!! Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function openDeleteModal(id){
+    $("#delete_form").attr("action","/cmsUsers/"+id);
+    $('#deleteModal').modal("show");
+}
+
+$(function () { 
+    
+    var table = $('.data-table').DataTable({
+        processing: false,
+        serverSide: false,
+        ajax: "{{ route('cmsUsers.index') }}",
+        columns: [   
+            {data: 'name', name: 'name', orderable: true, searchable: true},
+            {data: 'photo', name: 'photo', orderable: true, searchable: true},
+            {data: 'email', name: 'email', orderable: true, searchable: true},
+            {data: 'password', name: 'password', orderable: true, searchable: true},
+            {data: 'id_cms_privileges', name: 'id_cms_privileges', orderable: true, searchable: true},
+            {data: 'created_at', name: 'created_at', orderable: true, searchable: true},
+            {data: 'updated_at', name: 'updated_at', orderable: true, searchable: true},
+            {data: 'status', name: 'status', orderable: true, searchable: true},
+            {data: 'job_title', name: 'job_title', orderable: true, searchable: true},
+            {data: 'objectguid', name: 'objectguid', orderable: true, searchable: true},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });      
+});
+</script>

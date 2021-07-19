@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
-                        <a href="{{ route('somForms.index') }}">
+                        <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
@@ -23,7 +23,7 @@
     <div class="content px-3">
         <div class="row ml-1">
             <div class="col-md-6 mb-4">
-                <a href="{{ route('somForms.index') }}">
+                <a href="#">
                     <i class="fa fa-chevron-left"></i> Home
                 </a>
             </div>
@@ -43,10 +43,9 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-3">
-                        <span><i class="fa fa-globe ml-2"></i> Projects List</span>
+                        <span><i class="fa fa-box ml-2"></i> Projects List</span>
                     </div>
-                    @include('layouts.bradecrumbs')
-                    <div class="col-md-3"></div>
+                    <div class="col-md-9"></div>
                 </div>
                 
             </div>

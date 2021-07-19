@@ -15,7 +15,7 @@
 
         <div class="row">
             <div class="col-12-lg ml-2 mb-4">
-                <a href="{{ route('somNews.index') }}">
+                <a href="{{ route('somForms.index',['milestones_id'=> $milestones_id]) }}">
                     <i class="fa fa-chevron-left"></i> Back To List Data Forms
                 </a>
             </div>

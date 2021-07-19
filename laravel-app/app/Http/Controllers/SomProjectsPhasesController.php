@@ -8,10 +8,13 @@ use App\Repositories\SomProjectsPhasesRepository;
 use App\Repositories\SomStatusRepository;
 use App\Repositories\SomPhasesRepository;
 use App\Repositories\SomProjectsMilestonesRepository;
+use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+
+use DataTables;
 
 class SomProjectsPhasesController extends AppBaseController
 {
@@ -20,19 +23,21 @@ class SomProjectsPhasesController extends AppBaseController
     private $somPhasesStatusRepository;
     private $somPhasesRepository;
     private $somProjectsMilestonesRepository;
+    private $somProjectsRepository;
 
     public function __construct(
                 SomProjectsPhasesRepository $somProjectsPhasesRepo,
                 SomStatusRepository $somPhasesStatusRepo,
                 SomPhasesRepository $somPhasesRepo,
-                SomProjectsMilestonesRepository $somProjectsMilestonesRepo
+                SomProjectsMilestonesRepository $somProjectsMilestonesRepo,
+                SomProjectsRepository $somProjectsRepo
                 )
     {
         $this->somProjectsPhasesRepository = $somProjectsPhasesRepo;
         $this->somPhasesStatusRepository = $somPhasesStatusRepo;
         $this->somPhasesRepository = $somPhasesRepo;
         $this->somProjectsMilestonesRepository = $somProjectsMilestonesRepo;
-       
+        $this->somProjectsRepository = $somProjectsRepo;       
     }
 
     /**
@@ -46,12 +51,51 @@ class SomProjectsPhasesController extends AppBaseController
     {
         //JOIN BY PROJECT_ID---
         $projectId = $request->input('project_id');
-        $somProjectsPhases = $this->somProjectsPhasesRepository->all(['som_projects_id' => $projectId]);
+        // $somProjectsPhases = $this->somProjectsPhasesRepository->all(['som_projects_id' => $projectId]);
+
+        $somProjects = $this->somProjectsRepository->find($projectId);
+        $bradecrumbs = array();
+        $bradecrumbs[0] = array();
+        $bradecrumbs[0]['id'] = $somProjects['id'];
+        $bradecrumbs[0]['name'] = $somProjects['name'];
         //---------------------
+        if ($request->ajax()) {
+
+            $data = $this->somProjectsPhasesRepository->getDataBySomProjectsId($projectId);
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button Milestones                    
+                    $action .= "<a href=\"".route("somProjectsMilestones.index",
+                        ['phases_id'=> $row->id]
+                    )."\" class='btn btn-default btn-xs'><i class='fas fa-film' title='Milestones'></i> Milestones</a>";
+
+                    //button show                
+                    // $action .= "<a href=\"".route('somProjectsPhases.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectsPhases.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
 
         return view('som_projects_phases.index')
                 ->with('projectId', $projectId)
-                ->with('somProjectsPhases', $somProjectsPhases);
+                ->with('bradecrumbs', $bradecrumbs);
     }
 
     /**

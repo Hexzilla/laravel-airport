@@ -13,11 +13,19 @@
 
     <div class="content px-3">
 
+        <div class="row">
+            <div class="col-12-lg ml-2 mb-4">
+                <a href="{{ route('somAirports.index') }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Projects Airport
+                </a>
+            </div>
+        </div>
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
 
-            {!! Form::open(['route' => 'somProjectsAirports.store','enctype' =>'multipart/form-data']) !!}
+            {!! Form::open(['route' => 'somAirports.store','enctype' =>'multipart/form-data']) !!}
 
             <div class="card-header">
                 <span><i class="fa fa-fighter-jet ml-2"></i> Add Airport</span>
@@ -33,7 +41,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somProjectsAirports.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('somAirports.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

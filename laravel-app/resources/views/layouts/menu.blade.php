@@ -7,8 +7,8 @@
 </li>
 
 <li class="nav-item">
-    <a href="{{ route('somForms.index') }}"
-       class="nav-link {{ Request::is('somForms*') ? 'active' : '' }}">
+    <a href="#"
+       class="nav-link ">
         <p title='Home'><i class="fa fa-home"></i> Home</p>
     </a>
 </li>

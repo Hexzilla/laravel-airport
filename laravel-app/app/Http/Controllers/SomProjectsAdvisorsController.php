@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsAdvisorsController extends AppBaseController
 {
     /** @var  SomProjectsAdvisorsRepository */
@@ -29,11 +31,39 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsID = $request->input('project_id');  //0712
-        $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->all();
+        $somProjectsID = $request->input('project_id');
+
+        if ($request->ajax()) {
+
+            $data = $this->somProjectsAdvisorsRepository->all();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somProjectsAdvisors.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectsAdvisors.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
+
         return view('som_projects_advisors.index')
-            ->with('somProjectsAdvisors', $somProjectsAdvisors)
-            ->with('somProjectID',$somProjectsID);  //0712
+            ->with('somProjectID',$somProjectsID);
     }
 
     /**
@@ -102,7 +132,7 @@ class SomProjectsAdvisorsController extends AppBaseController
 
         return view('som_projects_advisors.edit')
             ->with('somProjectsAdvisors', $somProjectsAdvisors)
-            ->with('somProjectID', $somProjectsAdvisors->som_porjects_id); //0712
+            ->with('somProjectID', $somProjectsAdvisors->som_projects_id); //0712
     }
 
     /**

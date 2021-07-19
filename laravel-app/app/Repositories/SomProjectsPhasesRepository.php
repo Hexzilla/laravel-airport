@@ -40,4 +40,28 @@ class SomProjectsPhasesRepository extends BaseRepository
     {
         return SomProjectsPhases::class;
     }
+
+    public function getDataBySomProjectsId($som_projects_id){
+        $select  = array();
+        $select[0] = 'som_projects_phases.*';
+        $select[1] = 'som_phases.name as som_phases_name';
+        $result = $this->makeModel()
+            ->leftJoin('som_phases', 'som_projects_phases.som_phases_id', 'som_phases.id')
+            ->where('som_projects_phases.som_projects_id', $som_projects_id)
+            ->get($select);
+        return $result;
+    }
+
+    public function getBradecrumbsById($id){
+        $select  = array();
+        $select[0] = 'som_projects_phases.*';
+        $select[1] = 'som_phases.name as som_phases_name';
+        $select[2] = 'som_projects.name as som_projects_name';
+        $result = $this->makeModel()
+            ->leftJoin('som_phases', 'som_projects_phases.som_phases_id', 'som_phases.id')
+            ->leftJoin('som_projects', 'som_projects_phases.som_projects_id', 'som_projects.id')
+            ->where('som_projects_phases.id', $id)
+            ->get($select);
+        return $result;
+    }
 }

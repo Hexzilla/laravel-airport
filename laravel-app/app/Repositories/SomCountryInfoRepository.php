@@ -52,4 +52,14 @@ class SomCountryInfoRepository extends BaseRepository
         return $this->makeModel()
             ->insert($data);
     }
+
+    public function getAllData(){
+        $select  = array();
+        $select[0] = 'som_country_info.*';
+        $select[1] = 'som_country.country as som_country_name';
+        $result = $this->makeModel()
+            ->leftJoin('som_country', 'som_country_info.som_country_id', 'som_country.id')
+            ->get($select);
+        return $result;
+    }
 }
