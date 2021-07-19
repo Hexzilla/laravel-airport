@@ -8,18 +8,18 @@
                     <h1><i class='fas fa-glass-martini'></i> Project Phases</h1>
                 </div>
                 <div class="col-sm-6">
-                    <div class="float-right">                                                
+                    <div class="float-right">
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
                             <i class="fa fa-chevron-right"></i> Project Phases
-                        </a>                        
-                    </div>                        
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>    
+    </section>
 
     <div class="content px-3">
 
@@ -47,21 +47,21 @@
                     <div class="col-md-3">
                         <span>Projects</span>
                     </div>
-                    <div class="col-md-6 bradecrumbs-menu">
-                        <span>{!! $bradecrumbs[0]['name'] !!}</span> 
+                    <div class="col-md-6 breadcrumbs-menu">
+                        <span>{!! $breadcrumbs[0]['name'] !!}</span>
                     </div>
                     <div class="col-md-3"></div>
                 </div>
             </div>
         </div>
 
-        <div class="card">            
+        <div class="card">
             <div class="card-body p-0">
                 @include('som_projects_phases.table')
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>

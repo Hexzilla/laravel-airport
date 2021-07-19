@@ -37,7 +37,7 @@ class SomProjectsPhasesController extends AppBaseController
         $this->somPhasesStatusRepository = $somPhasesStatusRepo;
         $this->somPhasesRepository = $somPhasesRepo;
         $this->somProjectsMilestonesRepository = $somProjectsMilestonesRepo;
-        $this->somProjectsRepository = $somProjectsRepo;       
+        $this->somProjectsRepository = $somProjectsRepo;
     }
 
     /**
@@ -54,10 +54,10 @@ class SomProjectsPhasesController extends AppBaseController
         // $somProjectsPhases = $this->somProjectsPhasesRepository->all(['som_projects_id' => $projectId]);
 
         $somProjects = $this->somProjectsRepository->find($projectId);
-        $bradecrumbs = array();
-        $bradecrumbs[0] = array();
-        $bradecrumbs[0]['id'] = $somProjects['id'];
-        $bradecrumbs[0]['name'] = $somProjects['name'];
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somProjects['id'];
+        $breadcrumbs[0]['name'] = $somProjects['name'];
         //---------------------
         if ($request->ajax()) {
 
@@ -68,17 +68,17 @@ class SomProjectsPhasesController extends AppBaseController
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
-                    //button Milestones                    
+                    //button Milestones
                     $action .= "<a href=\"".route("somProjectsMilestones.index",
                         ['phases_id'=> $row->id]
                     )."\" class='btn btn-default btn-xs'><i class='fas fa-film' title='Milestones'></i> Milestones</a>";
 
-                    //button show                
+                    //button show
                     // $action .= "<a href=\"".route('somProjectsPhases.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     // $action .= "<i class='far fa-eye'></i>";
-                    // $action .= "</a>";   
+                    // $action .= "</a>";
 
-                    //button edit                     
+                    //button edit
                     $action .= "<a href=\"".route('somProjectsPhases.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
@@ -87,15 +87,15 @@ class SomProjectsPhasesController extends AppBaseController
                     $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
-                    return $action;                        
-                })                    
-                ->rawColumns(['action'])                
+                    return $action;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
         return view('som_projects_phases.index')
                 ->with('projectId', $projectId)
-                ->with('bradecrumbs', $bradecrumbs);
+                ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -233,7 +233,7 @@ class SomProjectsPhasesController extends AppBaseController
         }
 
         $somProjectsPhases = $this->somProjectsPhasesRepository->update($request->all(), $id);
-        
+
         Flash::success('Som Projects Phases updated successfully.');
         $project_id = $somProjectsPhases->som_projects_id;
         return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
@@ -264,7 +264,7 @@ class SomProjectsPhasesController extends AppBaseController
             Flash::error('First some milestones must be deleted for the Phases');
             return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
         }
-        
+
         $this->somProjectsPhasesRepository->delete($id);
 
         Flash::success('Som Projects Phases deleted successfully.');

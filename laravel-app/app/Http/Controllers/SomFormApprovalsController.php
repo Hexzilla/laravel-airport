@@ -21,7 +21,7 @@ class SomFormApprovalsController extends AppBaseController
     private $somFormsRepository;
 
     public function __construct(
-    			SomFormApprovalsRepository $somFormApprovalsRepo, 
+    			SomFormApprovalsRepository $somFormApprovalsRepo,
     			SomFormsRepository $somFromsRepo)
     {
         $this->somFormApprovalsRepository = $somFormApprovalsRepo;
@@ -40,35 +40,35 @@ class SomFormApprovalsController extends AppBaseController
         $somforms_id = $request->get('somforms_id');
         // $somFormApprovals = $this->somFormApprovalsRepository->all(['som_forms_id'=>$somforms_id]);
 
-        $bradecrumbs = array();
-        $bradecrumbs[0] = array();         
-        $bradecrumbs[0]['id'] = 0;
-        $bradecrumbs[0]['name'] = "";
-        $bradecrumbs[1] = array();
-        $bradecrumbs[1]['id'] = 0;
-        $bradecrumbs[1]['name'] = "";
-        $bradecrumbs[2] = array();
-        $bradecrumbs[2]['id'] = 0;
-        $bradecrumbs[2]['name'] = "";
-        $bradecrumbs[3] = array();
-        $bradecrumbs[3]['id'] = 0;
-        $bradecrumbs[3]['name'] = "";
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = 0;
+        $breadcrumbs[0]['name'] = "";
+        $breadcrumbs[1] = array();
+        $breadcrumbs[1]['id'] = 0;
+        $breadcrumbs[1]['name'] = "";
+        $breadcrumbs[2] = array();
+        $breadcrumbs[2]['id'] = 0;
+        $breadcrumbs[2]['name'] = "";
+        $breadcrumbs[3] = array();
+        $breadcrumbs[3]['id'] = 0;
+        $breadcrumbs[3]['name'] = "";
 
         if(!empty($somforms_id)){
-            $bradeAry = $this->somFormsRepository->getBradecrumbsById($somforms_id); 
+            $bradeAry = $this->somFormsRepository->getbreadcrumbsById($somforms_id);
 
-            //projects        
-            $bradecrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
-            $bradecrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
-            //phases            
-            $bradecrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
-            $bradecrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
-            //milestones 
-            $bradecrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id']; 
-            $bradecrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name']; 
+            //projects
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            //phases
+            $breadcrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
+            $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            //milestones
+            $breadcrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id'];
+            $breadcrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name'];
             //forms
-            $bradecrumbs[3]['id'] = $somforms_id; 
-            $bradecrumbs[3]['name'] = $bradeAry[0]['name'];
+            $breadcrumbs[3]['id'] = $somforms_id;
+            $breadcrumbs[3]['name'] = $bradeAry[0]['name'];
         }
 
         if ($request->ajax()) {
@@ -81,12 +81,12 @@ class SomFormApprovalsController extends AppBaseController
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
-                    //button show                
+                    //button show
                     $action .= "<a href=\"".route('somFormApprovals.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";   
+                    $action .= "</a>";
 
-                    //button edit                     
+                    //button edit
                     $action .= "<a href=\"".route('somFormApprovals.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
@@ -95,15 +95,15 @@ class SomFormApprovalsController extends AppBaseController
                     $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
-                    return $action;                        
-                })                    
-                ->rawColumns(['action'])                
+                    return $action;
+                })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
         return view('som_form_approvals.index')
             ->with('somforms_id', $somforms_id)
-            ->with('bradecrumbs', $bradecrumbs);
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -118,7 +118,7 @@ class SomFormApprovalsController extends AppBaseController
         $somFormApprovals->som_forms_id = $somforms_id;
         $somFormApprovals->order = 1;
         $somFormApprovals->som_status_id = 0;
-     
+
         $somForms= $this->somFormsRepository->all([], null, null, ['id', 'name'])->toArray();
         $somFormsIds[] =  '**Please Select a formId';
         foreach($somForms as $rows)
@@ -187,7 +187,7 @@ class SomFormApprovalsController extends AppBaseController
         $somforms_id = $somFormApprovals->som_forms_id;
 
         $somForms= $this->somFormsRepository->all([], null, null, ['id', 'name']);
-        
+
         $formsIds[] =  '**Please Select a formId';
         foreach($somForms->toArray() as $rows)
         {
