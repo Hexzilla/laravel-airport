@@ -1,4 +1,11 @@
 <li class="nav-item">
+    <a href="{{ route('home.index') }}"
+       class="nav-link {{ Request::is('home*') ? 'active' : '' }}">
+        <p title="Projects"><i class="fa fa-home"></i> Home</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('somProjects.index') }}"
        class="nav-link {{ Request::is('somProjects*') ? 'active' : '' }}">
         <p title="Projects"><i class="fa fa-box"></i> Projects</p>
