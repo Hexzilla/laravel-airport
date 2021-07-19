@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request as Request1;
+use App\Http\Utils\CRUDBooster;
 
 class HomeController extends Controller
 {
@@ -19,12 +20,12 @@ class HomeController extends Controller
         $viewData['username']= Auth::user()->name;
         $viewData['userphoto']= Auth::user()->photo;
 
-        $currency = 0; // question
-        $viewData['currency'] = $currency.'M $';
+        $currency = (CRUDBooster::getSetting('currency')?(CRUDBooster::getSetting('currency')):'M $');
+        $viewData['currency'] = $currency;
 
-        $queryPhases="SELECT ph.id, ph.name, ph.hex_color FROM som_projects p 
-                        join som_projects_phases pp on p.id=pp.som_projects_id 
-                        join som_phases ph on ph.id=pp.som_phases_id 
+        $queryPhases="SELECT ph.id, ph.name, ph.hex_color FROM som_projects p
+                        join som_projects_phases pp on p.id=pp.som_projects_id
+                        join som_phases ph on ph.id=pp.som_phases_id
                         WHERE is_template_project=1 order by `order` ";
         $phasesList = DB::select(DB::raw($queryPhases));
         $viewData['phases_list']=$phasesList;
@@ -75,12 +76,12 @@ class HomeController extends Controller
                 //DB::raw('IFNULL(som_status.hex_color, \''.$color_project_not_initialized.'\') AS project_status_color'),
                 DB::raw("IFNULL(
                                 (SELECT hex_color from som_phases
-                                    where som_phases.id = 
+                                    where som_phases.id =
                                         (SELECT som_projects_phases.som_phases_id
                                             FROM som_projects_phases
                                             WHERE som_projects_id = som_projects.id
                                             AND som_status_id IS NOT NULL
-                                            AND som_projects_phases.order = 
+                                            AND som_projects_phases.order =
                                                 (SELECT MAX(som_projects_phases.order) last
                                                     FROM som_projects_phases
                                                     WHERE som_projects_id = som_projects.id
@@ -98,7 +99,7 @@ class HomeController extends Controller
         $viewData['project_map_marks']=json_encode($projectMapMarks);
 
         //2) Calculo del listado de proyectos
-        $queryProjList = "select distinct p.id as id, 
+        $queryProjList = "select distinct p.id as id,
             p.img_url as image, #Imagen
             p.name, #Nombre del proyecto
             c.country, #Pais
@@ -106,7 +107,7 @@ class HomeController extends Controller
             p.equity, #
             IFNULL((SELECT ph.name
                 FROM som_projects_phases
-                inner join som_phases ph on ph.id=som_projects_phases.som_phases_id 
+                inner join som_phases ph on ph.id=som_projects_phases.som_phases_id
                 WHERE som_projects_id = p.id
                 AND som_status_id IS NOT NULL
                 AND som_projects_phases.order = (SELECT MAX(som_projects_phases.order) last
@@ -114,16 +115,16 @@ class HomeController extends Controller
                         WHERE som_projects_id = p.id
                         AND som_status_id IS NOT NULL
                     ) limit 1), 'Not initiated') as phase, #etapa
-        
-            IFNULL((select mil.name 
+
+            IFNULL((select mil.name
                 from som_phases_milestones mil
-                inner join som_projects_phases prh on prh.id=mil.som_projects_phases_id 
+                inner join som_projects_phases prh on prh.id=mil.som_projects_phases_id
                 where som_projects_id = p.id
                 AND mil.som_status_id IS NOT NULL
                 AND mil.order = (
                             SELECT MAX(mil2.order) last
                             FROM som_phases_milestones mil2
-                            inner join som_projects_phases prh2 on prh2.id = mil2.som_projects_phases_id 
+                            inner join som_projects_phases prh2 on prh2.id = mil2.som_projects_phases_id
                             WHERE som_projects_id = p.id
                             AND mil2.som_status_id IS NOT NULL
                 )
@@ -147,8 +148,8 @@ class HomeController extends Controller
             pa.kpi_revenues_non_aeronautical as Revenues_non_aeronautical_pax,
             pa.kpi_ebitda as EBITDA_pax,
             pa.debt_ebitda as Debt_Ebitda,
-            pa.city AS city                                    
-            from som_projects p    
+            pa.city AS city
+            from som_projects p
             inner join som_country c on p.som_country_id=c.id
             inner join som_projects_model m on p.som_projects_model_id=m.id
             inner join som_project_users pu on p.id = pu.som_projects_id
