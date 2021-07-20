@@ -25,8 +25,9 @@ class UpdateSomProjectsAdditionalAirportRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->request->get('som_project_additional_airporty_id');
         $rules = SomProjectsAdditionalAirport::$rules;
-        
+        $rules['som_airport_id'] .= '|unique:som_projects_additional_airport,som_airport_id,' . $id . ',id,som_project_id,'. $this->request->get('som_project_id', 0);
         return $rules;
     }
 }

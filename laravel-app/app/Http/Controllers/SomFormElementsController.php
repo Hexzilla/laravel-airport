@@ -5,19 +5,38 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomFormElementsRequest;
 use App\Http\Requests\UpdateSomFormElementsRequest;
 use App\Repositories\SomFormElementsRepository;
+use App\Repositories\CmsPrivilegesRolesRepository;
+use App\Repositories\cmsPrivilegesRepository;
+use App\Repositories\SomFormsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Models\SomFormElements;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Flash;
 use Response;
+
+use DataTables;
 
 class SomFormElementsController extends AppBaseController
 {
     /** @var  SomFormElementsRepository */
     private $somFormElementsRepository;
 
-    public function __construct(SomFormElementsRepository $somFormElementsRepo)
+     /** @var  CmsPrivilegesRolesRepository */
+    private $cmsPrivilegesRolesRepository;
+    private $cmsPrivilegesRepository;
+    private $somFormsRepository;
+
+    public function __construct(
+            SomFormElementsRepository $somFormElementsRepo, 
+            CmsPrivilegesRolesRepository $cmsPrivilegesRolesRepo,
+            cmsPrivilegesRepository $cmsPrivilegesRepo,
+            SomFormsRepository $somFormsRepo)
     {
         $this->somFormElementsRepository = $somFormElementsRepo;
+        $this->cmsPrivilegesRolesRepository = $cmsPrivilegesRolesRepo;
+        $this->cmsPrivilegesRepository = $cmsPrivilegesRepo;
+        $this->somFormsRepository = $somFormsRepo;
     }
 
     /**
@@ -29,10 +48,73 @@ class SomFormElementsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somFormElements = $this->somFormElementsRepository->all();
+        $somforms_id = $request->get('somforms_id');
+        // $somFormElements = $this->somFormElementsRepository->all(['som_forms_id'=>$somforms_id]);
+
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();         
+        $breadcrumbs[0]['id'] = 0;
+        $breadcrumbs[0]['name'] = "";
+        $breadcrumbs[1] = array();
+        $breadcrumbs[1]['id'] = 0;
+        $breadcrumbs[1]['name'] = "";
+        $breadcrumbs[2] = array();
+        $breadcrumbs[2]['id'] = 0;
+        $breadcrumbs[2]['name'] = "";
+        $breadcrumbs[3] = array();
+        $breadcrumbs[3]['id'] = 0;
+        $breadcrumbs[3]['name'] = "";
+
+        if(!empty($somforms_id)){
+            $bradeAry = $this->somFormsRepository->getbreadcrumbsById($somforms_id); 
+
+            //projects        
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            //phases            
+            $breadcrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
+            $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            //milestones 
+            $breadcrumbs[2]['id'] = $bradeAry[0]['som_phases_milestones_id']; 
+            $breadcrumbs[2]['name'] = $bradeAry[0]['som_phases_milestones_name']; 
+            //forms
+            $breadcrumbs[3]['id'] = $somforms_id; 
+            $breadcrumbs[3]['name'] = $bradeAry[0]['name'];
+        }
+
+        if ($request->ajax()) {
+
+            $data = $this->somFormElementsRepository->all(['som_forms_id'=>$somforms_id]);
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somFormElements.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somFormElements.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
 
         return view('som_form_elements.index')
-            ->with('somFormElements', $somFormElements);
+            ->with('somforms_id', $somforms_id)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -40,9 +122,33 @@ class SomFormElementsController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_form_elements.create');
+        $somforms_id = $request->get('somforms_id');
+        $somFormElements = new SomFormElements();
+        $somFormElements->som_forms_id = $somforms_id;
+        $somFormElements->order = 1;
+        $somFormElements->som_status_id = 0;
+
+        $arrRole = array();
+        $arrRole[] = 'Please select a Privilege';
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $filter = array($roleEditor, $roleLegal ,$roleFinance);
+        $RoleRows = $this->cmsPrivilegesRepository->find($filter)->toArray();
+        foreach($RoleRows as $row)
+        {
+            $arrRole[$row['id']] = $row['name'];
+        }
+
+        $elementTypes['-1'] = 'Please select a Element type';
+        $elementTypes = $elementTypes + config('constants.elementTypes');
+        return view('som_form_elements.create')
+                ->with('somforms_id', $somforms_id)
+                ->with('arrRole', $arrRole )
+                ->with('elementTypes', $elementTypes)
+                ->with('somFormElements', $somFormElements );
     }
 
     /**
@@ -59,8 +165,8 @@ class SomFormElementsController extends AppBaseController
         $somFormElements = $this->somFormElementsRepository->create($input);
 
         Flash::success('Som Form Elements saved successfully.');
-
-        return redirect(route('somFormElements.index'));
+        $somforms_id = $somFormElements->som_forms_id;
+        return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -80,7 +186,10 @@ class SomFormElementsController extends AppBaseController
             return redirect(route('somFormElements.index'));
         }
 
-        return view('som_form_elements.show')->with('somFormElements', $somFormElements);
+        $somforms_id = $somFormElements->som_forms_id;
+        return view('som_form_elements.show')
+            ->with('somFormElements', $somFormElements)
+            ->with('somforms_id', $somforms_id);
     }
 
     /**
@@ -93,6 +202,7 @@ class SomFormElementsController extends AppBaseController
     public function edit($id)
     {
         $somFormElements = $this->somFormElementsRepository->find($id);
+        
 
         if (empty($somFormElements)) {
             Flash::error('Som Form Elements not found');
@@ -100,7 +210,28 @@ class SomFormElementsController extends AppBaseController
             return redirect(route('somFormElements.index'));
         }
 
-        return view('som_form_elements.edit')->with('somFormElements', $somFormElements);
+        $somforms_id = $somFormElements->som_forms_id;
+
+        $arrRole = array();
+        $arrRole[] = 'Please select a Privilege';
+        $roleEditor = config('constants.UserPrivileges.Editor');
+        $roleLegal = config('constants.UserPrivileges.Legal');
+        $roleFinance = config('constants.UserPrivileges.Finance');
+        $filter = array($roleEditor, $roleLegal ,$roleFinance);
+        $RoleRows = $this->cmsPrivilegesRepository->find($filter)->toArray();
+        foreach($RoleRows as $row)
+        {
+            $arrRole[$row['id']] = $row['name'];
+        }
+
+        $elementTypes['-1'] = 'Please select a Element type';
+        $elementTypes = $elementTypes + config('constants.elementTypes');
+
+        return view('som_form_elements.edit')
+            ->with('somforms_id', $somforms_id)
+            ->with('somFormElements', $somFormElements)
+            ->with('elementTypes', $elementTypes)
+            ->with('arrRole', $RoleRows);
     }
 
     /**
@@ -124,8 +255,8 @@ class SomFormElementsController extends AppBaseController
         $somFormElements = $this->somFormElementsRepository->update($request->all(), $id);
 
         Flash::success('Som Form Elements updated successfully.');
-
-        return redirect(route('somFormElements.index'));
+        $somforms_id = $somFormElements->som_forms_id;
+        return redirect(route('somFormElements.index' , ['somforms_id'=>$somforms_id]));
     }
 
     /**
@@ -146,11 +277,12 @@ class SomFormElementsController extends AppBaseController
 
             return redirect(route('somFormElements.index'));
         }
+        $somforms_id = $somFormElements->som_forms_id;
 
         $this->somFormElementsRepository->delete($id);
 
         Flash::success('Som Form Elements deleted successfully.');
 
-        return redirect(route('somFormElements.index'));
+        return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
     }
 }

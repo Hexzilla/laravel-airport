@@ -75,4 +75,36 @@ class SomProjectsAirportRepository extends BaseRepository
     {
         return SomProjectsAirport::class;
     }
+
+    public function getLastInsertedId(){
+        return $this->makeModel()
+            ->max('id');
+    }
+
+    public function insertData($data){
+        return $this->makeModel()
+            ->insert($data);
+    }
+
+    public function updateData($id, $data){
+        return $this->makeModel()
+            ->where('id', $id)
+            ->update($data);
+    }
+
+    public function getCountByCountryId($country_id){
+        return $this->makeModel()
+            ->where('som_country_id', $country_id)
+            ->count();
+    }
+
+    public function getAllData(){
+        $select  = array();
+        $select[0] = 'som_projects_airport.*';
+        $select[1] = 'som_projects_airport_type.name as som_projects_airport_type_name';
+        $result = $this->makeModel()
+            ->leftJoin('som_projects_airport_type', 'som_projects_airport.som_projects_airport_type_id', 'som_projects_airport_type.id')
+            ->get($select);
+        return $result;
+    } 
 }

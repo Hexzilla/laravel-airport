@@ -111,6 +111,8 @@ Route::resource('somProjectsAdditionalAirports', App\Http\Controllers\SomProject
 
 Route::resource('somProjectsAdvisors', App\Http\Controllers\SomProjectsAdvisorsController::class);
 
+Route::resource('somAirports', App\Http\Controllers\SomProjectsAirportController::class);
+
 Route::resource('somProjectsAirports', App\Http\Controllers\SomProjectsAirportController::class);
 
 Route::resource('somProjectsAirportTypes', App\Http\Controllers\SomProjectsAirportTypeController::class);

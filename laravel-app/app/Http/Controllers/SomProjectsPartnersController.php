@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomProjectsPartnersRequest;
 use App\Http\Requests\UpdateSomProjectsPartnersRequest;
 use App\Repositories\SomProjectsPartnersRepository;
+use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsPartnersController extends AppBaseController
 {
     /** @var  SomProjectsPartnersRepository */
     private $somProjectsPartnersRepository;
+    private $somProjectsRepository;
 
-    public function __construct(SomProjectsPartnersRepository $somProjectsPartnersRepo)
+    public function __construct(SomProjectsPartnersRepository $somProjectsPartnersRepo,
+                                SomProjectsRepository $somProjectsRepo)
     {
         $this->somProjectsPartnersRepository = $somProjectsPartnersRepo;
+        $this->somProjectsRepository = $somProjectsRepo;
     }
 
     /**
@@ -28,11 +34,50 @@ class SomProjectsPartnersController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
-        $somProjectsPartners = $this->somProjectsPartnersRepository->all();
+    {   
+        if($request->input('project_id') == null){
+            Flash::error('Som Projects Id not found');
+            return redirect(route('somProjects.index'));
+        }
+        $somProjectsID = $request->input('project_id');
+        $somProjects = $this->somProjectsRepository->find($somProjectsID);
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somProjects['id'];
+        $breadcrumbs[0]['name'] = $somProjects['name'];
+
+        if ($request->ajax()) {
+
+            $data = $this->somProjectsPartnersRepository->all(['som_projects_id'=>$somProjectsID]);
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somProjectsPartners.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectsPartners.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        } 
 
         return view('som_projects_partners.index')
-            ->with('somProjectsPartners', $somProjectsPartners);
+            ->with('somProjectID',$somProjectsID)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -40,11 +85,10 @@ class SomProjectsPartnersController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_projects_partners.create');
+        return view('som_projects_partners.create')->with('somProjectID', $request->input('som_project_id'));
     }
-
     /**
      * Store a newly created SomProjectsPartners in storage.
      *
@@ -60,7 +104,7 @@ class SomProjectsPartnersController extends AppBaseController
 
         Flash::success('Som Projects Partners saved successfully.');
 
-        return redirect(route('somProjectsPartners.index'));
+        return redirect(route('somProjectsPartners.index',['project_id'=> $input['som_projects_id']]));
     }
 
     /**
@@ -77,7 +121,7 @@ class SomProjectsPartnersController extends AppBaseController
         if (empty($somProjectsPartners)) {
             Flash::error('Som Projects Partners not found');
 
-            return redirect(route('somProjectsPartners.index'));
+            return redirect(route('somProjects.index'));
         }
 
         return view('som_projects_partners.show')->with('somProjectsPartners', $somProjectsPartners);
@@ -97,10 +141,12 @@ class SomProjectsPartnersController extends AppBaseController
         if (empty($somProjectsPartners)) {
             Flash::error('Som Projects Partners not found');
 
-            return redirect(route('somProjectsPartners.index'));
+            return redirect(route('somProjects.index'));
         }
 
-        return view('som_projects_partners.edit')->with('somProjectsPartners', $somProjectsPartners);
+        return view('som_projects_partners.edit')
+            ->with('somProjectsPartners', $somProjectsPartners)
+            ->with('somProjectID', $somProjectsPartners->som_projects_id);
     }
 
     /**
@@ -118,14 +164,14 @@ class SomProjectsPartnersController extends AppBaseController
         if (empty($somProjectsPartners)) {
             Flash::error('Som Projects Partners not found');
 
-            return redirect(route('somProjectsPartners.index'));
+            return redirect(route('somProjects.index'));
         }
 
         $somProjectsPartners = $this->somProjectsPartnersRepository->update($request->all(), $id);
 
         Flash::success('Som Projects Partners updated successfully.');
 
-        return redirect(route('somProjectsPartners.index'));
+        return redirect(route('somProjectsPartners.index',['project_id'=> $somProjectsPartners['som_projects_id']]));
     }
 
     /**
@@ -144,13 +190,13 @@ class SomProjectsPartnersController extends AppBaseController
         if (empty($somProjectsPartners)) {
             Flash::error('Som Projects Partners not found');
 
-            return redirect(route('somProjectsPartners.index'));
+            return redirect(route('somProjects.index'));
         }
 
         $this->somProjectsPartnersRepository->delete($id);
 
         Flash::success('Som Projects Partners deleted successfully.');
 
-        return redirect(route('somProjectsPartners.index'));
+        return redirect(route('somProjectsPartners.index',['project_id'=> $somProjectsPartners['som_projects_id']]));
     }
 }

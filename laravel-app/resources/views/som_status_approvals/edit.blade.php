@@ -13,6 +13,14 @@
 
     <div class="content px-3">
 
+        <div class="row">
+            <div class="col-12-lg ml-2 mb-4">
+                <a href="{{ route('somStatusApprovals.index',['som_approvals_responsible_id'=> $som_approvals_responsible_id]) }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Status Approvals
+                </a>
+            </div>
+        </div>
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
@@ -27,7 +35,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somStatusApprovals.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('somStatusApprovals.index',['som_approvals_responsible_id'=> $som_approvals_responsible_id]) }}" class="btn btn-default">Cancel</a>
             </div>
 
            {!! Form::close() !!}

@@ -83,19 +83,19 @@ class SomFormElements extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|min:3|max:170',
         'document' => 'nullable|string|max:1000',
         'doc_url_description' => 'nullable|string|max:255',
         'template' => 'nullable|string|max:1000',
         'template_url_description' => 'nullable|string|max:255',
         'lastupdate' => 'nullable',
         'comment' => 'nullable|string|max:255',
-        'som_forms_id' => 'required|integer',
-        'order_elements' => 'required|integer',
+        'som_forms_id' => 'required|integer|min:0',
+        'order_elements' => 'required|integer|min:0',
         'is_mandatory' => 'required|boolean',
-        'is_sub_element' => 'nullable|boolean',
+        'is_sub_element' => 'required|integer',
         'tooltip' => 'nullable|string|max:2000',
-        'cms_privileges_role_id' => 'nullable|integer'
+        'cms_privileges_role_id' => 'required|integer|min:1'
     ];
 
     /**

@@ -55,9 +55,9 @@ class SomNews extends Model
      */
     public static $rules = [
         'title' => 'required|string|max:100',
-        'news_description' => 'nullable|string|max:1000',
+        'news_description' => 'required|string|max:1000',
         'date_from' => 'required',
-        'date_until' => 'nullable'
+        'date_until' => 'nullable|after_or_equal:date_from'
     ];
 
     

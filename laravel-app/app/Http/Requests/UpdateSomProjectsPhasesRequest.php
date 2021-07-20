@@ -25,8 +25,9 @@ class UpdateSomProjectsPhasesRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->request->get('som_projects_phases_id');
         $rules = SomProjectsPhases::$rules;
-        
+        $rules['som_phases_id'] .= '|unique:som_projects_phases,som_phases_id,' . $id . ',id,som_projects_id,'. $this->request->get('som_projects_id', 0);
         return $rules;
     }
 }
