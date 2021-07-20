@@ -15,8 +15,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user_id = Auth::id();
+        if($user_id==''){
+            $urlactual =\URL::full();
+            return redirect(CRUDBooster::adminPath()."/loginhome?return_url=".urlencode($urlactual));
+        }
+
+        //TODO: Figure out where we are using this and why they are null
+        $project_id = $request->get('project_id');
+        $show_phases = $request->get('show_phases');
+
+        //echo $project_id;
+        //echo $show_phases;
+
         $viewData['username']= Auth::user()->name;
         $viewData['userphoto']= Auth::user()->photo;
 
@@ -45,7 +58,6 @@ class HomeController extends Controller
         $projModelList = DB::select(DB::raw($queryProjModel));
         $viewData['proj_model_list']=$projModelList;
 
-        $user_id = Auth::id();
         $color_project_not_initialized="#cc0000";
         $projectMapMarks = DB::table('som_projects')
             ->join('som_project_users', 'som_projects.id', '=', 'som_project_users.som_projects_id')
@@ -198,9 +210,6 @@ class HomeController extends Controller
 
         //Log::debug('Array proyectos:'.json_encode($arrProjList));
         $viewData['project_list'] = json_encode($arrProjList);
-
-        $project_id = Request1::get('project_id');
-        $show_phases = Request1::get('show_phases');
         $viewData['selected_project'] = is_null($project_id)?'null':$project_id;
         $viewData['decision_map'] = is_null($show_phases)?'false':($show_phases=='true'?'true':'false');
 
