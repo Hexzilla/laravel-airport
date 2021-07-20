@@ -35,8 +35,13 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsID = $request->input('project_id');
+        
+        if($request->input('project_id') == null){
+            Flash::error('Som Projects Id not found');
+            return redirect(route('somProjects.index'));
+        }
 
+        $somProjectsID = $request->input('project_id');
         $somProjects = $this->somProjectsRepository->find($somProjectsID);
         $breadcrumbs = array();
         $breadcrumbs[0] = array();
@@ -45,7 +50,7 @@ class SomProjectsAdvisorsController extends AppBaseController
 
         if ($request->ajax()) {
 
-            $data = $this->somProjectsAdvisorsRepository->all();
+            $data = $this->somProjectsAdvisorsRepository->all(['som_projects_id'=>$somProjectsID]);
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -101,7 +106,7 @@ class SomProjectsAdvisorsController extends AppBaseController
 
         Flash::success('Som Projects Advisors saved successfully.');
 
-        return redirect(route('somProjectsAdvisors.index'));
+        return redirect(route('somProjectsAdvisors.index',['project_id'=> $input['som_projects_id']]));
     }
 
     /**
@@ -118,7 +123,7 @@ class SomProjectsAdvisorsController extends AppBaseController
         if (empty($somProjectsAdvisors)) {
             Flash::error('Som Projects Advisors not found');
 
-            return redirect(route('somProjectsAdvisors.index'));
+            return redirect(route('somProjects.index'));
         }
 
         return view('som_projects_advisors.show')->with('somProjectsAdvisors', $somProjectsAdvisors);
@@ -138,7 +143,7 @@ class SomProjectsAdvisorsController extends AppBaseController
         if (empty($somProjectsAdvisors)) {
             Flash::error('Som Projects Advisors not found');
 
-            return redirect(route('somProjectsAdvisors.index'));
+            return redirect(route('somProjects.index'));
         }
 
         return view('som_projects_advisors.edit')
@@ -161,14 +166,14 @@ class SomProjectsAdvisorsController extends AppBaseController
         if (empty($somProjectsAdvisors)) {
             Flash::error('Som Projects Advisors not found');
 
-            return redirect(route('somProjectsAdvisors.index'));
+            return redirect(route('somProjects.index'));
         }
-
+        $som_projects_id = $somProjectsAdvisors['som_projects_id'];
         $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->update($request->all(), $id);
 
         Flash::success('Som Projects Advisors updated successfully.');
 
-        return redirect(route('somProjectsAdvisors.index'));
+        return redirect(route('somProjectsAdvisors.index',['project_id'=> $som_projects_id]));
     }
 
     /**
@@ -187,13 +192,13 @@ class SomProjectsAdvisorsController extends AppBaseController
         if (empty($somProjectsAdvisors)) {
             Flash::error('Som Projects Advisors not found');
 
-            return redirect(route('somProjectsAdvisors.index'));
+            return redirect(route('somProjects.index'));
         }
 
         $this->somProjectsAdvisorsRepository->delete($id);
 
         Flash::success('Som Projects Advisors deleted successfully.');
 
-        return redirect(route('somProjectsAdvisors.index'));
+        return redirect(route('somProjectsAdvisors.index',['project_id'=> $somProjectsAdvisors['som_projects_id']]));
     }
 }

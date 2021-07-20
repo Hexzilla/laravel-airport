@@ -187,7 +187,9 @@ class SomFormElementsController extends AppBaseController
         }
 
         $somforms_id = $somFormElements->som_forms_id;
-        return view('som_form_elements.show')->with('somFormElements', $somFormElements);
+        return view('som_form_elements.show')
+            ->with('somFormElements', $somFormElements)
+            ->with('somforms_id', $somforms_id);
     }
 
     /**

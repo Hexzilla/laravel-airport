@@ -245,7 +245,7 @@ class SomProjectUsersController extends AppBaseController
      *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $somProjectUsers = $this->somProjectUsersRepository->find($id);
         $project_id = $request->input('project_id');  
