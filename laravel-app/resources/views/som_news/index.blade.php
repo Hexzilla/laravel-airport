@@ -7,9 +7,9 @@
             <div class="col-sm-6">
                 <h1>
                     <i class="far fa-newspaper ml-2"></i> News
-                    <a class="btn btn-primary"
+                    <a class="btn btn-primary pl-2"
                         href="{{ route('somNews.create') }}">
-                        Add New
+                        <i class="fas fa-plus-circle mr-2"></i>Add New
                     </a>
                 </h1>
             </div>
