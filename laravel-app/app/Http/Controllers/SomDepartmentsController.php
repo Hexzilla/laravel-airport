@@ -40,6 +40,9 @@ class SomDepartmentsController extends AppBaseController
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
+                    //button users                    
+                    $action .= "<a href=\"".route("somDepartmentsUsers.index",['som_departments_id'=> $row->id])."\" class='btn btn-default btn-xs'><i class='fa fa-tasks'></i> Users</a>";
+
                     //button show                
                     $action .= "<a href=\"".route('somDepartments.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";

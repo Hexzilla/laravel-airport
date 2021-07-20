@@ -38,29 +38,29 @@ class SomFormsController extends AppBaseController
     {
         $milestones_id = $request->get('milestones_id');
             
-        $bradecrumbs = array();
-        $bradecrumbs[0] = array();         
-        $bradecrumbs[0]['id'] = 0;
-        $bradecrumbs[0]['name'] = "";
-        $bradecrumbs[1] = array();
-        $bradecrumbs[1]['id'] = 0;
-        $bradecrumbs[1]['name'] = "";
-        $bradecrumbs[2] = array();
-        $bradecrumbs[2]['id'] = 0;
-        $bradecrumbs[2]['name'] = "";
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();         
+        $breadcrumbs[0]['id'] = 0;
+        $breadcrumbs[0]['name'] = "";
+        $breadcrumbs[1] = array();
+        $breadcrumbs[1]['id'] = 0;
+        $breadcrumbs[1]['name'] = "";
+        $breadcrumbs[2] = array();
+        $breadcrumbs[2]['id'] = 0;
+        $breadcrumbs[2]['name'] = "";
 
         if(!empty($milestones_id)){
-            $bradeAry = $this->somProjectsMilestonesRepository->getBradecrumbsById($milestones_id);          
+            $bradeAry = $this->somProjectsMilestonesRepository->getbreadcrumbsById($milestones_id);          
                
             //projects        
-            $bradecrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
-            $bradecrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];            
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];
             //phases            
-            $bradecrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
-            $bradecrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            $breadcrumbs[1]['id'] = $bradeAry[0]['som_projects_phases_id'];
+            $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
             //milestones 
-            $bradecrumbs[2]['id'] = $milestones_id;
-            $bradecrumbs[2]['name'] = $bradeAry[0]['name']; 
+            $breadcrumbs[2]['id'] = $milestones_id;
+            $breadcrumbs[2]['name'] = $bradeAry[0]['name']; 
         }
 
         if ($request->ajax()) {
@@ -119,7 +119,7 @@ class SomFormsController extends AppBaseController
 
         return view('som_forms.index')
                 ->with('milestones_id', $milestones_id)
-                ->with('bradecrumbs', $bradecrumbs);
+                ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**

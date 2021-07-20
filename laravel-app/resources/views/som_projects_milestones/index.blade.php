@@ -25,7 +25,7 @@
 
         <div class="row ml-1">
             <div class="col-md-6 mb-4">
-                <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$bradecrumbs[0]['id'] ]) }}">
+                <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$breadcrumbs[0]['id'] ]) }}">
                     <i class="fa fa-chevron-left"></i> Back To List Project Phases
                 </a>
             </div>
@@ -47,11 +47,11 @@
                     <div class="col-md-3">
                         <span>Phases</span>
                     </div>
-                    <div class="col-md-6 bradecrumbs-menu">
-                        <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$bradecrumbs[0]['id'] ]) }}">
-                            {!! $bradecrumbs[0]['name'] !!}
+                    <div class="col-md-6 breadcrumbs-menu">
+                        <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$breadcrumbs[0]['id'] ]) }}">
+                            {!! $breadcrumbs[0]['name'] !!}
                         </a>  / 
-                        <span>{!! $bradecrumbs[1]['name'] !!}</span> 
+                        <span>{!! $breadcrumbs[1]['name'] !!}</span> 
                     </div>
                     <div class="col-md-3"></div>
                 </div>

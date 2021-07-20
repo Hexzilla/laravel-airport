@@ -54,10 +54,10 @@ class SomProjectsPhasesController extends AppBaseController
         // $somProjectsPhases = $this->somProjectsPhasesRepository->all(['som_projects_id' => $projectId]);
 
         $somProjects = $this->somProjectsRepository->find($projectId);
-        $bradecrumbs = array();
-        $bradecrumbs[0] = array();
-        $bradecrumbs[0]['id'] = $somProjects['id'];
-        $bradecrumbs[0]['name'] = $somProjects['name'];
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somProjects['id'];
+        $breadcrumbs[0]['name'] = $somProjects['name'];
         //---------------------
         if ($request->ajax()) {
 
@@ -95,7 +95,7 @@ class SomProjectsPhasesController extends AppBaseController
 
         return view('som_projects_phases.index')
                 ->with('projectId', $projectId)
-                ->with('bradecrumbs', $bradecrumbs);
+                ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**

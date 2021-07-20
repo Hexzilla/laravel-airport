@@ -28,9 +28,7 @@
             {!! Form::model($somProjectsAdditionalAirport, ['route' => ['somProjectsAdditionalAirports.update', $somProjectsAdditionalAirport->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
                     @include('som_projects_additional_airports.fields')
-                </div>
             </div>
 
             <div class="card-footer">

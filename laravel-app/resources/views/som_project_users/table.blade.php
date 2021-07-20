@@ -2,9 +2,8 @@
     <table class="table table-bordered data-table" id="somProjectUsers-table">
         <thead>
             <tr>
-                <th>Som Projects Id</th>
-                <th>Cms Users Id</th>
-                <th>Cms Privileges Id</th>
+                <th>Cms User</th>
+                <th>Cms Privilege</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -28,6 +27,7 @@
             <div class="modal-body" id="deleteModalBody">
                 <div>
                     {!! Form::open(['route' => ['somProjectUsers.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
+                    <input type="hidden" name="project_id" id="project_id" value="{!! $project_id !!}">
                     <div class="form-group row">
                         <div class="col-md-12">
                             <span>Are you sure?</span>
@@ -55,12 +55,11 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: false,
         serverSide: false,
-        ajax: "{{ route('somProjectUsers.index') }}",
+        ajax: "{{ route('somProjectUsers.index', ['project_id'=>$project_id]) }}",
         columns: [
-            {data: 'som_projects_id', name: 'som_projects_id', orderable: true, searchable: true},
-            {data: 'cms_users_id', name: 'cms_users_id', orderable: true, searchable: true},
-            {data: 'cms_privileges_id', name: 'cms_privileges_id', orderable: true, searchable: true},          
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {data: 'cms_users_name', name: 'cms_users_name', orderable: true, searchable: true},
+            {data: 'cms_privileges_name', name: 'cms_privileges_name', orderable: true, searchable: true},          
+            {data: 'action', name: 'action', orderable: false, searchable: false,sWidth:'15%'},
         ]
     });
 });

@@ -41,21 +41,21 @@ class SomProjectsMilestonesController extends AppBaseController
         // else
         //     $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
 
-        $bradecrumbs = array();
-        $bradecrumbs[0] = array();         
-        $bradecrumbs[0]['id'] = 0;
-        $bradecrumbs[0]['name'] = "";
-        $bradecrumbs[1] = array();
-        $bradecrumbs[1]['id'] = 0;
-        $bradecrumbs[1]['name'] = "";
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();         
+        $breadcrumbs[0]['id'] = 0;
+        $breadcrumbs[0]['name'] = "";
+        $breadcrumbs[1] = array();
+        $breadcrumbs[1]['id'] = 0;
+        $breadcrumbs[1]['name'] = "";
 
         if(!empty($phases_id)){
-            $bradeAry = $this->somProjectsPhasesRepository->getBradecrumbsById($phases_id);          
+            $bradeAry = $this->somProjectsPhasesRepository->getbreadcrumbsById($phases_id);          
                       
-            $bradecrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
-            $bradecrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];            
-            $bradecrumbs[1]['id'] = $phases_id;
-            $bradecrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];            
+            $breadcrumbs[1]['id'] = $phases_id;
+            $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
         }
 
         if ($request->ajax()) {
@@ -103,7 +103,7 @@ class SomProjectsMilestonesController extends AppBaseController
 
         return view('som_projects_milestones.index')
                 ->with('somProjectsPhaseId', $phases_id)
-                ->with('bradecrumbs', $bradecrumbs);
+                ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**

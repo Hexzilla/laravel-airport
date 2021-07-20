@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSomProjectsAdditionalAirportRequest;
 use App\Http\Requests\UpdateSomProjectsAdditionalAirportRequest;
 use App\Repositories\SomProjectsAdditionalAirportRepository;
 use App\Repositories\SomProjectsAirportRepository;
+use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -18,14 +19,17 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     /** @var  SomProjectsAdditionalAirportRepository */
     private $somProjectsAdditionalAirportRepository;
     private $somProjectsAirportRepository;
+    private $somProjectsRepository;
 
     public function __construct(
         SomProjectsAdditionalAirportRepository $somProjectsAdditionalAirportRepo,
-        SomProjectsAirportRepository $somProjectsAirportRepo
+        SomProjectsAirportRepository $somProjectsAirportRepo,
+        SomProjectsRepository $somProjectsRepo
         )
     {
         $this->somProjectsAdditionalAirportRepository = $somProjectsAdditionalAirportRepo;
         $this->somProjectsAirportRepository = $somProjectsAirportRepo;
+        $this->somProjectsRepository = $somProjectsRepo; 
     }
 
     /**
@@ -39,6 +43,12 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     {
         //JOIN BY PROJECT_ID---
         $projectId = $request->input('project_id');
+
+        $somProjects = $this->somProjectsRepository->find($projectId);
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somProjects['id'];
+        $breadcrumbs[0]['name'] = $somProjects['name'];
         //---------------------
 
         if ($request->ajax()) {
@@ -71,7 +81,8 @@ class SomProjectsAdditionalAirportController extends AppBaseController
         }
 
         return view('som_projects_additional_airports.index')
-            ->with('projectId', $projectId);
+            ->with('projectId', $projectId)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**

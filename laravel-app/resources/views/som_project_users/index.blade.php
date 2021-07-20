@@ -42,14 +42,20 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-body p-3" >
                 <div class="row">
                     <div class="col-md-3">
-                        <span><i class="fas fa-users ml-2"></i> User List</span>
+                        <span>Projects</span>
                     </div>
-                    <div class="col-md-9"></div>
-                </div>                
+                    <div class="col-md-6 breadcrumbs-menu">
+                        <span>{!! $breadcrumbs[0]['name'] !!}</span> 
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
             </div>
+        </div>
+
+        <div class="card">            
             <div class="card-body p-0">
                 @include('som_project_users.table')
 

@@ -47,8 +47,8 @@
                     <div class="col-md-3">
                         <span>Projects</span>
                     </div>
-                    <div class="col-md-6 bradecrumbs-menu">
-                        <span>{!! $bradecrumbs[0]['name'] !!}</span> 
+                    <div class="col-md-6 breadcrumbs-menu">
+                        <span>{!! $breadcrumbs[0]['name'] !!}</span> 
                     </div>
                     <div class="col-md-3"></div>
                 </div>

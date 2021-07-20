@@ -44,7 +44,7 @@ class SomFormsRepository extends BaseRepository
         return SomForms::class;
     }
 
-    public function getBradecrumbsById($id){
+    public function getbreadcrumbsById($id){
         $select  = array();
         $select[0] = 'som_forms.*';
         $select[1] = 'som_phases_milestones.name as som_phases_milestones_name';
