@@ -120,3 +120,5 @@ Route::resource('somProjectsTransactionTypes', App\Http\Controllers\SomProjectsT
 Route::resource('somStatuses', App\Http\Controllers\SomStatusController::class);
 
 Route::resource('somStatusApprovals', App\Http\Controllers\SomStatusApprovalsController::class);
+
+Route::get('/api/get_project', [App\Http\Controllers\ApiGetProjectController::class, 'index'])->name('get_project');
