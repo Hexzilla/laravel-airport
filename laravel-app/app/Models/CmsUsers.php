@@ -36,16 +36,11 @@ class CmsUsers  extends Authenticatable
     public $timestamps = false;
 
     public $fillable = [
-        'name',
-        'photo',
-        'email',
-        'password',
-        'id_cms_privileges',
-        'created_at',
-        'updated_at',
         'status',
+        'photo',
+        'name',
+        'email',
         'job_title',
-        'objectguid'
     ];
 
     /**
@@ -55,17 +50,11 @@ class CmsUsers  extends Authenticatable
      */
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string',
-        'photo' => 'string',
-        'email' => 'string',
-        'password' => 'string',
-        'id_cms_privileges' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
         'status' => 'string',
+        'photo' => 'string',
+        'name' => 'string',
+        'email' => 'string',
         'job_title' => 'string',
-        'objectguid' => 'string',
-        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -74,16 +63,11 @@ class CmsUsers  extends Authenticatable
      * @var array
      */
     public static $rules = [
+        'status' => 'nullable|string|max:50',
         'name' => 'nullable|string|max:255',
         'photo' => 'nullable|string|max:255',
         'email' => 'nullable|string|max:255',
-        'password' => 'nullable|string|max:255',
-        'id_cms_privileges' => 'nullable|integer',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'status' => 'nullable|string|max:50',
         'job_title' => 'nullable|string|max:250',
-        'objectguid' => 'nullable|string|max:100'
     ];
 
     /**

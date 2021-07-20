@@ -50,4 +50,29 @@ class SomCountryRepository extends BaseRepository
     {
         return SomCountry::class;
     }
+
+    public function getLastInsertedId(){
+        return $this->makeModel()
+            ->max('id');
+    }
+
+    public function insertData($data){
+        return $this->makeModel()
+            ->insert($data);
+    }
+
+    public function getCountByCountryCode($country_code){
+        return $this->makeModel()
+            ->where('country_code', $country_code)
+            ->count();
+    }
+
+    public function getCountByCountryCodeAndId($country_code, $id){
+        return $this->makeModel()
+            ->where('country_code', $country_code)
+            ->where('id','<>', $id)
+            ->count();
+    }
+
+
 }

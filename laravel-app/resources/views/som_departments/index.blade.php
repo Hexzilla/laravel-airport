@@ -22,12 +22,27 @@
     </section>
 
     <div class="content px-3">
+        <div class="row ml-1">
+            <div class="col-md-6 mb-4">
+                <a href="#">
+                    <i class="fa fa-chevron-left"></i> Home
+                </a>
+            </div>
+        </div>
 
         @include('flash::message')
 
         <div class="clearfix"></div>
 
         <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-3">
+                        <span><i class="fa fa-folder ml-2"></i> Departments List</span>
+                    </div>
+                    <div class="col-md-9"></div>
+                </div>
+            </div>
             <div class="card-body p-0">
                 @include('som_departments.table')
 

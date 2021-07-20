@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomCountryInfoRequest;
 use App\Http\Requests\UpdateSomCountryInfoRequest;
 use App\Repositories\SomCountryInfoRepository;
+use App\Repositories\SomCountryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomCountryInfoController extends AppBaseController
 {
     /** @var  SomCountryInfoRepository */
     private $somCountryInfoRepository;
+    private $somCountryRepository;
 
-    public function __construct(SomCountryInfoRepository $somCountryInfoRepo)
+    public function __construct(SomCountryInfoRepository $somCountryInfoRepo
+        ,SomCountryRepository $somCountryRepository)
     {
         $this->somCountryInfoRepository = $somCountryInfoRepo;
+        $this->somCountryRepository = $somCountryRepository;
     }
 
     /**
@@ -28,11 +34,40 @@ class SomCountryInfoController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
-        $somCountryInfos = $this->somCountryInfoRepository->all();
+    {        
+        $somCountry_id = $request->get("somCountry_id");
+
+        if ($request->ajax()) {
+
+            $data = $this->somCountryInfoRepository->getAllData();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somCountryInfos.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somCountryInfos.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }        
 
         return view('som_country_infos.index')
-            ->with('somCountryInfos', $somCountryInfos);
+            ->with('somCountry_id',$somCountry_id);
     }
 
     /**
@@ -40,9 +75,15 @@ class SomCountryInfoController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_country_infos.create');
+        $data = array();        
+        $data['selected_year'] = ""; 
+
+        $somCountry_id = $request->get("somCountry_id");
+
+        return view('som_country_infos.create')->with('data', $data)
+        ->with('somCountry_id',$somCountry_id);
     }
 
     /**
@@ -54,9 +95,34 @@ class SomCountryInfoController extends AppBaseController
      */
     public function store(CreateSomCountryInfoRequest $request)
     {
-        $input = $request->all();
+        // $validated = $request->validated();
 
-        $somCountryInfo = $this->somCountryInfoRepository->create($input);
+        // if (array_key_exists('som_country_id', $validated)) {
+        //     unset($validated['som_country_id']);
+        // }
+
+        $input = $request->rules();
+
+        $data = array();
+        if(!empty($request->input('som_country_id'))){
+            $data['som_country_id'] = $request->input('som_country_id');
+        } 
+        if(!empty($request->input('year'))){
+            $data['year'] = $request->input('year');
+        } 
+        if(!empty($request->input('inflation'))){
+            $data['inflation'] = $request->input('inflation');
+        } 
+        if(!empty($request->input('population'))){
+            $data['population'] = $request->input('population');
+        } 
+        if(!empty($request->input('gpd_evolution'))){
+            $data['gpd_evolution'] = $request->input('gpd_evolution');
+        } 
+
+        $this->somCountryInfoRepository->insertData($data);
+
+        // $somCountryInfo = $this->somCountryInfoRepository->create($validated);
 
         Flash::success('Som Country Info saved successfully.');
 
@@ -100,7 +166,12 @@ class SomCountryInfoController extends AppBaseController
             return redirect(route('somCountryInfos.index'));
         }
 
-        return view('som_country_infos.edit')->with('somCountryInfo', $somCountryInfo);
+        $data = array();
+        
+        $data['selected_year'] = $somCountryInfo->year;  
+
+        return view('som_country_infos.edit')->with('somCountryInfo', $somCountryInfo)->with('data', $data)
+        ->with('somCountry_id',$somCountryInfo->som_country_id);
     }
 
     /**

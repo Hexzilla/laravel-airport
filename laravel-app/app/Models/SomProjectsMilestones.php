@@ -69,7 +69,7 @@ class SomProjectsMilestones extends Model
         'som_projects_phases_id' => 'required|integer',
         'blocking' => 'nullable|integer',
         'order' => 'required|integer',
-        'due_date' => 'nullable',
+        'due_date' => 'required|date',
         'name' => 'required|string|max:255',
         'som_status_id' => 'nullable|integer',
         'is_hidden' => 'nullable|boolean'

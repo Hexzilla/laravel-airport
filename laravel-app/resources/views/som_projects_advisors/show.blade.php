@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"
-                       href="{{ route('somProjectsAdvisors.index') }}">
+                       href="{{ route('somProjectsAdvisors.index',['project_id'=> $somProjectsAdvisors['som_projects_id']]) }}">
                         Back
                     </a>
                 </div>

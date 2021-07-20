@@ -54,8 +54,8 @@ class SomFormApprovals extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:255',
-        'som_forms_id' => 'required|integer',
-        'order_approval' => 'required|integer'
+        'som_forms_id' => 'required|integer|min:0',
+        'order_approval' => 'required|integer|min:0'
     ];
 
     /**

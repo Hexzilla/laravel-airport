@@ -29,6 +29,7 @@ class SomProjectsModelController extends AppBaseController
      */
     public function index(Request $request)
     {
+        
         $somProjectsModels = $this->somProjectsModelRepository->all();
 
         return view('som_projects_models.index')

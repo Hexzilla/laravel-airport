@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSomProjectsMilestonesRequest;
 use App\Http\Requests\UpdateSomProjectsMilestonesRequest;
 use App\Repositories\SomProjectsMilestonesRepository;
+use App\Repositories\SomProjectsPhasesRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
 
+use DataTables;
+
 class SomProjectsMilestonesController extends AppBaseController
 {
     /** @var  SomProjectsMilestonesRepository */
     private $somProjectsMilestonesRepository;
+    private $somProjectsPhasesRepository;
 
-    public function __construct(SomProjectsMilestonesRepository $somProjectsMilestonesRepo)
+    public function __construct(SomProjectsMilestonesRepository $somProjectsMilestonesRepo,
+                                SomProjectsPhasesRepository $somProjectsPhasesRepo)
     {
         $this->somProjectsMilestonesRepository = $somProjectsMilestonesRepo;
+        $this->somProjectsPhasesRepository = $somProjectsPhasesRepo;
     }
 
     /**
@@ -29,10 +35,75 @@ class SomProjectsMilestonesController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
+        $phases_id = $request->get('phases_id');
+        // if(!empty($phases_id))
+        //     $somProjectsMilestones = $this->somProjectsMilestonesRepository->all(['som_projects_phases_id'=>$phases_id]);
+        // else
+        //     $somProjectsMilestones = $this->somProjectsMilestonesRepository->all();
+
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();         
+        $breadcrumbs[0]['id'] = 0;
+        $breadcrumbs[0]['name'] = "";
+        $breadcrumbs[1] = array();
+        $breadcrumbs[1]['id'] = 0;
+        $breadcrumbs[1]['name'] = "";
+
+        if(!empty($phases_id)){
+            $bradeAry = $this->somProjectsPhasesRepository->getbreadcrumbsById($phases_id);          
+                      
+            $breadcrumbs[0]['id'] = $bradeAry[0]['som_projects_id'];
+            $breadcrumbs[0]['name'] = $bradeAry[0]['som_projects_name'];            
+            $breadcrumbs[1]['id'] = $phases_id;
+            $breadcrumbs[1]['name'] = $bradeAry[0]['som_phases_name'];
+        }
+
+        if ($request->ajax()) {
+
+            if(!empty($phases_id))
+                $data = $this->somProjectsMilestonesRepository->all(['som_projects_phases_id'=>$phases_id]);
+            else
+                $data = $this->somProjectsMilestonesRepository->all();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('due_date', function ($request) {
+                    $due_date = "";
+                    if(!empty($request->due_date)){
+                        $due_date = date('Y-m-d', strtotime($request->due_date));
+                    }
+                    return $due_date; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button Forms                    
+                    $action .= "<a href=\"".route( "somForms.index", ['milestones_id'=> $row->id] )."\" class='btn btn-default btn-xs'><i class='fas fa-list' title='Forms'></i> Forms</a>";
+
+                    //button show                
+                    $action .= "<a href=\"".route('somProjectsMilestones.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-eye'></i>";
+                    $action .= "</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjectsMilestones.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['action'])                
+                ->make(true);
+        }
 
         return view('som_projects_milestones.index')
-            ->with('somProjectsMilestones', $somProjectsMilestones);
+                ->with('somProjectsPhaseId', $phases_id)
+                ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -40,9 +111,12 @@ class SomProjectsMilestonesController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('som_projects_milestones.create');
+        $phases_id = $request->get('phases_id');
+        return view('som_projects_milestones.create')
+                ->with('somProjectsMilestones', array())
+                ->with('somProjectsPhaseId', $phases_id);
     }
 
     /**
@@ -60,7 +134,8 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones saved successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 
     /**
@@ -99,8 +174,10 @@ class SomProjectsMilestonesController extends AppBaseController
 
             return redirect(route('somProjectsMilestones.index'));
         }
-
-        return view('som_projects_milestones.edit')->with('somProjectsMilestones', $somProjectsMilestones);
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return view('som_projects_milestones.edit')
+                ->with('somProjectsPhaseId', $phases_id)
+                ->with('somProjectsMilestones', $somProjectsMilestones);
     }
 
     /**
@@ -125,7 +202,8 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones updated successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 
     /**
@@ -151,6 +229,7 @@ class SomProjectsMilestonesController extends AppBaseController
 
         Flash::success('Som Projects Milestones deleted successfully.');
 
-        return redirect(route('somProjectsMilestones.index'));
+        $phases_id = $somProjectsMilestones->som_projects_phases_id;
+        return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
     }
 }

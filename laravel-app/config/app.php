@@ -180,6 +180,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Yajra\DataTables\DataTablesServiceProvider::class,
+
     ],
 
     /*
@@ -237,6 +239,7 @@ return [
         'CRUDBooster' => App\Http\Utils\CRUDBooster::class,
         'SOMController' => App\Http\Controllers\SomController::class,
         'Adldap' => Adldap\Laravel\Facades\Adldap::class,
+	'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];

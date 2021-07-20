@@ -13,6 +13,14 @@
 
     <div class="content px-3">
 
+        <div class="row">
+            <div class="col-12-lg ml-2 mb-4">
+                <a href="{{ route('somCountries.index') }}">
+                    <i class="fa fa-chevron-left"></i> Back To List Data Country
+                </a>
+            </div>
+        </div>
+
         @include('adminlte-templates::common.errors')
 
         <div class="card">
@@ -20,9 +28,7 @@
             {!! Form::model($somCountry, ['route' => ['somCountries.update', $somCountry->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-                <div class="row">
                     @include('som_countries.fields')
-                </div>
             </div>
 
             <div class="card-footer">

@@ -50,7 +50,7 @@ class SomProjectsAdditionalAirport extends Model
      * @var array
      */
     public static $rules = [
-        'som_airport_id' => 'required|integer',
+        'som_airport_id' => 'required|exists:som_projects_airport,id', 
         'som_project_id' => 'required|integer'
     ];
 

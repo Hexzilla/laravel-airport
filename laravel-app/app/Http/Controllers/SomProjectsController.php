@@ -6,18 +6,24 @@ use App\Http\Requests\CreateSomProjectsRequest;
 use App\Http\Requests\UpdateSomProjectsRequest;
 use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\SomStatusRepository;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
+
+use DataTables;
 
 class SomProjectsController extends AppBaseController
 {
     /** @var  SomProjectsRepository */
     private $somProjectsRepository;
-
-    public function __construct(SomProjectsRepository $somProjectsRepo)
+    private $somStatusRepository;
+    public function __construct(
+            SomProjectsRepository $somProjectsRepo,
+            SomStatusRepository $somStatusRepo)
     {
         $this->somProjectsRepository = $somProjectsRepo;
+        $this->somStatusRepository = $somStatusRepo;
     }
 
     /**
@@ -28,11 +34,62 @@ class SomProjectsController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
-        $somProjects = $this->somProjectsRepository->all();
+    {        
+        if ($request->ajax()) {
 
-        return view('som_projects.index')
-            ->with('somProjects', $somProjects);
+            $data = $this->somProjectsRepository->getAllData();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('is_template_project', function ($request) {
+                    $html = "";
+                    if ($request->is_template_project){
+                        $html = '<i class="fas fa-key"></i>';
+                    }
+                    return $html; 
+                })
+                ->editColumn('img_url', function ($request) {
+                    $html = "<img src=\"".$request->img_url."\" alt=\"".$request->name."\">";
+                    return $html; 
+                })
+                ->addColumn('action', function($row){
+                    $action ="";
+                    $action .= "<div class='btn-group' style='float:right;'>";
+
+                    //button Users                   
+                    $action .= "<a href=\"". route('somProjectUsers.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                        <i class='fas fa-users'></i>Users</a>";
+
+                    //button Additional Airports 
+                    $action .= "<a href=\"". route('somProjectsAdditionalAirports.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'><i class='fas fa-plane'></i>Additional Airports</a>";
+
+                    //button Phases
+                    $action .= "<a href=\"". route('somProjectsPhases.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='fas fa-film'></i>Phases</a>";
+
+                    //button Partners
+                    $action .= "<a href=\"". route('somProjectsPartners.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='far fa-object-group'></i>Partners</a>";
+
+                    //button Advisors
+                    $action .= "<a href=\"". route('somProjectsAdvisors.index', ['project_id' => $row->id])."\" class='btn btn-default btn-xs'>
+                            <i class='fas fa-users'></i>Advisors</a>";   
+
+                    //button edit                     
+                    $action .= "<a href=\"".route('somProjects.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    $action .= "<i class='far fa-edit'></i>";
+
+                    //button delete
+                    $action .= "</a>";
+                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+
+                    $action .= "</div>";
+                    return $action;                        
+                })                    
+                ->rawColumns(['is_template_project','img_url','action'])                
+                ->make(true);
+        }
+        return view('som_projects.index');
     }
 
     /**
@@ -42,7 +99,16 @@ class SomProjectsController extends AppBaseController
      */
     public function create()
     {
-        return view('som_projects.create');
+        $statusArray = array();
+        $sel_status_id = 0;
+        $statusRows = $this->somStatusRepository->all(['type'=>'projects'], null, null, ['id','name']);
+        foreach($statusRows as $row)
+        {
+            $statusArray[$row['id']] = $row['name'];
+        }
+        return view('som_projects.create')
+                    ->with('statusArray', $statusArray)
+                    ->with('sel_status', $sel_status_id);
     }
 
     /**
@@ -100,7 +166,17 @@ class SomProjectsController extends AppBaseController
             return redirect(route('somProjects.index'));
         }
 
-        return view('som_projects.edit')->with('somProjects', $somProjects);
+        $statusArray = array();
+        $sel_status_id = $somProjects->som_project_info_status_id;
+        $statusRows = $this->somStatusRepository->all(['type'=>'projects'], null, null, ['id','name']);
+        foreach($statusRows as $row)
+        {
+            $statusArray[$row['id']] = $row['name'];
+        }
+        return view('som_projects.edit')
+                ->with('statusArray', $statusArray)
+                ->with('sel_status', $sel_status_id)
+                ->with('somProjects', $somProjects);
     }
 
     /**

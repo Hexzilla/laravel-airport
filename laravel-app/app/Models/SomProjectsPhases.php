@@ -61,7 +61,7 @@ class SomProjectsPhases extends Model
         'som_projects_id' => 'required|integer',
         'som_phases_id' => 'required|integer',
         'order' => 'required|integer',
-        'som_status_id' => 'nullable|integer'
+        'som_status_id' => 'nullable|integer|exists:som_status,id'
     ];
 
     /**
