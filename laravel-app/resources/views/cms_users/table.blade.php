@@ -2,21 +2,16 @@
     <table class="table table-bordered data-table" id="cmsUsers-table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Has Access</th>
                 <th>Photo</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Password</th>
-                <th>Id Cms Privileges</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Status</th>
-                <th>Job Title</th>
-                <th>Objectguid</th>
+                <th>Application Role</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-        
+
         </tbody>
     </table>
 </div>
@@ -37,9 +32,9 @@
                     {!! Form::open(['route' => ['cmsUsers.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <span>Are you sure?</span>                            
+                            <span>Are you sure?</span>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
                         {!! Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs']) !!}
                     </div>
@@ -57,25 +52,20 @@ function openDeleteModal(id){
     $('#deleteModal').modal("show");
 }
 
-$(function () { 
-    
+$(function () {
+
     var table = $('.data-table').DataTable({
         processing: false,
         serverSide: false,
         ajax: "{{ route('cmsUsers.index') }}",
-        columns: [   
-            {data: 'name', name: 'name', orderable: true, searchable: true},
-            {data: 'photo', name: 'photo', orderable: true, searchable: true},
-            {data: 'email', name: 'email', orderable: true, searchable: true},
-            {data: 'password', name: 'password', orderable: true, searchable: true},
-            {data: 'id_cms_privileges', name: 'id_cms_privileges', orderable: true, searchable: true},
-            {data: 'created_at', name: 'created_at', orderable: true, searchable: true},
-            {data: 'updated_at', name: 'updated_at', orderable: true, searchable: true},
+        columns: [
             {data: 'status', name: 'status', orderable: true, searchable: true},
+            {data: 'photo', name: 'photo', orderable: true, searchable: true},
+            {data: 'name', name: 'name', orderable: true, searchable: true},
+            {data: 'email', name: 'email', orderable: true, searchable: true},
             {data: 'job_title', name: 'job_title', orderable: true, searchable: true},
-            {data: 'objectguid', name: 'objectguid', orderable: true, searchable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-    });      
+    });
 });
 </script>

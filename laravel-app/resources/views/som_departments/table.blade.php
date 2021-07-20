@@ -2,12 +2,13 @@
     <table class="table table-bordered data-table" id="somDepartments-table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Department</th>
+                {{-- <th>User</th> --}}
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-        
+
         </tbody>
     </table>
 </div>
@@ -28,9 +29,9 @@
                     {!! Form::open(['route' => ['somDepartments.destroy', '0'], 'id'=>'delete_form', 'method' => 'delete']) !!}
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <span>Are you sure?</span>                            
+                            <span>Are you sure?</span>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="form-group col-sm-12" style="display: grid;justify-content: end;">
                         {!! Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs']) !!}
                     </div>
@@ -48,15 +49,16 @@ function openDeleteModal(id){
     $('#deleteModal').modal("show");
 }
 
-$(function () {     
+$(function () {
     var table = $('.data-table').DataTable({
         processing: false,
         serverSide: false,
         ajax: "{{ route('somDepartments.index') }}",
-        columns: [   
-            {data: 'name', name: 'name', orderable: true, searchable: true},
+        columns: [
+            {data: 'name', name: 'department', orderable: true, searchable: true},
+            //{data: 'user_name', name: 'user_name', orderable: true, searchable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false,sWidth:'10%'},
         ]
-    });      
+    });
 });
 </script>
