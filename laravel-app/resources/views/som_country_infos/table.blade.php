@@ -2,16 +2,15 @@
     <table class="table table-bordered data-table" id="somCountryInfos-table">
         <thead>
             <tr>
-                <th>Som Country</th>
                 <th>Year</th>
-                <th>Population</th>
-                <th>Inflation</th>
-                <th>Gpd Evolution</th>
+                <th>Inflation (%)</th>
+                <th>Population (mn)</th>
+                <th>GDP (€ bn)</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-        
+
         </tbody>
     </table>
 </div>
@@ -59,11 +58,10 @@ $(function () {
         serverSide: false,
         ajax: "{{ route('somCountryInfos.index', ['somCountry_id'=>$somCountry_id]) }}",
         columns: [
-            {data: 'som_country_name', name: 'som_country_name', orderable: true, searchable: true},
             {data: 'year', name: 'year', orderable: true, searchable: true},
-            {data: 'population', name: 'population', orderable: true, searchable: true},
             {data: 'inflation', name: 'inflation', orderable: true, searchable: true},
-            {data: 'gpd_evolution', name: 'gpd_evolution', orderable: true, searchable: true},            
+            {data: 'population', name: 'population', orderable: true, searchable: true},
+            {data: 'gpd_evolution', name: 'gpd_evolution', orderable: true, searchable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
