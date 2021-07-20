@@ -28,12 +28,6 @@
                     <i class="fa fa-chevron-left"></i> Home
                 </a>
             </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somDepartments.create') }}">
-                        Add New
-                </a>
-            </div>
         </div>
 
         @include('flash::message')
@@ -47,7 +41,7 @@
                         <span><i class="fa fa-folder ml-2"></i> Departments List</span>
                     </div>
                     <div class="col-md-9"></div>
-                </div>                
+                </div>
             </div>
             <div class="card-body p-0">
                 @include('som_departments.table')
