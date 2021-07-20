@@ -9,5 +9,5 @@
 <div class="form-group col-sm-6">
     {!! Form::label('cms_users_id', 'Cms Users Id:') !!}
     <!-- {!! Form::number('cms_users_id', null, ['class' => 'form-control']) !!} -->
-    {!! Form::select('cms_users_id', $data['users'], $data['selected_user'], ['class' => 'form-control','onchange'=>'formatCountry()']) !!}
+    {!! Form::select('cms_users_id', $data['users'], $data['selected_user'], ['class' => 'form-control']) !!}
 </div>

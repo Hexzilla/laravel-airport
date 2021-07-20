@@ -79,10 +79,11 @@ class SomDepartmentsUsersController extends AppBaseController
     {
         $som_departments_id = $request->get("som_departments_id");
 
+        $data = array();
         $data['users'] = array();
         $cmsUsers = $this->cmsUsersRepository->all();
         $cnt = 0;
-        $selected_country_id = 0;
+        $selected_user_id = 0;
         foreach ($cmsUsers as $cmsuser) {
             $data['users'][$cmsuser->id] = $cmsuser->name;
             if($cnt == 0){
@@ -169,9 +170,10 @@ class SomDepartmentsUsersController extends AppBaseController
             return redirect(route('somDepartmentsUsers.index'));
         }
 
+        $data = array();
         $data['users'] = array();
         $cmsUsers = $this->cmsUsersRepository->all();
-        $selected_country_id = 0;
+        $selected_user_id = 0;
         foreach ($cmsUsers as $cmsuser) {
             $data['users'][$cmsuser->id] = $cmsuser->name;
         }  

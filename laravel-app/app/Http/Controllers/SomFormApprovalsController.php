@@ -81,6 +81,9 @@ class SomFormApprovalsController extends AppBaseController
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
+                    //button Responsibles                    
+                    $action .= "<a href=\"".route("somApprovalsResponsibles.index",['som_form_approvals_id'=> $row->id])."\" class='btn btn-default btn-xs'><i class='fa fa-users'></i> Responsibles</a>";
+
                     //button show                
                     $action .= "<a href=\"".route('somFormApprovals.show', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-eye'></i>";
