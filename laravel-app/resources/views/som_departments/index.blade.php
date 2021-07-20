@@ -5,17 +5,17 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><i class='fa fa-folder'></i> Som Departments</h1>
+                    <h1>Som Departments</h1>
                 </div>
-                <div class="col-sm-6">
-                    <div class="float-right">                                                
-                        <a href="#">
-                            <i class="fa fa-palette"></i> Home
-                        </a>
-                        <a href="#">
-                            <i class="fa fa-chevron-right"></i> Som Departments
-                        </a>                        
-                    </div>                        
+                <div class="col-sm-12">
+                    <a class="btn btn-primary float-left"
+                       href="{{ route('getLoad') }}">
+                        Load Users from AD
+                    </a>
+                    <a class="btn btn-primary ml-2"
+                       href="{{ route('somDepartments.create') }}">
+                        Add New
+                    </a>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>
