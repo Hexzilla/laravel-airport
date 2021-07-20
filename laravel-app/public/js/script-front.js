@@ -27,7 +27,7 @@ function downloadFromSharepoint(url){
 
 $(document).ready(function () {
     
-    $('#buttonBackOffice').click(function(){window.location.href = "/admin";});
+    $('#buttonBackOffice').click(function(){window.location.href = "/";});
     $('.loading').hide().removeClass('hide');
     refreshClock();
 
@@ -854,8 +854,7 @@ function loadProjectInfo(id, onBack) {
                 }else{
                     $('.multi-airport-slider').css('display','none');
                 }
-                
-
+                console.log(onBack)
                 if (onBack){
                     loadingHide(onBack);
                     $('.open-projects-modal').click();	
@@ -2183,7 +2182,7 @@ function loadNews(newDate){
         }
         loadingHide(false);
     }
-    xhr.send() // send request
+    xhr.send();// send request
     xhr.onerror= function(){
         alert('Request failed.  Returned status of ' + xhr.status)
         loadingHide(onBack);
@@ -2613,6 +2612,7 @@ async function generateProjectPdf(showGraphs){
         var img = new Image();
         if (currentProjectInfo.project.airport.som_projects_airport_img_url!=null){
             img.src = currentProjectInfo.project.airport.som_projects_airport_img_url;
+            console.log('img',img)
             doc.addImage(img, 'JPEG', 14, finalY + 20, 100, 50);
             airportHasImage = true;
         }

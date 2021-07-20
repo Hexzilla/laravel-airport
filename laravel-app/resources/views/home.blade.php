@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jScrollPane/2.0.23/style/jquery.jscrollpane.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.16/integration/font-awesome/dataTables.fontAwesome.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <!--CUSTOM CSS-->
     <link href="{{asset('css/jquery.jscrollpane.lozenge.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('css/style-front.css')}}" rel="stylesheet" type="text/css" />
@@ -206,12 +206,12 @@
     var openDecisionMap = <?php echo (isset($decision_map)?$decision_map:false) ?>;
     console.log(currentProjectInfo, openDecisionMap);
     $(document).ready(function() {
-        // loadingShow();
+        loadingShow();
         initializeMap();
         $( "#mapContainer div.leaflet-pane.leaflet-tile-pane" ).append( "<div id=\"background\"></div>" );
         initializeProjectList();
         loadMarkers();
-        // initialNewsLoad();
+        initialNewsLoad();
 
         if (currentProjectId != null){
             loadProjectInfo(currentProjectId, openDecisionMap);
@@ -230,7 +230,7 @@
             closeOnConfirm: false
         }).then((result) => {
             if (result.isConfirmed) {
-                location.href = '/admin/logout';
+                $('#logout-form').submit();
             }
         })
     });

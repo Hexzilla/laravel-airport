@@ -134,3 +134,4 @@ Route::resource('somStatusApprovals', App\Http\Controllers\SomStatusApprovalsCon
 Route::resource('home', App\Http\Controllers\HomeController::class);
 
 Route::get('/api/get_project', [App\Http\Controllers\ApiGetProjectController::class, 'index'])->name('get_project');
+Route::get('/api/news', [App\Http\Controllers\ApiNewsController::class, 'index'])->name('get_news');

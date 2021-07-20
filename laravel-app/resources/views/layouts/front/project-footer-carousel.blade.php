@@ -20,7 +20,7 @@
                     <div>
                         <div class="row">
                             <div class="col-md-6 right-0">
-                                <span class="box-icon fa fa-plane-departure"></span>
+                                <span class="box-icon fas fa-plane-departure"></span>
                                 <span class="box-title">airport sheet</span>
                             </div>
                             <div class="col-md-6 green-link open-airport-modal">
