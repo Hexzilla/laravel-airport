@@ -57,14 +57,14 @@
 </head>
 <body id="bodyMap" data-layout="cons">
     <!-- LOADING -->
-    @include("layouts.front.loading_modal")
+    @include("layouts.loading_modal")
 
     <!-- HEADER -->
     @include("layouts.header")
     <!-- END HEADER -->
 
     <!-- PROJECT LIST DIV -->
-    @include("layouts.front.project-list-cons")
+    @include("layouts.home.project-list-cons")
 
     <div id='mapContainer' class="home-container nomargin-side" style="z-index:0">
         <div id="mapFilters" class="filters nomargin-side cons hiddenFilters">
@@ -130,8 +130,8 @@
             </div>
         </div>
         <!-- PROJECT FOOTER -->
-        @include("layouts.front.project-footer-carousel")
-        @include("layouts.front.project-footer-carousel-mobile")
+        @include("layouts.home.project-footer-carousel")
+        @include("layouts.home.project-footer-carousel-mobile")
     </div>
 
     <!-- RELOJ -->
@@ -145,17 +145,17 @@
 
     <!-- MODALS ############################################################################################ -->
 
-    @include("layouts.front.project-phase-map")
+    @include("layouts.home.project-phase-map")
 
-    @include("layouts.front.project-data-modal-cons")
-    @include("layouts.front.project-financial-modal-cons")
+    @include("layouts.home.project-data-modal-cons")
+    @include("layouts.home.project-financial-modal-cons")
 
-    @include("layouts.front.actual-phase-modal")
-    @include("layouts.front.project-team-modal")
+    @include("layouts.home.actual-phase-modal")
+    @include("layouts.home.project-team-modal")
 
-    @include("layouts.front.project-country-modal")
-    @include("layouts.front.project-oportunity-modal")
-    @include("layouts.front.project-airport-modal")
+    @include("layouts.home.project-country-modal")
+    @include("layouts.home.project-oportunity-modal")
+    @include("layouts.home.project-airport-modal")
 
     <!-- END MODALS ############################################################################################ -->
 
