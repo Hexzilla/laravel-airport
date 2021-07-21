@@ -134,3 +134,14 @@ Route::resource('somStatuses', App\Http\Controllers\SomStatusController::class);
 Route::resource('somStatusApprovals', App\Http\Controllers\SomStatusApprovalsController::class);
 
 Route::get('/api/get_project', [App\Http\Controllers\ApiGetProjectController::class, 'index'])->name('get_project');
+
+//new added for all delete ==============================================================
+Route::delete('somProjectsDeleteAll', [App\Http\Controllers\SomProjectsController::class, 'deleteAll']);
+
+Route::delete('somAirportsDeleteAll', [App\Http\Controllers\SomProjectsAirportController::class, 'deleteAll']);
+
+Route::delete('somCountriesDeleteAll', [App\Http\Controllers\SomCountryController::class, 'deleteAll']);
+
+Route::delete('somNewsDeleteAll', [App\Http\Controllers\SomNewsController::class, 'deleteAll']);
+
+Route::delete('cmsUsersDeleteAll', [App\Http\Controllers\CmsUsersController::class, 'deleteAll']);

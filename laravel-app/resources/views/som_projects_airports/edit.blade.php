@@ -4,8 +4,18 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1>Edit Som Projects Airport</h1>
+                <div class="col-sm-6">
+                    <h1><i class="fa fa-fighter-jet"></i> Edit Airports</h1>
+                </div>
+                <div class="col-sm-6">
+                    <div class="float-right">                                                
+                        <a href="#" class="home-link">
+                            <i class="fa fa-palette"></i> Home
+                        </a>
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Airports
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -14,9 +24,9 @@
     <div class="content px-3">
 
         <div class="row">
-            <div class="col-12-lg ml-2 mb-4">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somAirports.index') }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Projects Airport
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Airports
                 </a>
             </div>
         </div>
@@ -27,15 +37,22 @@
 
             {!! Form::model($somProjectsAirport, ['route' => ['somAirports.update', $somProjectsAirport->id],'enctype' =>'multipart/form-data', 'method' => 'patch']) !!}
 
+            <div class="card-header coh">
+                <span><i class="fa fa-fighter-jet ml-2"></i> Edit Airports</span>
+            </div>
+
             <div class="card-body">
-                <!-- <div class="row"> -->
-                    @include('som_projects_airports.fields')
-                <!-- </div> -->
+                @include('som_projects_airports.fields')
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somAirports.index') }}" class="btn btn-default">Cancel</a>
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <a href="{{ route('somAirports.index') }}" class="btn btn-back"><i class="fa fa-chevron-circle-left"></i> Back</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-black']) !!}  
+                    </div>
+                </div>                                  
             </div>
 
            {!! Form::close() !!}

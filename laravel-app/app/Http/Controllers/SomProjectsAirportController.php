@@ -51,6 +51,9 @@ class SomProjectsAirportController extends AppBaseController
             $data = $this->somProjectsAirportRepository->getAllData();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('version_date', function ($request) {
                     $version_date = "";
                     if(!empty($request->version_date)){
@@ -78,7 +81,7 @@ class SomProjectsAirportController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -400,5 +403,24 @@ class SomProjectsAirportController extends AppBaseController
         Flash::success('Som Projects Airport deleted successfully.');
 
         return redirect(route('somAirports.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somProjectsAirportRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

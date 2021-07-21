@@ -4,8 +4,18 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1><i class="far fa-newspaper ml-2"></i> Edit News</h1>
+                <div class="col-sm-6">
+                    <h1><i class="far fa-newspaper"></i> Edit News</h1>
+                </div>
+                <div class="col-sm-6">
+                    <div class="float-right">                                                
+                        <a href="#" class="home-link">
+                            <i class="fa fa-palette"></i> Home
+                        </a>
+                        <span>
+                            <i class="fa fa-chevron-right"></i> News
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -14,9 +24,9 @@
     <div class="content px-3">
 
         <div class="row">
-            <div class="col-12-lg ml-2 mb-4">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somNews.index') }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data News
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data News
                 </a>
             </div>
         </div>
@@ -24,7 +34,7 @@
         @include('adminlte-templates::common.errors')
         <div class="card">
 
-            <div class="card-header">
+            <div class="card-header coh">
                 <span><i class="far fa-newspaper ml-2"></i> Edit News</span>
             </div>
 
@@ -35,12 +45,13 @@
             </div>
 
             <div class="card-footer">
-                <div class="row">
-                    <div class="offset-sm-2 col-sm-10">
-                        <a href="{{ route('somNews.index') }}" class="btn btn-default"><i class="fa fa-chevron-left"></i> Back</a>
-                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                        </div>
-                </div>
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <a href="{{ route('somNews.index') }}" class="btn btn-back"><i class="fa fa-chevron-circle-left"></i> Back</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-black']) !!}  
+                    </div>
+                </div>                                  
             </div>
 
            {!! Form::close() !!}

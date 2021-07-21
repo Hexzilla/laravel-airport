@@ -48,6 +48,9 @@ class SomCountryController extends AppBaseController
             $data = $this->somCountryRepository->all();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('version_date', function ($request) {
                     $version_date = "";
                     if(!empty($request->version_date)){
@@ -78,7 +81,7 @@ class SomCountryController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -282,5 +285,24 @@ class SomCountryController extends AppBaseController
         Flash::success('Som Country deleted successfully.');
 
         return redirect(route('somCountries.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somCountryRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

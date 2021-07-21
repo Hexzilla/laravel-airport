@@ -1,0 +1,44 @@
+
+/* This file is css for only local pages. */
+
+.data-table tbody tr.even {
+   background-color:#f1f1f1;
+}
+.data-table thead {
+    /*background-color:#bfbfbf;
+    color: #3a3939;*/
+    background-color: #343a40;
+    color: #ececec;
+    font-size: 16px;
+}
+.breadcrumbs-menu {
+    text-align: center;
+    /*color: #05b1e4;*/
+    font-size: 19px;
+    font-weight: 500;
+}
+.btn-black {
+    background-color: #343a40;
+    color: #fff;
+}
+.btn-black:hover{
+    color: #aeb1b1;
+} 
+.btn-back {
+    border: 1px solid rgba(0,0,0,.125) !important;
+} 
+.home-link{
+    color: black;
+}  
+.data-table-entries {
+    justify-content: flex-end;
+} 
+.coh {
+    background-color: #343a40 !important;
+    color: #fff;
+} 
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #f4f6f9 !important;
+} 

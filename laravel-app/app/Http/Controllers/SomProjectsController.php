@@ -41,6 +41,9 @@ class SomProjectsController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('is_template_project', function ($request) {
                     $html = "";
                     if ($request->is_template_project){
@@ -86,7 +89,7 @@ class SomProjectsController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['is_template_project','img_url','action'])                
+                ->rawColumns(['checkbox','is_template_project','img_url','action'])                
                 ->make(true);
         }
         return view('som_projects.index');
@@ -228,5 +231,24 @@ class SomProjectsController extends AppBaseController
         Flash::success('Som Projects deleted successfully.');
 
         return redirect(route('somProjects.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somProjectsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

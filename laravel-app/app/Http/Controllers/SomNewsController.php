@@ -37,6 +37,9 @@ class SomNewsController extends AppBaseController
             $data = $this->somNewsRepository->all();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('date_from', function ($request) {
                     $date_from = "";
                     if(!empty($request->date_from)){
@@ -71,7 +74,7 @@ class SomNewsController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -228,5 +231,24 @@ class SomNewsController extends AppBaseController
         Flash::success('News deleted successfully.');
 
         return redirect(route('somNews.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somNewsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "adldap2/adldap2-laravel": "^6.1",
         "doctrine/dbal": "~2.3",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -21,8 +22,7 @@
         "laravel/ui": "3.1",
         "laravelcollective/html": "^6.2",
         "vgrem/php-spo": "^2.4",
-        "adldap2/adldap2-laravel": "^6.1",
-	"yajra/laravel-datatables-oracle": "^9.18"
+        "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

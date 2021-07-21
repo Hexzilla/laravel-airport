@@ -36,26 +36,15 @@ class CmsUsersController extends AppBaseController
             $data = $this->cmsUsersRepository->all();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->editColumn('created_at', function ($request) {
-                    $created_at = "";
-                    if(!empty($request->created_at)){
-                        $created_at = date('Y-m-d H:i:s', strtotime($request->created_at));
-                    }
-                    return $created_at; 
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
                 })
-                ->editColumn('updated_at', function ($request) {
-                    $updated_at = "";
-                    if(!empty($request->updated_at)){
-                        $updated_at = date('Y-m-d H:i:s', strtotime($request->updated_at));
+                ->editColumn('status', function ($request) {
+                    $status = "";
+                    if($request->status == "Active"){
+                        $status = '<i class="fa fa-check-circle" style="color:#1dde1d;"></i>';
                     }
-                    return $updated_at; 
-                })
-                ->editColumn('password', function ($request) {     
-                    $password = "";
-                    if(!empty($request->password)){
-                        $password = $request->password;
-                    }
-                    return $password;  
+                    return $status; 
                 })
                 ->addColumn('action', function($row){
                     $action ="";
@@ -77,7 +66,7 @@ class CmsUsersController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','status','action'])                
                 ->make(true);
         }
 
@@ -201,5 +190,24 @@ class CmsUsersController extends AppBaseController
         Flash::success('Cms Users deleted successfully.');
 
         return redirect(route('cmsUsers.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->cmsUsersRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }
