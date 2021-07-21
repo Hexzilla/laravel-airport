@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
-                        <a href="#" class="home-link">
+                        <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <span>

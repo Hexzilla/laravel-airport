@@ -27,9 +27,9 @@
 .btn-back {
     border: 1px solid rgba(0,0,0,.125) !important;
 } 
-.home-link{
+/*.home-link{
     color: black;
-}  
+}  */
 .data-table-entries {
     justify-content: flex-end;
 } 
