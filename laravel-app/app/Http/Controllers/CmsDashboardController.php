@@ -36,6 +36,9 @@ class CmsDashboardController extends AppBaseController
             $data = $this->cmsDashboardRepository->all();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('created_at', function ($request) {
                     $created_at = "";
                     if(!empty($request->created_at)){
@@ -70,7 +73,7 @@ class CmsDashboardController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -194,5 +197,24 @@ class CmsDashboardController extends AppBaseController
         Flash::success('Cms Dashboard deleted successfully.');
 
         return redirect(route('cmsDashboards.index'));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->cmsDashboardRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

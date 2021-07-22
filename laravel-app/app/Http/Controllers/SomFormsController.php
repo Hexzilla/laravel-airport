@@ -74,6 +74,9 @@ class SomFormsController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('is_inactive', function ($request) {
                     $html = "";
                     if(!empty($request->is_inactive)){
@@ -98,22 +101,22 @@ class SomFormsController extends AppBaseController
                         <i class='far fa-task'></i>approvals</a>";
 
                     //button show                
-                    $action .= "<a href=\"".route('somForms.show', [$row->id])."\" class='btn btn-default btn-xs'>";
-                    $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";   
+                    // $action .= "<a href=\"".route('somForms.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
 
                     //button edit                     
                     $action .= "<a href=\"".route('somForms.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
                     //button delete
-                    $action .= "</a>";
-                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+                    // $action .= "</a>";
+                    // $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -251,5 +254,24 @@ class SomFormsController extends AppBaseController
         Flash::success('Som Forms deleted successfully.');
         
         return redirect(route('somForms.index', ['milestones_id'=>$milestones_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somFormsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

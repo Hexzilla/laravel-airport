@@ -67,6 +67,9 @@ class SomProjectsMilestonesController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->editColumn('due_date', function ($request) {
                     $due_date = "";
                     if(!empty($request->due_date)){
@@ -82,22 +85,22 @@ class SomProjectsMilestonesController extends AppBaseController
                     $action .= "<a href=\"".route( "somForms.index", ['milestones_id'=> $row->id] )."\" class='btn btn-default btn-xs'><i class='fas fa-list' title='Forms'></i> Forms</a>";
 
                     //button show                
-                    $action .= "<a href=\"".route('somProjectsMilestones.show', [$row->id])."\" class='btn btn-default btn-xs'>";
-                    $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";   
+                    // $action .= "<a href=\"".route('somProjectsMilestones.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
 
                     //button edit                     
                     $action .= "<a href=\"".route('somProjectsMilestones.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
                     //button delete
-                    $action .= "</a>";
-                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+                    // $action .= "</a>";
+                    // $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -231,5 +234,24 @@ class SomProjectsMilestonesController extends AppBaseController
 
         $phases_id = $somProjectsMilestones->som_projects_phases_id;
         return redirect(route('somProjectsMilestones.index', ['phases_id'=>$phases_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somProjectsMilestonesRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

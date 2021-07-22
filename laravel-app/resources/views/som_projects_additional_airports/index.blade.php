@@ -4,18 +4,26 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fas fa-plane-departure'></i> Additional Airports</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fas fa-plane-departure"></i> Additional Airports</h1>
+                    <a class="btn btn-black ml-3" 
+                       href="#" style="background-color:#07a2d8;">
+                        <i class="fa fa-id-card" aria-hidden="true"></i>  Show Data
+                    </a>
+                    <a class="btn btn-black ml-3" 
+                       href="{{ route('somProjectsAdditionalAirports.create', ['project_id' => $projectId]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
+                        <span>
                             <i class="fa fa-chevron-right"></i> Additional Airports
-                        </a>                        
-                    </div>                        
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,16 +31,10 @@
 
     <div class="content px-3">
 
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somProjects.index') }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Projects
-                </a>
-            </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somProjectsAdditionalAirports.create', ['project_id' => $projectId]) }}">
-                        Add Additional Airports
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Projects
                 </a>
             </div>
         </div>

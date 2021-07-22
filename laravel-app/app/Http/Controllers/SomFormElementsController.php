@@ -88,27 +88,30 @@ class SomFormElementsController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
 
                     //button show                
-                    $action .= "<a href=\"".route('somFormElements.show', [$row->id])."\" class='btn btn-default btn-xs'>";
-                    $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";   
+                    // $action .= "<a href=\"".route('somFormElements.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
 
                     //button edit                     
                     $action .= "<a href=\"".route('somFormElements.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
                     $action .= "<i class='far fa-edit'></i>";
 
                     //button delete
-                    $action .= "</a>";
-                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+                    // $action .= "</a>";
+                    // $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -284,5 +287,24 @@ class SomFormElementsController extends AppBaseController
         Flash::success('Som Form Elements deleted successfully.');
 
         return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somFormElementsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

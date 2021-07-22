@@ -4,18 +4,22 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fas fa-film'></i> Phases Milestones</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fas fa-film"></i> Phases Milestones</h1>
+                    <!-- <a class="btn btn-black ml-3" 
+                       href="{{ route('somProjectsMilestones.create', ['phases_id'=>$somProjectsPhaseId]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a> -->
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
+                        <span>
                             <i class="fa fa-chevron-right"></i> Phases Milestones
-                        </a>                        
-                    </div>                        
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,19 +27,13 @@
 
     <div class="content px-3">
 
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somProjectsPhases.index' , [ 'project_id'=>$breadcrumbs[0]['id'] ]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Project Phases
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Project Phases
                 </a>
             </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somProjectsMilestones.create', ['phases_id'=>$somProjectsPhaseId]) }}">
-                        Add New
-                </a>
-            </div>
-        </div>
+        </div> 
 
         @include('flash::message')
 

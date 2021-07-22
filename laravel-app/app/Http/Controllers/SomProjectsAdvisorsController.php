@@ -53,6 +53,9 @@ class SomProjectsAdvisorsController extends AppBaseController
             $data = $this->somProjectsAdvisorsRepository->all(['som_projects_id'=>$somProjectsID]);
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
@@ -73,7 +76,7 @@ class SomProjectsAdvisorsController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -200,5 +203,24 @@ class SomProjectsAdvisorsController extends AppBaseController
         Flash::success('Som Projects Advisors deleted successfully.');
 
         return redirect(route('somProjectsAdvisors.index',['project_id'=> $somProjectsAdvisors['som_projects_id']]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somProjectsAdvisorsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

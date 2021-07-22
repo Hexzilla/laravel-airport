@@ -4,18 +4,22 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fas fa-users'></i> Som Projects Advisors</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fas fa-users"></i> Project Advisors</h1>
+                    <a class="btn btn-black ml-3" 
+                       href="{{ route('somProjectsAdvisors.create',['som_project_id' => $somProjectID]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
-                            <i class="fa fa-chevron-right"></i> Projects Advisors
-                        </a>                        
-                    </div>                        
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Project Advisors
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,19 +27,13 @@
 
     <div class="content px-3">
 
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somProjects.index') }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Projects
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Projects
                 </a>
             </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somProjectsAdvisors.create',['som_project_id' => $somProjectID]) }}">
-                        Add New
-                </a>
-            </div>
-        </div>
+        </div> 
 
         @include('flash::message')
 

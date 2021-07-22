@@ -4,18 +4,22 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fa fa-hand-o-right'></i> Som Form Approvals</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fa fa-check" style="color:#01b901;"></i> Approvals</h1>
+                    <a class="btn btn-black ml-3" 
+                       href="{{ route('somFormApprovals.create', ['somforms_id'=>$somforms_id]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
-                            <i class="fa fa-chevron-right"></i> Form Approvals
-                        </a>                        
-                    </div>                        
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Approvals
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,16 +27,10 @@
 
     <div class="content px-3">
 
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somForms.index', ['milestones_id'=>$breadcrumbs[2]['id'] ]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Forms
-                </a>
-            </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somFormApprovals.create', ['somforms_id'=>$somforms_id]) }}">
-                        Add New
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Forms
                 </a>
             </div>
         </div>

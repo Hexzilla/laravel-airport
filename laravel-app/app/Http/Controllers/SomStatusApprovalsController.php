@@ -91,6 +91,9 @@ class SomStatusApprovalsController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
@@ -111,7 +114,7 @@ class SomStatusApprovalsController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -269,5 +272,24 @@ class SomStatusApprovalsController extends AppBaseController
         Flash::success('Som Status Approvals deleted successfully.');
 
         return redirect(route('somStatusApprovals.index',['som_approvals_responsible_id'=> $som_approvals_responsible_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somStatusApprovalsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

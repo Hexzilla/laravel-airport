@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSomDepartmentsUsersRequest;
 use App\Http\Requests\UpdateSomDepartmentsUsersRequest;
 use App\Repositories\SomDepartmentsUsersRepository;
 use App\Repositories\CmsUsersRepository;
+use App\Repositories\SomDepartmentsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -18,12 +19,15 @@ class SomDepartmentsUsersController extends AppBaseController
     /** @var  SomDepartmentsUsersRepository */
     private $somDepartmentsUsersRepository;
     private $cmsUsersRepository;
+    private $somDepartmentsRepository;
 
     public function __construct(SomDepartmentsUsersRepository $somDepartmentsUsersRepo,
-                                CmsUsersRepository $cmsUsersRepository)
+                                CmsUsersRepository $cmsUsersRepository,
+                                SomDepartmentsRepository $somDepartmentsRepo)
     {
         $this->somDepartmentsUsersRepository = $somDepartmentsUsersRepo;
         $this->cmsUsersRepository = $cmsUsersRepository;
+        $this->somDepartmentsRepository = $somDepartmentsRepo;
     }
 
     /**
@@ -37,11 +41,20 @@ class SomDepartmentsUsersController extends AppBaseController
     {
         $som_departments_id = $request->get("som_departments_id");
 
+        $somDepartments = $this->somDepartmentsRepository->find($som_departments_id);
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somDepartments['id'];
+        $breadcrumbs[0]['name'] = $somDepartments['name'];
+
         if ($request->ajax()) {
 
             $data = $this->somDepartmentsUsersRepository->getAllData($som_departments_id);
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
@@ -62,12 +75,13 @@ class SomDepartmentsUsersController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         } 
 
         return view('som_departments_users.index')
-            ->with('som_departments_id', $som_departments_id);
+            ->with('som_departments_id', $som_departments_id)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -243,5 +257,24 @@ class SomDepartmentsUsersController extends AppBaseController
         Flash::success('Som Departments Users deleted successfully.');
 
         return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somDepartmentsUsersRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

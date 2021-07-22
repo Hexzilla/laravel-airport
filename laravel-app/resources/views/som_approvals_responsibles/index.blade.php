@@ -4,18 +4,26 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fa fa-users'></i> Som Approvals Responsibles</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fas fa-glass-martini"></i> Approvals Resp</h1>
+                    <a class="btn btn-black ml-3" 
+                       href="#" style="background-color:#07a2d8;">
+                        <i class="fa fa-id-card" aria-hidden="true"></i>  Show Data
+                    </a>
+                    <a class="btn btn-black ml-3" 
+                       href="{{ route('somApprovalsResponsibles.create', ['som_form_approvals_id'=>$som_form_approvals_id]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
-                            <i class="fa fa-chevron-right"></i> Approvals Responsibles
-                        </a>                        
-                    </div>                        
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Approvals Resp
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,19 +31,13 @@
 
     <div class="content px-3">
 
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somFormApprovals.index', ['somforms_id'=>$breadcrumbs[3]['id'] ]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Form Approvals
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Approvals
                 </a>
             </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somApprovalsResponsibles.create', ['som_form_approvals_id'=>$som_form_approvals_id]) }}">
-                        Add New
-                </a>
-            </div>
-        </div>
+        </div>  
 
         @include('flash::message')
 

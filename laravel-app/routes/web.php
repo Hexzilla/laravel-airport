@@ -145,3 +145,35 @@ Route::delete('somCountriesDeleteAll', [App\Http\Controllers\SomCountryControlle
 Route::delete('somNewsDeleteAll', [App\Http\Controllers\SomNewsController::class, 'deleteAll']);
 
 Route::delete('cmsUsersDeleteAll', [App\Http\Controllers\CmsUsersController::class, 'deleteAll']);
+
+Route::delete('somDepartmentsDeleteAll', [App\Http\Controllers\SomDepartmentsController::class, 'deleteAll']);
+
+Route::delete('somDepartmentsUsersDeleteAll', [App\Http\Controllers\SomDepartmentsUsersController::class, 'deleteAll']);
+
+Route::delete('somProjectUsersDeleteAll', [App\Http\Controllers\SomProjectUsersController::class, 'deleteAll']);
+
+Route::delete('somProjectsAdditionalAirportsDeleteAll', [App\Http\Controllers\SomProjectsAdditionalAirportController::class, 'deleteAll']);
+
+Route::delete('somProjectsPartnersDeleteAll', [App\Http\Controllers\SomProjectsPartnersController::class, 'deleteAll']);
+
+Route::delete('somProjectsAdvisorsDeleteAll', [App\Http\Controllers\SomProjectsAdvisorsController::class, 'deleteAll']);
+
+Route::delete('somProjectsPhasesDeleteAll', [App\Http\Controllers\SomProjectsPhasesController::class, 'deleteAll']);
+
+Route::delete('somProjectsMilestonesDeleteAll', [App\Http\Controllers\SomProjectsMilestonesController::class, 'deleteAll']);
+
+Route::delete('somFormsDeleteAll', [App\Http\Controllers\SomFormsController::class, 'deleteAll']);
+
+Route::delete('somFormTasksDeleteAll', [App\Http\Controllers\SomFormTasksController::class, 'deleteAll']);
+
+Route::delete('somFormElementsDeleteAll', [App\Http\Controllers\SomFormElementsController::class, 'deleteAll']);
+
+Route::delete('somFormApprovalsDeleteAll', [App\Http\Controllers\SomFormApprovalsController::class, 'deleteAll']);
+
+Route::delete('somApprovalsResponsiblesDeleteAll', [App\Http\Controllers\SomApprovalsResponsibleController::class, 'deleteAll']);
+
+Route::delete('somStatusApprovalsDeleteAll', [App\Http\Controllers\SomStatusApprovalsController::class, 'deleteAll']);
+
+Route::delete('somCountryInfosDeleteAll', [App\Http\Controllers\SomCountryInfoController::class, 'deleteAll']);
+
+Route::delete('cmsDashboardsDeleteAll', [App\Http\Controllers\CmsDashboardController::class, 'deleteAll']);

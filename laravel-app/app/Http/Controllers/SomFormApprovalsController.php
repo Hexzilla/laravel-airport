@@ -77,6 +77,9 @@ class SomFormApprovalsController extends AppBaseController
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
@@ -85,9 +88,9 @@ class SomFormApprovalsController extends AppBaseController
                     $action .= "<a href=\"".route("somApprovalsResponsibles.index",['som_form_approvals_id'=> $row->id])."\" class='btn btn-default btn-xs'><i class='fa fa-users'></i> Responsibles</a>";
 
                     //button show                
-                    $action .= "<a href=\"".route('somFormApprovals.show', [$row->id])."\" class='btn btn-default btn-xs'>";
-                    $action .= "<i class='far fa-eye'></i>";
-                    $action .= "</a>";   
+                    // $action .= "<a href=\"".route('somFormApprovals.show', [$row->id])."\" class='btn btn-default btn-xs'>";
+                    // $action .= "<i class='far fa-eye'></i>";
+                    // $action .= "</a>";   
 
                     //button edit                     
                     $action .= "<a href=\"".route('somFormApprovals.edit', [$row->id])."\" class='btn btn-default btn-xs'>";
@@ -100,7 +103,7 @@ class SomFormApprovalsController extends AppBaseController
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -261,5 +264,24 @@ class SomFormApprovalsController extends AppBaseController
         Flash::success('Som Form Approvals deleted successfully.');
 
         return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somFormApprovalsRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

@@ -64,6 +64,9 @@ class SomProjectsPhasesController extends AppBaseController
             $data = $this->somProjectsPhasesRepository->getDataBySomProjectsId($projectId);
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('checkbox', function ($request) {
+                    return '<input type="checkbox" class="sub_chk" id="'.$request->id.'" name="someCheckbox" />';
+                })
                 ->addColumn('action', function($row){
                     $action ="";
                     $action .= "<div class='btn-group' style='float:right;'>";
@@ -83,13 +86,13 @@ class SomProjectsPhasesController extends AppBaseController
                     $action .= "<i class='far fa-edit'></i>";
 
                     //button delete
-                    $action .= "</a>";
-                    $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
+                    // $action .= "</a>";
+                    // $action .= "<button class='btn btn-danger btn-xs' onclick='openDeleteModal(\"".$row->id."\")'><i class='far fa-trash-alt'></i></button>";
 
                     $action .= "</div>";
                     return $action;                        
                 })                    
-                ->rawColumns(['action'])                
+                ->rawColumns(['checkbox','action'])                
                 ->make(true);
         }
 
@@ -270,5 +273,24 @@ class SomProjectsPhasesController extends AppBaseController
         Flash::success('Som Projects Phases deleted successfully.');
 
         return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
+    }
+
+    /**
+     * Remove selected items from storage.
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function deleteAll(Request $request)
+    {
+        $ids = $request->ids;
+        $data_id_array = explode(",", $ids); 
+        if(!empty($data_id_array)) {
+            foreach($data_id_array as $id) {
+                $this->somProjectsPhasesRepository->delete($id);
+            }
+        }
+        return response()->json(['success'=>"Deleted successfully."]);
     }
 }

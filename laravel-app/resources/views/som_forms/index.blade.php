@@ -4,34 +4,33 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class='fas fa-list'></i> Som Forms</h1>
+                <div class="col-sm-6" style="display:flex;">
+                    <h1><i class="fa fa-bars"></i> Forms</h1>
+                    <!-- <a class="btn btn-black ml-3" 
+                       href="{{ route('somForms.create',['milestones_id'=> $milestones_id]) }}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>  Add Data
+                    </a> -->
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
                         <a href="#">
                             <i class="fa fa-palette"></i> Home
                         </a>
-                        <a href="#">
-                            <i class="fa fa-chevron-right"></i> Som Forms
-                        </a>                        
-                    </div>                        
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Forms
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <div class="content px-3">
-        <div class="row ml-1">
-            <div class="col-md-6 mb-4">
+
+        <div class="row">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somProjectsMilestones.index' , ['phases_id'=>$breadcrumbs[1]['id'] ]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Phases Milestones
-                </a>
-            </div>
-            <div class="col-md-6 mb-4">
-                <a class="btn btn-primary float-right"
-                    href="{{ route('somForms.create',['milestones_id'=> $milestones_id]) }}">
-                        Add New
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Phases Milestones
                 </a>
             </div>
         </div>

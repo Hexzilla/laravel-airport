@@ -4,8 +4,18 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1>Edit Som Project Users</h1>
+                <div class="col-sm-6">
+                    <h1><i class="fas fa-users"></i> Edit Project Users</h1>
+                </div>
+                <div class="col-sm-6">
+                    <div class="float-right">                                                
+                        <a href="#">
+                            <i class="fa fa-palette"></i> Home
+                        </a>
+                        <span>
+                            <i class="fa fa-chevron-right"></i> Project Users
+                        </span>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -14,9 +24,9 @@
     <div class="content px-3">
 
         <div class="row">
-            <div class="col-12-lg ml-2 mb-4">
+            <div class="col-12-lg ml-4 mb-4">
                 <a href="{{ route('somProjectUsers.index', ['project_id' => $project_id]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Projects Users
+                    <i class="fa fa-chevron-circle-left"></i> Back To List Data Projects Users
                 </a>
             </div>
         </div>
@@ -27,15 +37,22 @@
 
             {!! Form::model($somProjectUsers, ['route' => ['somProjectUsers.update', $somProjectUsers->id], 'method' => 'patch']) !!}
 
+            <div class="card-header coh">
+                <span><i class="fa fa-search ml-2"></i> Edit Projects Users</span>
+            </div>
+
             <div class="card-body">
-                <div class="row">
-                    @include('som_project_users.fields')
-                </div>
+                @include('som_project_users.fields')
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('somProjectUsers.index', ['project_id' => $project_id]) }}" class="btn btn-default">Cancel</a>
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <a href="{{ route('somProjectUsers.index', ['project_id' => $project_id]) }}" class="btn btn-back"><i class="fa fa-chevron-circle-left"></i> Back</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-black']) !!}  
+                    </div>
+                </div>                                  
             </div>
 
            {!! Form::close() !!}
