@@ -101,23 +101,19 @@ class SomProjectUsersController extends AppBaseController
         $selected_user_id = 0;
         foreach ($cmsUsers as $cmsuser) {
             $data['users'][$cmsuser->id] = $cmsuser->name;
-            if($cnt == 0){
+            /*if($cnt == 0){
                 $selected_user_id = $cmsuser->id;
             }
-            $cnt++;
+            $cnt++;*/
         }  
         $data['selected_user'] = $selected_user_id;
 
         $data['privileges'] = array();
-        $cmsPrivileges = $this->cmsPrivilegesRepository->all();
+        $cmsPrivileges = $this->getProjectPrivileges();
         $cnt = 0;
         $selected_privilege_id = 0;
         foreach ($cmsPrivileges as $cmsPrivilege) {
             $data['privileges'][$cmsPrivilege->id] = $cmsPrivilege->name;
-            if($cnt == 0){
-                $selected_privilege_id = $cmsPrivilege->id;
-            }
-            $cnt++;
         }  
         $data['selected_privilege'] = $selected_privilege_id;
 
@@ -188,19 +184,20 @@ class SomProjectUsersController extends AppBaseController
 
         $data = array();
         $data['users'] = array();
-        $cmsUsers = $this->cmsUsersRepository->all();
+        $cmsuser = $this->cmsUsersRepository->find($somProjectUsers->cms_users_id);
+        $data['users'][$cmsuser->id] = $cmsuser->name;
         $selected_user_id = 0;
-        foreach ($cmsUsers as $cmsuser) {
-            $data['users'][$cmsuser->id] = $cmsuser->name;
-        }  
+
         $selected_user_id = $somProjectUsers->cms_users_id;
         $data['selected_user'] = $selected_user_id;
 
         $data['privileges'] = array();
-        $cmsPrivileges = $this->cmsPrivilegesRepository->all();
+        $cmsPrivileges = $cmsPrivileges = $this->getProjectPrivileges();
         $selected_privilege_id = 0;
         foreach ($cmsPrivileges as $cmsPrivilege) {
-            $data['privileges'][$cmsPrivilege->id] = $cmsPrivilege->name;
+            if ($cmsPrivilege->is_project_role == 1) {
+                $data['privileges'][$cmsPrivilege->id] = $cmsPrivilege->name;
+            }
         }  
         $data['selected_privilege'] = $somProjectUsers->cms_privileges_id;
 
@@ -261,5 +258,18 @@ class SomProjectUsersController extends AppBaseController
         Flash::success('Som Project Users deleted successfully.');
 
         return redirect(route('somProjectUsers.index',['project_id'=> $project_id]));
+    }
+
+    function getProjectPrivileges() 
+    {
+        $projectPrivileges = array();
+        $cmsPrivileges = $this->cmsPrivilegesRepository->all();
+        foreach ($cmsPrivileges as $cmsPrivilege) {
+            if ($cmsPrivilege->is_project_role == 1) {
+                $projectPrivileges[] = $cmsPrivilege;
+            }
+        } 
+
+        return $projectPrivileges;
     }
 }

@@ -8,6 +8,7 @@ use App\Repositories\SomProjectsAdvisorsRepository;
 use App\Repositories\SomProjectsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
+use App\Http\Utils\CRUDBooster;
 use Flash;
 use Response;
 
@@ -102,11 +103,16 @@ class SomProjectsAdvisorsController extends AppBaseController
     {
         $input = $request->all();
 
-        $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->create($input);
+        //$somProjectsAdvisors = $this->somProjectsAdvisorsRepository->create($input);
 
-        Flash::success('Som Projects Advisors saved successfully.');
+        if (CRUDBooster::insert('som_projects_advisors', $input) == false) {
+            Flash::error('An error occured while attempting to add new advisor');
+        }
+        else {
+            Flash::success('Som Projects Advisors saved successfully.');
 
-        return redirect(route('somProjectsAdvisors.index',['project_id'=> $input['som_projects_id']]));
+            return redirect(route('somProjectsAdvisors.index',['project_id'=> $input['som_projects_id']]));
+        }
     }
 
     /**

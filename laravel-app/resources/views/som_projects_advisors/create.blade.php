@@ -35,9 +35,9 @@
 
             <div class="card-footer">
                 <div class="row">
-                    <div class="offset-sm-2 col-sm-10">
-                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                    <div class="offset-sm-2 col-sm-10">                        
                         <a href="{{ route('somProjectsAdvisors.index',['project_id'=> $somProjectID]) }}" class="btn btn-default">Cancel</a>
+                        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
                     </div>
                 </div>    
             </div>
