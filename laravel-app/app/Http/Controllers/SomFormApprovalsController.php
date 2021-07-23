@@ -13,6 +13,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomFormApprovalsController extends AppBaseController
 {
@@ -102,6 +104,11 @@ class SomFormApprovalsController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_form_approvals.index')
@@ -116,6 +123,11 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $somforms_id = $request->get('somforms_id');
         $somFormApprovals = new SomFormApprovals();
         $somFormApprovals->som_forms_id = $somforms_id;
@@ -145,11 +157,26 @@ class SomFormApprovalsController extends AppBaseController
     public function store(CreateSomFormApprovalsRequest $request)
     {
         $input = $request->all();
+        $somforms_id = $request->get('som_forms_id');
 
-        $somFormApprovals = $this->somFormApprovalsRepository->create($input);
+        try{
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $somFormApprovals = $this->somFormApprovalsRepository->create($input);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomFormApprovalsController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Approvals saved successfully.');
-        $somforms_id = $somFormApprovals->som_forms_id;
+        
         return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
     }
 
@@ -162,6 +189,11 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormApprovals = $this->somFormApprovalsRepository->find($id);
 
         if (empty($somFormApprovals)) {
@@ -185,6 +217,11 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormApprovals = $this->somFormApprovalsRepository->find($id);
 
         $somforms_id = $somFormApprovals->som_forms_id;
@@ -221,15 +258,33 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function update($id, UpdateSomFormApprovalsRequest $request)
     {
-        $somFormApprovals = $this->somFormApprovalsRepository->find($id);
+        $somforms_id = $request->get('som_forms_id'); 
+        
+        try{
 
-        if (empty($somFormApprovals)) {
-            Flash::error('Som Form Approvals not found');
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-            return redirect(route('somFormApprovals.index'));
-        }
+            $somFormApprovals = $this->somFormApprovalsRepository->find($id);
 
-        $somFormApprovals = $this->somFormApprovalsRepository->update($request->all(), $id);
+            if (empty($somFormApprovals)) {
+                Flash::error('Som Form Approvals not found');
+
+                return redirect(route('somFormApprovals.index'));
+            }
+
+            $somFormApprovals = $this->somFormApprovalsRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomFormApprovalsController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
+        }   
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Approvals updated successfully.');
         $somforms_id = $somFormApprovals->som_forms_id;
@@ -247,16 +302,34 @@ class SomFormApprovalsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somFormApprovals = $this->somFormApprovalsRepository->find($id);
+        $somforms_id = 0;
 
-        if (empty($somFormApprovals)) {
-            Flash::error('Som Form Approvals not found');
+        try{
 
-            return redirect(route('somFormApprovals.index'));
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somFormApprovals = $this->somFormApprovalsRepository->find($id);
+
+            if (empty($somFormApprovals)) {
+                Flash::error('Som Form Approvals not found');
+
+                return redirect(route('somFormApprovals.index'));
+            }
+            $somforms_id = $somFormApprovals->som_forms_id;
+
+            $this->somFormApprovalsRepository->delete($id);
+            
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomFormApprovalsController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormApprovals.index', ['somforms_id'=>$somforms_id]));
         }
-        $somforms_id = $somFormApprovals->som_forms_id;
-
-        $this->somFormApprovalsRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Approvals deleted successfully.');
 

@@ -15,6 +15,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomProjectsPhasesController extends AppBaseController
 {
@@ -91,6 +93,11 @@ class SomProjectsPhasesController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_projects_phases.index')
@@ -105,6 +112,11 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $projectId = $request->input('project_id');
 
         $somProjectsPhaseStatus = $this->somPhasesStatusRepository->all(['type'=>'phases'], null, null, ['id', 'name', 'hex_color'] )->toArray();
@@ -141,12 +153,27 @@ class SomProjectsPhasesController extends AppBaseController
     public function store(CreateSomProjectsPhasesRequest $request)
     {
         $input = $request->all();
+        $project_id = $request->input('som_projects_id');
 
-        $somProjectsPhases = $this->somProjectsPhasesRepository->create($input);
+        try{
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }        
+
+            $somProjectsPhases = $this->somProjectsPhasesRepository->create($input);
+            $project_id = $somProjectsPhases->som_projects_id;
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomProjectsPhasesController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Phases saved successfully.');
-
-        $project_id = $somProjectsPhases->som_projects_id;
+        
         return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
     }
 
@@ -159,6 +186,11 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
 
         if (empty($somProjectsPhases)) {
@@ -179,6 +211,11 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
 
         if (empty($somProjectsPhases)) {
@@ -224,18 +261,35 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function update($id, UpdateSomProjectsPhasesRequest $request)
     {
-        $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
+        $project_id = 0;
 
-        if (empty($somProjectsPhases)) {
-            Flash::error('Som Projects Phases not found');
+        try{
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-            return redirect(route('somProjectsPhases.index'));
+            $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
+
+            if (empty($somProjectsPhases)) {
+                Flash::error('Som Projects Phases not found');
+
+                return redirect(route('somProjectsPhases.index'));
+            }
+            $project_id = $somProjectsPhases->som_projects_id;
+
+            $somProjectsPhases = $this->somProjectsPhasesRepository->update($request->all(), $id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomProjectsPhasesController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
         }
-
-        $somProjectsPhases = $this->somProjectsPhasesRepository->update($request->all(), $id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
         
         Flash::success('Som Projects Phases updated successfully.');
-        $project_id = $somProjectsPhases->som_projects_id;
+        
         return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
     }
 
@@ -250,22 +304,38 @@ class SomProjectsPhasesController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
+        $project_id = 0;
 
-        if (empty($somProjectsPhases)) {
-            Flash::error('Som Projects Phases not found');
+        try{
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-            return redirect(route('somProjectsPhases.index'));
-        }
-        $project_id = $somProjectsPhases->som_projects_id;
-        $milestones = $this->somProjectsMilestonesRepository->all(['som_projects_phases_id'=>$id])->toArray();
-        if(count($milestones)>0)
-        {
-            Flash::error('First some milestones must be deleted for the Phases');
+            $somProjectsPhases = $this->somProjectsPhasesRepository->find($id);
+
+            if (empty($somProjectsPhases)) {
+                Flash::error('Som Projects Phases not found');
+
+                return redirect(route('somProjectsPhases.index'));
+            }
+            $project_id = $somProjectsPhases->som_projects_id;
+            $milestones = $this->somProjectsMilestonesRepository->all(['som_projects_phases_id'=>$id])->toArray();
+            if(count($milestones)>0)
+            {
+                Flash::error('First some milestones must be deleted for the Phases');
+                return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
+            }
+            
+            $this->somProjectsPhasesRepository->delete($id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomProjectsPhasesController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somProjectsPhases.index', ['project_id'=>$project_id]));
         }
-        
-        $this->somProjectsPhasesRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Phases deleted successfully.');
 

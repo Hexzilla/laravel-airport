@@ -13,6 +13,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomProjectsAdditionalAirportController extends AppBaseController
 {
@@ -78,6 +80,11 @@ class SomProjectsAdditionalAirportController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_projects_additional_airports.index')
@@ -92,6 +99,11 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
     	$somProjectsId = $request->input('project_id');
         $somProjectsAirports= $this->somProjectsAirportRepository->all([], null, null, ['id', 'name']);
         
@@ -118,11 +130,28 @@ class SomProjectsAdditionalAirportController extends AppBaseController
     public function store(CreateSomProjectsAdditionalAirportRequest $request)
     {
         $input = $request->all();
-        $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->create($input);
-
-        Flash::success('Som Projects Additional Airport saved successfully.');
-        
         $projectId = $request->input('som_project_id');
+
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+            
+            $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomProjectsAdditionalAirportController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $projectId]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
+
+        Flash::success('Som Projects Additional Airport saved successfully.');        
+        
         return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $projectId]));
     }
 
@@ -135,6 +164,11 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
 
         if (empty($somProjectsAdditionalAirport)) {
@@ -155,6 +189,11 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
         if (empty($somProjectsAdditionalAirport)) {
             Flash::error('Som Projects Additional Airport not found');
@@ -188,21 +227,37 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function update($id, UpdateSomProjectsAdditionalAirportRequest $request)
     {
-        $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
+        $projectId = $request->input('som_project_id');
 
-        if (empty($somProjectsAdditionalAirport)) {
-            Flash::error('Som Projects Additional Airport not found');
+        try{
 
-            return redirect(route('somProjectsAdditionalAirports.index'));
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
+
+            if (empty($somProjectsAdditionalAirport)) {
+                Flash::error('Som Projects Additional Airport not found');
+
+                return redirect(route('somProjectsAdditionalAirports.index'));
+            }
+
+            $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomProjectsAdditionalAirportController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $projectId]));
         }
-
-        $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->update($request->all(), $id);
-        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
-        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Additional Airport updated successfully.');
 
-        return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]));
+        return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $projectId]));
     }
 
     /**
@@ -216,17 +271,35 @@ class SomProjectsAdditionalAirportController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id);
+        $somProjectsId = 0;
 
-        if (empty($somProjectsAdditionalAirport)) {
-            Flash::error('Som Projects Additional Airport not found');
+        try{
 
-            return redirect(route('somProjectsAdditionalAirports.index'));
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somProjectsAdditionalAirport = $this->somProjectsAdditionalAirportRepository->find($id); 
+
+            if (empty($somProjectsAdditionalAirport)) {
+                Flash::error('Som Projects Additional Airport not found');
+
+                return redirect(route('somProjectsAdditionalAirports.index'));
+            }
+
+            $somProjectsId = $somProjectsAdditionalAirport->som_project_id;
+
+            $this->somProjectsAdditionalAirportRepository->delete($id);
+            
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomProjectsAdditionalAirportController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsAdditionalAirports.index', ['project_id' => $somProjectsId]));
         }
-
-        $this->somProjectsAdditionalAirportRepository->delete($id);
-        $somProjectsAdditionalAirportArray = $somProjectsAdditionalAirport->toArray();
-        $somProjectsId = $somProjectsAdditionalAirportArray['som_project_id'];
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Additional Airport deleted successfully.');
 

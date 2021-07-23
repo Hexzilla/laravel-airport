@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Flash;
 use Response;
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomProjectUsersController extends AppBaseController
 {
@@ -78,6 +80,11 @@ class SomProjectUsersController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_project_users.index')
@@ -92,6 +99,11 @@ class SomProjectUsersController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $project_id = $request->input('project_id');
 
         $data = array();
@@ -136,9 +148,25 @@ class SomProjectUsersController extends AppBaseController
     public function store(CreateSomProjectUsersRequest $request)
     {
         $input = $request->all();
-        $som_projects_id = $request->input('som_projects_id');  
+        $som_projects_id = $request->input('som_projects_id');
 
-        $somProjectUsers = $this->somProjectUsersRepository->create($input);
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }              
+
+            $somProjectUsers = $this->somProjectUsersRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomProjectUsersController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectUsers.index',['project_id'=> $som_projects_id]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Project Users saved successfully.');
 
@@ -154,6 +182,11 @@ class SomProjectUsersController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectUsers = $this->somProjectUsersRepository->getData($id);
 
         if (empty($somProjectUsers)) {
@@ -178,6 +211,11 @@ class SomProjectUsersController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectUsers = $this->somProjectUsersRepository->find($id);
 
         if (empty($somProjectUsers)) {
@@ -220,16 +258,33 @@ class SomProjectUsersController extends AppBaseController
      */
     public function update($id, UpdateSomProjectUsersRequest $request)
     {
-        $somProjectUsers = $this->somProjectUsersRepository->find($id);
         $som_projects_id = $request->input('som_projects_id'); 
 
-        if (empty($somProjectUsers)) {
-            Flash::error('Som Project Users not found');
+        try{
 
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somProjectUsers = $this->somProjectUsersRepository->find($id);            
+
+            if (empty($somProjectUsers)) {
+                Flash::error('Som Project Users not found');
+
+                return redirect(route('somProjectUsers.index',['project_id'=> $som_projects_id]));
+            }
+
+            $somProjectUsers = $this->somProjectUsersRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomProjectUsersController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somProjectUsers.index',['project_id'=> $som_projects_id]));
         }
-
-        $somProjectUsers = $this->somProjectUsersRepository->update($request->all(), $id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Project Users updated successfully.');
 
@@ -247,16 +302,31 @@ class SomProjectUsersController extends AppBaseController
      */
     public function destroy($id, Request $request)
     {
-        $somProjectUsers = $this->somProjectUsersRepository->find($id);
         $project_id = $request->input('project_id');  
 
-        if (empty($somProjectUsers)) {
-            Flash::error('Som Project Users not found');
+        try{
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $somProjectUsers = $this->somProjectUsersRepository->find($id);            
+
+            if (empty($somProjectUsers)) {
+                Flash::error('Som Project Users not found');
+
+                return redirect(route('somProjectUsers.index',['project_id'=> $project_id]));
+            }
+
+            $this->somProjectUsersRepository->delete($id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomProjectUsersController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somProjectUsers.index',['project_id'=> $project_id]));
         }
-
-        $this->somProjectUsersRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Project Users deleted successfully.');
 

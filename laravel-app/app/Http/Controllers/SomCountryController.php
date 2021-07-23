@@ -14,6 +14,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomCountryController extends AppBaseController
 {
@@ -80,6 +82,11 @@ class SomCountryController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_countries.index');
@@ -92,6 +99,11 @@ class SomCountryController extends AppBaseController
      */
     public function create()
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $max_id = $this->somCountryRepository->getLastInsertedId();
         $data = array();
         $data['id'] = $max_id+1;
@@ -110,63 +122,79 @@ class SomCountryController extends AppBaseController
      */
     public function store(CreateSomCountryRequest $request)
     {
-        // $input = $request->all();
-        $input = $request->rules();
+        try{
 
-        $data = array();
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
 
-        $data['id'] = $request->input('id');   
-        if(!empty($request->input('country_code'))){
-            $data['country_code'] = $request->input('country_code');
-        }
+            // $input = $request->all();
+            $input = $request->rules();
 
-        $countCountry = $this->somCountryRepository->getCountByCountryCode($request->input('country_code'));
-        if($countCountry>0){
-            Flash::error('Som Country already exist.');
+            $data = array();
+
+            $data['id'] = $request->input('id');   
+            if(!empty($request->input('country_code'))){
+                $data['country_code'] = $request->input('country_code');
+            }
+
+            $countCountry = $this->somCountryRepository->getCountByCountryCode($request->input('country_code'));
+            if($countCountry>0){
+                Flash::error('Som Country already exist.');
+                return redirect(route('somCountries.index'));
+            }
+
+            if(!empty($request->input('country'))){
+                $data['country'] = $request->input('country');
+            }
+            if(!empty($request->input('description'))){
+                $data['description'] = $request->input('description');
+            }
+            if(!empty($request->input('politics'))){
+                $data['politics'] = $request->input('politics');
+            }
+            if(!empty($request->input('regulatory'))){
+                $data['regulatory'] = $request->input('regulatory');
+            }
+            if(!empty($request->input('corruption'))){
+                $data['corruption'] = $request->input('corruption');
+            }
+            if(!empty($request->input('business_easyness'))){
+                $data['business_easyness'] = $request->input('business_easyness');
+            }
+            if(!empty($request->input('spain_affinity'))){
+                $data['spain_affinity'] = $request->input('spain_affinity');
+            }
+            if(!empty($request->input('aena_strategy_align'))){
+                $data['aena_strategy_align'] = $request->input('aena_strategy_align');
+            }
+            if(!empty($request->input('tourism_activity'))){
+                $data['tourism_activity'] = $request->input('tourism_activity');
+            }
+            if(!empty($request->input('country_risk'))){
+                $data['country_risk'] = $request->input('country_risk');
+            }
+            if(!empty($request->input('imports_exports'))){
+                $data['imports_exports'] = $request->input('imports_exports');
+            }
+            if(!empty($request->input('version_date'))){
+                $data['version_date'] = $request->input('version_date');
+            }
+            if(!empty($request->input('exchange_rate'))){
+                $data['exchange_rate'] = $request->input('exchange_rate');
+            }
+
+            $this->somCountryRepository->insertData($data);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomCountryController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somCountries.index'));
-        }
-
-        if(!empty($request->input('country'))){
-            $data['country'] = $request->input('country');
-        }
-        if(!empty($request->input('description'))){
-            $data['description'] = $request->input('description');
-        }
-        if(!empty($request->input('politics'))){
-            $data['politics'] = $request->input('politics');
-        }
-        if(!empty($request->input('regulatory'))){
-            $data['regulatory'] = $request->input('regulatory');
-        }
-        if(!empty($request->input('corruption'))){
-            $data['corruption'] = $request->input('corruption');
-        }
-        if(!empty($request->input('business_easyness'))){
-            $data['business_easyness'] = $request->input('business_easyness');
-        }
-        if(!empty($request->input('spain_affinity'))){
-            $data['spain_affinity'] = $request->input('spain_affinity');
-        }
-        if(!empty($request->input('aena_strategy_align'))){
-            $data['aena_strategy_align'] = $request->input('aena_strategy_align');
-        }
-        if(!empty($request->input('tourism_activity'))){
-            $data['tourism_activity'] = $request->input('tourism_activity');
-        }
-        if(!empty($request->input('country_risk'))){
-            $data['country_risk'] = $request->input('country_risk');
-        }
-        if(!empty($request->input('imports_exports'))){
-            $data['imports_exports'] = $request->input('imports_exports');
-        }
-        if(!empty($request->input('version_date'))){
-            $data['version_date'] = $request->input('version_date');
-        }
-        if(!empty($request->input('exchange_rate'))){
-            $data['exchange_rate'] = $request->input('exchange_rate');
-        }
-
-        $this->somCountryRepository->insertData($data);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
         // $somCountry = $this->somCountryRepository->create($input);
 
         Flash::success('Som Country saved successfully.');
@@ -183,6 +211,11 @@ class SomCountryController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somCountry = $this->somCountryRepository->find($id);
 
         if (empty($somCountry)) {
@@ -203,6 +236,11 @@ class SomCountryController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $data = array();
         $data['id'] = $id;
         $somCountry = $this->somCountryRepository->find($id);
@@ -228,21 +266,37 @@ class SomCountryController extends AppBaseController
      */
     public function update($id, UpdateSomCountryRequest $request)
     {
-        $somCountry = $this->somCountryRepository->find($id);
+        try{
 
-        if (empty($somCountry)) {
-            Flash::error('Som Country not found');
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $somCountry = $this->somCountryRepository->find($id);
+
+            if (empty($somCountry)) {
+                Flash::error('Som Country not found');
+
+                return redirect(route('somCountries.index'));
+            }
+
+            $countCountry = $this->somCountryRepository->getCountByCountryCodeAndId($request->input('country_code'),$id);
+            if($countCountry>0){
+                Flash::error('Som Country already exist.');
+                return redirect(route('somCountries.index'));
+            }
+
+            $somCountry = $this->somCountryRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomCountryController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somCountries.index'));
         }
-
-        $countCountry = $this->somCountryRepository->getCountByCountryCodeAndId($request->input('country_code'),$id);
-        if($countCountry>0){
-            Flash::error('Som Country already exist.');
-            return redirect(route('somCountries.index'));
-        }
-
-        $somCountry = $this->somCountryRepository->update($request->all(), $id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Country updated successfully.');
 
@@ -260,24 +314,41 @@ class SomCountryController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somCountry = $this->somCountryRepository->find($id);
+        try{
 
-        if (empty($somCountry)) {
-            Flash::error('Som Country not found');
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $somCountry = $this->somCountryRepository->find($id);
+
+            if (empty($somCountry)) {
+                Flash::error('Som Country not found');
+
+                return redirect(route('somCountries.index'));
+            }
+
+            $project_count = $this->somProjectsRepository->getCountByCountryId($id);
+            $airport_count = $this->somProjectsAirportRepository->getCountByCountryId($id);
+            $info_count = $this->somCountryInfoRepository->getCountByCountryId($id);
+
+            if($project_count>0 || $airport_count>0 || $info_count>0){
+                Flash::error('It is being used in another menu.');
+                return redirect(route('somCountries.index'));
+            }
+
+            $this->somCountryRepository->delete($id);
+            
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomCountryController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somCountries.index'));
         }
 
-        $project_count = $this->somProjectsRepository->getCountByCountryId($id);
-        $airport_count = $this->somProjectsAirportRepository->getCountByCountryId($id);
-        $info_count = $this->somCountryInfoRepository->getCountByCountryId($id);
-
-        if($project_count>0 || $airport_count>0 || $info_count>0){
-            Flash::error('It is being used in another menu.');
-            return redirect(route('somCountries.index'));
-        }
-
-        $this->somCountryRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Country deleted successfully.');
 

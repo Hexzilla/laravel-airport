@@ -12,6 +12,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomCountryInfoController extends AppBaseController
 {
@@ -64,7 +66,12 @@ class SomCountryInfoController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
-        }        
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
+        }       
 
         return view('som_country_infos.index')
             ->with('somCountry_id',$somCountry_id);
@@ -77,6 +84,11 @@ class SomCountryInfoController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $data = array();        
         $data['selected_year'] = ""; 
 
@@ -95,32 +107,40 @@ class SomCountryInfoController extends AppBaseController
      */
     public function store(CreateSomCountryInfoRequest $request)
     {
-        // $validated = $request->validated();
+        try{
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
 
-        // if (array_key_exists('som_country_id', $validated)) {
-        //     unset($validated['som_country_id']);
-        // }
+            $input = $request->rules();
 
-        $input = $request->rules();
+            $data = array();
+            if(!empty($request->input('som_country_id'))){
+                $data['som_country_id'] = $request->input('som_country_id');
+            } 
+            if(!empty($request->input('year'))){
+                $data['year'] = $request->input('year');
+            } 
+            if(!empty($request->input('inflation'))){
+                $data['inflation'] = $request->input('inflation');
+            } 
+            if(!empty($request->input('population'))){
+                $data['population'] = $request->input('population');
+            } 
+            if(!empty($request->input('gpd_evolution'))){
+                $data['gpd_evolution'] = $request->input('gpd_evolution');
+            } 
 
-        $data = array();
-        if(!empty($request->input('som_country_id'))){
-            $data['som_country_id'] = $request->input('som_country_id');
-        } 
-        if(!empty($request->input('year'))){
-            $data['year'] = $request->input('year');
-        } 
-        if(!empty($request->input('inflation'))){
-            $data['inflation'] = $request->input('inflation');
-        } 
-        if(!empty($request->input('population'))){
-            $data['population'] = $request->input('population');
-        } 
-        if(!empty($request->input('gpd_evolution'))){
-            $data['gpd_evolution'] = $request->input('gpd_evolution');
-        } 
-
-        $this->somCountryInfoRepository->insertData($data);
+            $this->somCountryInfoRepository->insertData($data);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomCountryInfoController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somCountryInfos.index'));
+        }         
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         // $somCountryInfo = $this->somCountryInfoRepository->create($validated);
 
@@ -138,6 +158,11 @@ class SomCountryInfoController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somCountryInfo = $this->somCountryInfoRepository->find($id);
 
         if (empty($somCountryInfo)) {
@@ -158,6 +183,11 @@ class SomCountryInfoController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somCountryInfo = $this->somCountryInfoRepository->find($id);
 
         if (empty($somCountryInfo)) {
@@ -184,15 +214,31 @@ class SomCountryInfoController extends AppBaseController
      */
     public function update($id, UpdateSomCountryInfoRequest $request)
     {
-        $somCountryInfo = $this->somCountryInfoRepository->find($id);
+        try{
 
-        if (empty($somCountryInfo)) {
-            Flash::error('Som Country Info not found');
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $somCountryInfo = $this->somCountryInfoRepository->find($id);
+
+            if (empty($somCountryInfo)) {
+                Flash::error('Som Country Info not found');
+
+                return redirect(route('somCountryInfos.index'));
+            }
+
+            $somCountryInfo = $this->somCountryInfoRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomCountryInfoController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somCountryInfos.index'));
-        }
-
-        $somCountryInfo = $this->somCountryInfoRepository->update($request->all(), $id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Country Info updated successfully.');
 
@@ -210,15 +256,31 @@ class SomCountryInfoController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somCountryInfo = $this->somCountryInfoRepository->find($id);
+        try{
+            
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        if (empty($somCountryInfo)) {
-            Flash::error('Som Country Info not found');
+            $somCountryInfo = $this->somCountryInfoRepository->find($id);
 
+            if (empty($somCountryInfo)) {
+                Flash::error('Som Country Info not found');
+
+                return redirect(route('somCountryInfos.index'));
+            }
+
+            $this->somCountryInfoRepository->delete($id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomCountryInfoController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somCountryInfos.index'));
-        }
-
-        $this->somCountryInfoRepository->delete($id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Country Info deleted successfully.');
 

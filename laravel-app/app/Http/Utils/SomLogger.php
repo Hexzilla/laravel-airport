@@ -22,7 +22,7 @@ class SomLogger{
         "ERR1002" => "ErrorLoginSharepoint",// "User  cant login into Sharepoint",
         "ERR1003" => "ErrorSaveInfo",//"Error SOMController->postEditSave()",
         "ERR1004" => "ErrorEditInfo",//"Error SOMController->postAddSave()",
-        "ERR1005" => "ErrorDeleteInfo",//"Error SOMController->postAddSave()",
+        "ERR1005" => "ErrorDeleteInfo",//"Error SOMController->getDelete()",
         "ERR1006" => "ErrorDeleteImage",//"Error SOMController->getDeleteImage()",
         "ERR1007" => "ErrorForm",//,"Not found Form Info",
         "ERR1008" => "ErrorFormUnauthorized",//"Trying to access unauthorized form",

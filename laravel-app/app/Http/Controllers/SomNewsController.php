@@ -11,6 +11,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 
 class SomNewsController extends AppBaseController
@@ -31,9 +33,8 @@ class SomNewsController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
-        if ($request->ajax()) {
-
+    {    
+        if ($request->ajax()) { 
             $data = $this->somNewsRepository->all();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -73,6 +74,11 @@ class SomNewsController extends AppBaseController
                 })
                 ->rawColumns(['action'])
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_news.index');
@@ -85,6 +91,10 @@ class SomNewsController extends AppBaseController
      */
     public function create()
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
         return view('som_news.create');
     }
 
@@ -97,9 +107,25 @@ class SomNewsController extends AppBaseController
      */
     public function store(CreateSomNewsRequest $request)
     {
-        $input = $request->all();
+        try{
 
-        $somNews = $this->somNewsRepository->create($input);
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $input = $request->all();
+
+            $somNews = $this->somNewsRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomNewsController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somNews.index'));
+        }
+
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('News saved successfully.');
 
@@ -120,6 +146,11 @@ class SomNewsController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somNews = $this->somNewsRepository->find($id);
 
         if (empty($somNews)) {
@@ -168,6 +199,11 @@ class SomNewsController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somNews = $this->somNewsRepository->find($id);
 
         if (empty($somNews)) {
@@ -189,15 +225,31 @@ class SomNewsController extends AppBaseController
      */
     public function update($id, UpdateSomNewsRequest $request)
     {
-        $somNews = $this->somNewsRepository->find($id);
+        try{
 
-        if (empty($somNews)) {
-            Flash::error('Som News not found');
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $somNews = $this->somNewsRepository->find($id);
+
+            if (empty($somNews)) {
+                Flash::error('Som News not found');
+
+                return redirect(route('somNews.index'));
+            }
+
+            $somNews = $this->somNewsRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomNewsController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somNews.index'));
-        }
-
-        $somNews = $this->somNewsRepository->update($request->all(), $id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));        
 
         Flash::success('News updated successfully.');
 
@@ -215,15 +267,30 @@ class SomNewsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somNews = $this->somNewsRepository->find($id);
+        try{
 
-        if (empty($somNews)) {
-            Flash::error('News not found');
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+            $somNews = $this->somNewsRepository->find($id);
 
+            if (empty($somNews)) {
+                Flash::error('News not found');
+
+                return redirect(route('somNews.index'));
+            }
+
+            $this->somNewsRepository->delete($id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomNewsController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somNews.index'));
         }
-
-        $this->somNewsRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('News deleted successfully.');
 

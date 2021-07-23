@@ -12,6 +12,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomDepartmentsUsersController extends AppBaseController
 {
@@ -64,6 +66,11 @@ class SomDepartmentsUsersController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         } 
 
         return view('som_departments_users.index')
@@ -77,6 +84,10 @@ class SomDepartmentsUsersController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
         $som_departments_id = $request->get("som_departments_id");
 
         $data = array();
@@ -109,15 +120,32 @@ class SomDepartmentsUsersController extends AppBaseController
     {
         $input = $request->all();
         $som_departments_id = $request->input('som_departments_id');  
-        $cms_users_id = $request->input('cms_users_id');  
+        $cms_users_id = $request->input('cms_users_id'); 
 
-        $countDepartments = $this->somDepartmentsUsersRepository->getCountEqualData($som_departments_id, $cms_users_id);
-        if($countDepartments>0){
-            Flash::error('User already exist.');
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $countDepartments = $this->somDepartmentsUsersRepository->getCountEqualData($som_departments_id, $cms_users_id);
+            if($countDepartments>0){
+                Flash::error('User already exist.');
+                return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
+            }      
+
+            $somDepartmentsUsers = $this->somDepartmentsUsersRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomDepartmentsUsersController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
-        }      
+        }
 
-        $somDepartmentsUsers = $this->somDepartmentsUsersRepository->create($input);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Departments Users saved successfully.');
 
@@ -138,6 +166,11 @@ class SomDepartmentsUsersController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somDepartmentsUsers = $this->somDepartmentsUsersRepository->getData($id);
 
         if (empty($somDepartmentsUsers)) {
@@ -162,6 +195,11 @@ class SomDepartmentsUsersController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somDepartmentsUsers = $this->somDepartmentsUsersRepository->find($id);
 
         if (empty($somDepartmentsUsers)) {
@@ -196,23 +234,40 @@ class SomDepartmentsUsersController extends AppBaseController
      */
     public function update($id, UpdateSomDepartmentsUsersRequest $request)
     {
-        $somDepartmentsUsers = $this->somDepartmentsUsersRepository->find($id);
         $som_departments_id = $request->input('som_departments_id');  
         $cms_users_id = $request->input('cms_users_id'); 
 
-        if (empty($somDepartmentsUsers)) {
-            Flash::error('Som Departments Users not found');
+        try{
 
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somDepartmentsUsers = $this->somDepartmentsUsersRepository->find($id);            
+
+            if (empty($somDepartmentsUsers)) {
+                Flash::error('Som Departments Users not found');
+
+                return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
+            }
+
+            $countDepartments = $this->somDepartmentsUsersRepository->getCountEqualDataById($som_departments_id, $cms_users_id, $id);
+            if($countDepartments>0){
+                Flash::error('User already exist.');
+                return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
+            }      
+
+            $somDepartmentsUsers = $this->somDepartmentsUsersRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomDepartmentsUsersController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
-        }
-
-        $countDepartments = $this->somDepartmentsUsersRepository->getCountEqualDataById($som_departments_id, $cms_users_id, $id);
-        if($countDepartments>0){
-            Flash::error('User already exist.');
-            return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
-        }      
-
-        $somDepartmentsUsers = $this->somDepartmentsUsersRepository->update($request->all(), $id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Departments Users updated successfully.');
 
@@ -230,15 +285,32 @@ class SomDepartmentsUsersController extends AppBaseController
      */
     public function destroy($id, Request $request)
     {
-        $somDepartmentsUsers = $this->somDepartmentsUsersRepository->find($id);
         $som_departments_id = $request->input('som_departments_id');  
 
-        if (empty($somDepartmentsUsers)) {
-            Flash::error('Som Departments Users not found');
+        try{
 
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somDepartmentsUsers = $this->somDepartmentsUsersRepository->find($id);            
+
+            if (empty($somDepartmentsUsers)) {
+                Flash::error('Som Departments Users not found');
+
+                return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
+            }
+            $this->somDepartmentsUsersRepository->delete($id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomDepartmentsUsersController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]));
-        }
-        $this->somDepartmentsUsersRepository->delete($id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Departments Users deleted successfully.');
 
