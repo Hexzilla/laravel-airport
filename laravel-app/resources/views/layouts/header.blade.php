@@ -23,7 +23,7 @@
                         <div class="col-md-13 phase-views">
                             <!-- FILTER -->
                             <div class="row filter change-view-container">
-                                <div class="phase-text">VISTA MAPA</div>
+                                <div class="phase-text">VISTA LISTA</div>
                                 <div class="toggle-container" id="change-view-slidder">
                                     <div></div>
                                 </div>
