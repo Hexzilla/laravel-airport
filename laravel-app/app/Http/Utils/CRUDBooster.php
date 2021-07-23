@@ -32,8 +32,12 @@ class CRUDBooster
 
     public static function insert($table, $data = [])
     {
+        if (array_key_exists('_token', $data)) {
+            unset($data['_token']);
+        }
+
         $data['id'] = DB::table($table)->max('id') + 1;
-        if (!$data['created_at']) {
+        if (array_key_exists('created_at', $data) && !$data['created_at']) {
             if (Schema::hasColumn($table, 'created_at')) {
                 $data['created_at'] = date('Y-m-d H:i:s');
             }

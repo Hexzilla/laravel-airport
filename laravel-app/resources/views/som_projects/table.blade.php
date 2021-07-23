@@ -1,17 +1,17 @@
 
 <div class="table-responsive" style="padding: 10px;">
-    <table class="table table-bordered data-table" id="somProjects-table">
+    <table class="table table-hover stripe table-bordered data-table" id="somProjects-table" width="100%">
         <thead>
-            <tr>
-                <th>Master</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Transactio Type</th>
-                <th>Asset Type</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Action</th>
+            <tr class="active">
+                <th width="3%"></th>
+                <th width="auto">Image</th>
+                <th width="auto">Name</th>
+                <th width="auto">Description</th>
+                <th width="auto">Transaction Type</th>
+                <th width="auto">Asset Type</th>
+                <th width="auto">Location</th>
+                <th width="auto">Status</th>
+                <th width="auto" style="text-align:right">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -60,15 +60,15 @@ $(function () {
         processing: false,
         serverSide: false,
         ajax: "{{ route('somProjects.index') }}",
-        columns: [   
-            {data: 'is_template_project', name: 'is_template_project', orderable: true, searchable: true}, 
-            {data: 'img_url', name: 'img_url', orderable: true, searchable: true},  
-            {data: 'name', name: 'name', orderable: true, searchable: true}, 
-            {data: 'sub_name', name: 'sub_name', orderable: true, searchable: true}, 
+        columns: [
+            {data: 'is_template_project', name: 'is_template_project', orderable: true, searchable: true},
+            {data: 'img_url', name: 'img_url', orderable: true, searchable: true},
+            {data: 'name', name: 'name', orderable: true, searchable: true},
+            {data: 'sub_name', name: 'sub_name', orderable: true, searchable: true},
             {data: 'som_project_model_name', name: 'som_project_model_name', orderable: true, searchable: true},
             {data: 'som_project_process_type_name', name: 'som_project_process_type_name', orderable: true, searchable: true},
             {data: 'som_country_name', name: 'som_country_name', orderable: true, searchable: true},
-            {data: 'som_project_info_status_name', name: 'som_project_info_status_name', orderable: true, searchable: true},            
+            {data: 'som_project_info_status_name', name: 'som_project_info_status_name', orderable: true, searchable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });

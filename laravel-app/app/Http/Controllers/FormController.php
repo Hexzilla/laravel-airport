@@ -39,9 +39,8 @@ class FormController extends Controller
             $urlactual = \URL::full();
             return redirect(CRUDBooster::adminPath() . "/loginhome?return_url=" . urlencode($urlactual));
         }
-
         $viewData['userid']     =   $user_id;
-        $viewData['username']   =   CRUDBooster::myName();
+        $viewData['username']   =   Auth::user()->name;
         $viewData['userphoto']  =   '../' . CRUDBooster::myPhoto();
         $viewData['formId'] = $id;
 
@@ -88,7 +87,6 @@ class FormController extends Controller
             SomLogger::error("ERR1008", 'Trying to access unauthorized form');
             return redirect('home');
         }
-
         //2) Get Task List
         $queryTaskList = "select t.id, t.order, t.name, t.request_date as request_date, t.duedate, t.task_completion_date as completion_date,
                         t.comment, t.support_doc_url as doc_url, t.support_doc_description as doc_description,
@@ -126,7 +124,6 @@ class FormController extends Controller
                         where f.id=:form_id
                         order by t.order";
 
-
         $taskList = DB::select(
             DB::raw($queryTaskList),
             array(
@@ -160,12 +157,8 @@ class FormController extends Controller
             }
         }
 
-
-
-
         //Log::debug('Listado de responsables: '.json_encode($responsibleArray));
         $viewData['responsibles_list'] = $responsibleArray;
-
 
         //3) Get Control Elements
         $queryElementList = "SELECT e.id, e.order_elements, e.name, e.lastupdate,
@@ -306,7 +299,6 @@ class FormController extends Controller
             $approvalStatusArray[$approval->id] = DB::select(DB::raw($queryStatusApproval), array('approval_resp_id' => ($approval->approval_resp_id)));
         }
 
-
         //Log::debug('Listado de status de approvals: '.json_encode($approvalStatusArray));
         $viewData['approval_status_list'] = $approvalStatusArray;
         $viewData['approval_status_active'] = $approvalStatusActive;
@@ -326,9 +318,7 @@ class FormController extends Controller
 
         $i = 0;
         $milestoneSize = count($milestonesList);
-
         foreach ($milestonesList as $milestone) {
-
             //Si es Milestone Actual
             if ($milestone->id == $id) {
 
@@ -342,16 +332,16 @@ class FormController extends Controller
                     $viewData['next_milestone'] = $milestonesList[$i + 1];
                 }
             }
-
             $i++;
         }
-
-
         //Check Privileges
-        $viewData['taskEditAllowed'] = $this->isAllowed('task', $taskList[0]->id, Operation::ValidateAccess);
-        $viewData['elementEditAllowed'] = $this->isAllowed('element', $elementList[0]->id, Operation::ValidateAccess);
-        $viewData['approvalEditAllowed'] = $this->isAllowed('approval', $approvalList[0]->id, Operation::Edit);
-
+        if(!empty($taskList))
+            $viewData['taskEditAllowed'] = $this->isAllowed('task', $taskList[0]->id, Operation::ValidateAccess);
+        if(!empty($elementList))
+            $viewData['elementEditAllowed'] = $this->isAllowed('element', $elementList[0]->id, Operation::ValidateAccess);
+        if(!empty($approvalList))
+            $viewData['approvalEditAllowed'] = $this->isAllowed('approval', $approvalList[0]->id, Operation::Edit);
+//        dd($viewData);
         return view('form', $viewData);
     }
 
@@ -366,7 +356,6 @@ class FormController extends Controller
             if (strpos($term, ' ')) {
                 $searchAll = false;
             }
-
 
             //Find groups Users:
             $queryLdap = Adldap::search()
