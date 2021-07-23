@@ -2,6 +2,7 @@
 
 namespace App\Http\Utils;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
@@ -143,8 +144,10 @@ class CRUDBooster
     public static function isView()
     {
         if (self::isSuperadmin()) return true;
-
+        $userSession = Auth::user();
+        //var_dump($userSession);
         $session = Session::get('admin_privileges_roles');
+        if ($userSession === null || $session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'User session not found...'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_visible;
@@ -157,6 +160,7 @@ class CRUDBooster
         if (self::isSuperadmin()) return true;
 
         $session = Session::get('admin_privileges_roles');
+        if ($session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'Unauthorized'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_edit;
@@ -169,6 +173,7 @@ class CRUDBooster
         if (self::isSuperadmin()) return true;
 
         $session = Session::get('admin_privileges_roles');
+        if ($session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'Unauthorized'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_create;
@@ -181,6 +186,7 @@ class CRUDBooster
         if (self::isSuperadmin()) return true;
 
         $session = Session::get('admin_privileges_roles');
+        if ($session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'Unauthorized'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_read;
@@ -193,6 +199,7 @@ class CRUDBooster
         if (self::isSuperadmin()) return true;
 
         $session = Session::get('admin_privileges_roles');
+        if ($session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'Unauthorized'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 return (bool) $v->is_delete;
@@ -205,6 +212,7 @@ class CRUDBooster
         if (self::isSuperadmin()) return true;
 
         $session = Session::get('admin_privileges_roles');
+        if ($session === null || count($session) === 0 ) { return CRUDBooster::redirect('/login', 'Unauthorized'); }
         foreach ($session as $v) {
             if ($v->path == self::getModulePath()) {
                 if ($v->is_visible && $v->is_create && $v->is_read && $v->is_edit && $v->is_delete) {
@@ -383,7 +391,7 @@ class CRUDBooster
     private static function getModulePath()
     {
         // Changed for database log.
-        // $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));        
+        // $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
         // return Request::segment(1 + $adminPathSegments);
         return Request::segment(1);
     }
