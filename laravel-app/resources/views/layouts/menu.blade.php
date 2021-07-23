@@ -7,9 +7,9 @@
 </li>
 
 <li class="nav-item">
-    <a href="#"
-       class="nav-link ">
-        <p title='Home'><i class="fa fa-home"></i> Home</p>
+    <a href="{{ route('home.index') }}"
+       class="nav-link {{ Request::is('home*') ? 'active' : '' }}">
+        <p title="Home"><i class="fa fa-home"></i> Home</p>
     </a>
 </li>
 
