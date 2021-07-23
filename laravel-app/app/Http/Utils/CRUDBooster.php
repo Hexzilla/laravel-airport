@@ -382,8 +382,10 @@ class CRUDBooster
 
     private static function getModulePath()
     {
-        $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));
-        return Request::segment(1 + $adminPathSegments);
+        // Changed for database log.
+        // $adminPathSegments = count(explode('/', config('crudbooster.ADMIN_PATH')));        
+        // return Request::segment(1 + $adminPathSegments);
+        return Request::segment(1);
     }
 
     public static function mainpath($path = NULL)

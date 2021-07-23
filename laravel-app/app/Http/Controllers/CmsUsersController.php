@@ -11,6 +11,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class CmsUsersController extends AppBaseController
 {
@@ -79,6 +81,11 @@ class CmsUsersController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('cms_users.index');
@@ -91,6 +98,11 @@ class CmsUsersController extends AppBaseController
      */
     public function create()
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         return view('cms_users.create');
     }
 
@@ -103,9 +115,25 @@ class CmsUsersController extends AppBaseController
      */
     public function store(CreateCmsUsersRequest $request)
     {
-        $input = $request->all();
+        try{
 
-        $cmsUsers = $this->cmsUsersRepository->create($input);
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $input = $request->all();
+
+            $cmsUsers = $this->cmsUsersRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error CmsUsersController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('cmsUsers.index'));
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Cms Users saved successfully.');
 
@@ -121,6 +149,11 @@ class CmsUsersController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $cmsUsers = $this->cmsUsersRepository->find($id);
 
         if (empty($cmsUsers)) {
@@ -141,6 +174,11 @@ class CmsUsersController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $cmsUsers = $this->cmsUsersRepository->find($id);
 
         if (empty($cmsUsers)) {
@@ -162,15 +200,31 @@ class CmsUsersController extends AppBaseController
      */
     public function update($id, UpdateCmsUsersRequest $request)
     {
-        $cmsUsers = $this->cmsUsersRepository->find($id);
+        try{
 
-        if (empty($cmsUsers)) {
-            Flash::error('Cms Users not found');
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $cmsUsers = $this->cmsUsersRepository->find($id);
+
+            if (empty($cmsUsers)) {
+                Flash::error('Cms Users not found');
+
+                return redirect(route('cmsUsers.index'));
+            }
+
+            $cmsUsers = $this->cmsUsersRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error CmsUsersController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('cmsUsers.index'));
         }
-
-        $cmsUsers = $this->cmsUsersRepository->update($request->all(), $id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Cms Users updated successfully.');
 
@@ -188,15 +242,32 @@ class CmsUsersController extends AppBaseController
      */
     public function destroy($id)
     {
-        $cmsUsers = $this->cmsUsersRepository->find($id);
+        try{
 
-        if (empty($cmsUsers)) {
-            Flash::error('Cms Users not found');
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
+            $cmsUsers = $this->cmsUsersRepository->find($id);
+
+            if (empty($cmsUsers)) {
+                Flash::error('Cms Users not found');
+
+                return redirect(route('cmsUsers.index'));
+            }
+
+            $this->cmsUsersRepository->delete($id);
+            
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error CmsUsersController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('cmsUsers.index'));
-        }
+        } 
 
-        $this->cmsUsersRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Cms Users deleted successfully.');
 

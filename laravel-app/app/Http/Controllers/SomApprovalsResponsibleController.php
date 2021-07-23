@@ -13,6 +13,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomApprovalsResponsibleController extends AppBaseController
 {
@@ -112,6 +114,11 @@ class SomApprovalsResponsibleController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_approvals_responsibles.index')
@@ -126,6 +133,11 @@ class SomApprovalsResponsibleController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $som_form_approvals_id = $request->get("som_form_approvals_id");
 
         $data = array();
@@ -161,7 +173,23 @@ class SomApprovalsResponsibleController extends AppBaseController
         $input = $request->all();
         $som_form_approvals_id = $request->input('som_form_approvals_id');
 
-        $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->create($input);
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomApprovalsResponsibleController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somApprovalsResponsibles.index',['som_form_approvals_id'=> $som_form_approvals_id]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Approvals Responsible saved successfully.');
 
@@ -182,6 +210,11 @@ class SomApprovalsResponsibleController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);
 
         if (empty($somApprovalsResponsible)) {
@@ -206,6 +239,11 @@ class SomApprovalsResponsibleController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);
 
         if (empty($somApprovalsResponsible)) {
@@ -241,16 +279,33 @@ class SomApprovalsResponsibleController extends AppBaseController
      */
     public function update($id, UpdateSomApprovalsResponsibleRequest $request)
     {
-        $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);
         $som_form_approvals_id = $request->input('som_form_approvals_id');
 
-        if (empty($somApprovalsResponsible)) {
-            Flash::error('Som Approvals Responsible not found');
+        try{
 
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);        
+
+            if (empty($somApprovalsResponsible)) {
+                Flash::error('Som Approvals Responsible not found');
+
+                return redirect(route('somApprovalsResponsibles.index',['som_form_approvals_id'=> $som_form_approvals_id]));
+            }
+
+            $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomApprovalsResponsibleController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somApprovalsResponsibles.index',['som_form_approvals_id'=> $som_form_approvals_id]));
-        }
-
-        $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->update($request->all(), $id);
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Approvals Responsible updated successfully.');
 
@@ -268,16 +323,33 @@ class SomApprovalsResponsibleController extends AppBaseController
      */
     public function destroy($id, Request $request)
     {
-        $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);
-        $som_form_approvals_id = $request->input('som_form_approvals_id');  
+        $som_form_approvals_id = $request->input('som_form_approvals_id'); 
 
-        if (empty($somApprovalsResponsible)) {
-            Flash::error('Som Approvals Responsible not found');
+        try{
 
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somApprovalsResponsible = $this->somApprovalsResponsibleRepository->find($id);        
+
+            if (empty($somApprovalsResponsible)) {
+                Flash::error('Som Approvals Responsible not found');
+
+                return redirect(route('somApprovalsResponsibles.index',['som_form_approvals_id'=> $som_form_approvals_id]));
+            }
+
+            $this->somApprovalsResponsibleRepository->delete($id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomApprovalsResponsibleController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somApprovalsResponsibles.index',['som_form_approvals_id'=> $som_form_approvals_id]));
-        }
-
-        $this->somApprovalsResponsibleRepository->delete($id);
+        }  
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Approvals Responsible deleted successfully.');
 

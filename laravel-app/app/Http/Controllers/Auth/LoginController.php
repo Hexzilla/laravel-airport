@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RqFacade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -19,6 +20,7 @@ use Office365\Runtime\Auth\AuthenticationContext;
 use Office365\Runtime\Auth\NetworkCredentialContext;
 
 use App\Http\Utils\SomLogger;
+use App\Http\Utils\CRUDBooster;
 
 class LoginController extends Controller
 {
@@ -92,6 +94,8 @@ class LoginController extends Controller
                 Session::put('theme_color', $priv->theme_color);
                 Session::put("appname", env('APP_NAME'));
                 Session::put("last_login_timestamp", Carbon::now()->timestamp);
+
+                CRUDBooster::insertLog(trans("crudbooster.log_login",['email'=>$user->email,'ip'=>RqFacade::server('REMOTE_ADDR')]));
 
                 //Check redirect to Front or Backoffice
                 $loginadmin = Session::get('loginadmin');
@@ -183,7 +187,7 @@ class LoginController extends Controller
                     Session::put("appname", env('APP_NAME'));
                     Session::put("last_login_timestamp", Carbon::now()->timestamp);
 
-                    //CRUDBooster::insertLog(trans("crudbooster.log_login",['email'=>$user->email,'ip'=>RqFacade::server('REMOTE_ADDR')]));
+                    CRUDBooster::insertLog(trans("crudbooster.log_login",['email'=>$user->email,'ip'=>RqFacade::server('REMOTE_ADDR')]));
 
                     //Check redirect to Front or Backoffice
                     $loginadmin = Session::get('loginadmin');

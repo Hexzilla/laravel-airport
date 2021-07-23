@@ -13,6 +13,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomProjectsAdvisorsController extends AppBaseController
 {
@@ -76,6 +78,11 @@ class SomProjectsAdvisorsController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_projects_advisors.index')
@@ -90,6 +97,11 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         return view('som_projects_advisors.create')->with('somProjectID',$request->input('som_project_id'));
     }
     /**
@@ -103,16 +115,25 @@ class SomProjectsAdvisorsController extends AppBaseController
     {
         $input = $request->all();
 
-        //$somProjectsAdvisors = $this->somProjectsAdvisorsRepository->create($input);
+        try{
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }           
 
-        if (CRUDBooster::insert('som_projects_advisors', $input) == false) {
-            Flash::error('An error occured while attempting to add new advisor');
-        }
-        else {
-            Flash::success('Som Projects Advisors saved successfully.');
-
+            $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->create($input);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomProjectsAdvisorsController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somProjectsAdvisors.index',['project_id'=> $input['som_projects_id']]));
         }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
+
+        Flash::success('Som Projects Advisors saved successfully.');
+
+        return redirect(route('somProjectsAdvisors.index',['project_id'=> $input['som_projects_id']]));
     }
 
     /**
@@ -124,6 +145,11 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
 
         if (empty($somProjectsAdvisors)) {
@@ -144,6 +170,11 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
 
         if (empty($somProjectsAdvisors)) {
@@ -167,15 +198,30 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function update($id, UpdateSomProjectsAdvisorsRequest $request)
     {
-        $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
+        $som_projects_id = 0;
+        try{
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        if (empty($somProjectsAdvisors)) {
-            Flash::error('Som Projects Advisors not found');
+            $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
 
-            return redirect(route('somProjects.index'));
+            if (empty($somProjectsAdvisors)) {
+                Flash::error('Som Projects Advisors not found');
+
+                return redirect(route('somProjects.index'));
+            }
+            $som_projects_id = $somProjectsAdvisors['som_projects_id'];
+            $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->update($request->all(), $id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomProjectsAdvisorsController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsAdvisors.index',['project_id'=> $som_projects_id]));
         }
-        $som_projects_id = $somProjectsAdvisors['som_projects_id'];
-        $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->update($request->all(), $id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Advisors updated successfully.');
 
@@ -193,18 +239,35 @@ class SomProjectsAdvisorsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
+        $som_projects_id = 0;
 
-        if (empty($somProjectsAdvisors)) {
-            Flash::error('Som Projects Advisors not found');
+        try{
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-            return redirect(route('somProjects.index'));
-        }
+            $somProjectsAdvisors = $this->somProjectsAdvisorsRepository->find($id);
 
-        $this->somProjectsAdvisorsRepository->delete($id);
+            if (empty($somProjectsAdvisors)) {
+                Flash::error('Som Projects Advisors not found');
+
+                return redirect(route('somProjects.index'));
+            }
+            $som_projects_id = $somProjectsAdvisors['som_projects_id'];
+
+            $this->somProjectsAdvisorsRepository->delete($id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomProjectsAdvisorsController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somProjectsAdvisors.index',['project_id'=> $som_projects_id]));
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Projects Advisors deleted successfully.');
 
-        return redirect(route('somProjectsAdvisors.index',['project_id'=> $somProjectsAdvisors['som_projects_id']]));
+        return redirect(route('somProjectsAdvisors.index',['project_id'=> $som_projects_id]));
     }
 }

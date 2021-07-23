@@ -16,6 +16,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomFormElementsController extends AppBaseController
 {
@@ -110,6 +112,11 @@ class SomFormElementsController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_form_elements.index')
@@ -124,6 +131,11 @@ class SomFormElementsController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $somforms_id = $request->get('somforms_id');
         $somFormElements = new SomFormElements();
         $somFormElements->som_forms_id = $somforms_id;
@@ -160,12 +172,30 @@ class SomFormElementsController extends AppBaseController
      */
     public function store(CreateSomFormElementsRequest $request)
     {
-        $input = $request->all();
+        $somforms_id = $request->get('som_forms_id');
 
-        $somFormElements = $this->somFormElementsRepository->create($input);
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $input = $request->all();
+
+            $somFormElements = $this->somFormElementsRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomFormElementsController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Elements saved successfully.');
-        $somforms_id = $somFormElements->som_forms_id;
+        
         return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
     }
 
@@ -178,6 +208,11 @@ class SomFormElementsController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormElements = $this->somFormElementsRepository->find($id);
 
         if (empty($somFormElements)) {
@@ -201,6 +236,11 @@ class SomFormElementsController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormElements = $this->somFormElementsRepository->find($id);
         
 
@@ -231,7 +271,7 @@ class SomFormElementsController extends AppBaseController
             ->with('somforms_id', $somforms_id)
             ->with('somFormElements', $somFormElements)
             ->with('elementTypes', $elementTypes)
-            ->with('arrRole', $RoleRows);
+            ->with('arrRole', $arrRole);
     }
 
     /**
@@ -244,18 +284,36 @@ class SomFormElementsController extends AppBaseController
      */
     public function update($id, UpdateSomFormElementsRequest $request)
     {
-        $somFormElements = $this->somFormElementsRepository->find($id);
+        $somforms_id = $request->get('som_forms_id');
 
-        if (empty($somFormElements)) {
-            Flash::error('Som Form Elements not found');
+        try{
 
-            return redirect(route('somFormElements.index'));
-        }
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        $somFormElements = $this->somFormElementsRepository->update($request->all(), $id);
+            $somFormElements = $this->somFormElementsRepository->find($id);
+
+            if (empty($somFormElements)) {
+                Flash::error('Som Form Elements not found');
+
+                return redirect(route('somFormElements.index'));
+            }
+
+            $somFormElements = $this->somFormElementsRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomFormElementsController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormElements.index' , ['somforms_id'=>$somforms_id]));
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Elements updated successfully.');
-        $somforms_id = $somFormElements->som_forms_id;
+        
         return redirect(route('somFormElements.index' , ['somforms_id'=>$somforms_id]));
     }
 
@@ -270,16 +328,34 @@ class SomFormElementsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somFormElements = $this->somFormElementsRepository->find($id);
+        $somforms_id = 0;
 
-        if (empty($somFormElements)) {
-            Flash::error('Som Form Elements not found');
+        try{
 
-            return redirect(route('somFormElements.index'));
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
+
+            $somFormElements = $this->somFormElementsRepository->find($id);
+
+            if (empty($somFormElements)) {
+                Flash::error('Som Form Elements not found');
+
+                return redirect(route('somFormElements.index'));
+            }
+            $somforms_id = $somFormElements->som_forms_id;
+
+            $this->somFormElementsRepository->delete($id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomFormElementsController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormElements.index', ['somforms_id'=>$somforms_id]));
         }
-        $somforms_id = $somFormElements->som_forms_id;
-
-        $this->somFormElementsRepository->delete($id);
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Elements deleted successfully.');
 

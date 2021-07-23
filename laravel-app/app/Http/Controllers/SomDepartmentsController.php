@@ -17,6 +17,7 @@ use finfo;
 use App\Http\Utils\SomLogger;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
 
 class SomDepartmentsController extends AppBaseController
 {
@@ -67,6 +68,11 @@ class SomDepartmentsController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
 
         return view('som_departments.index');
@@ -79,6 +85,11 @@ class SomDepartmentsController extends AppBaseController
      */
     public function create()
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         return view('som_departments.create');
     }
 
@@ -91,9 +102,24 @@ class SomDepartmentsController extends AppBaseController
      */
     public function store(CreateSomDepartmentsRequest $request)
     {
-        $input = $request->all();
+        try{
 
-        $somDepartments = $this->somDepartmentsRepository->create($input);
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $input = $request->all();
+            $somDepartments = $this->somDepartmentsRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomDepartmentsController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somDepartments.index'));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Departments saved successfully.');
 
@@ -109,6 +135,11 @@ class SomDepartmentsController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somDepartments = $this->somDepartmentsRepository->find($id);
 
         if (empty($somDepartments)) {
@@ -129,6 +160,11 @@ class SomDepartmentsController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somDepartments = $this->somDepartmentsRepository->find($id);
 
         if (empty($somDepartments)) {
@@ -150,15 +186,29 @@ class SomDepartmentsController extends AppBaseController
      */
     public function update($id, UpdateSomDepartmentsRequest $request)
     {
-        $somDepartments = $this->somDepartmentsRepository->find($id);
+        try{
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        if (empty($somDepartments)) {
-            Flash::error('Som Departments not found');
+            $somDepartments = $this->somDepartmentsRepository->find($id);
 
+            if (empty($somDepartments)) {
+                Flash::error('Som Departments not found');
+
+                return redirect(route('somDepartments.index'));
+            }
+
+            $somDepartments = $this->somDepartmentsRepository->update($request->all(), $id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomDepartmentsController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somDepartments.index'));
-        }
+        }            
 
-        $somDepartments = $this->somDepartmentsRepository->update($request->all(), $id);
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Departments updated successfully.');
 
@@ -176,18 +226,29 @@ class SomDepartmentsController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somDepartments = $this->somDepartmentsRepository->find($id);
+        try{
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        if (empty($somDepartments)) {
-            Flash::error('Som Departments not found');
+            $somDepartments = $this->somDepartmentsRepository->find($id);
 
+            if (empty($somDepartments)) {
+                Flash::error('Som Departments not found');
+
+                return redirect(route('somDepartments.index'));
+            }
+
+            $this->somDepartmentsRepository->delete($id);
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomDepartmentsController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
             return redirect(route('somDepartments.index'));
-        }
-
-        $this->somDepartmentsRepository->delete($id);
-
+        }  
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
         Flash::success('Som Departments deleted successfully.');
-
         return redirect(route('somDepartments.index'));
     }
 

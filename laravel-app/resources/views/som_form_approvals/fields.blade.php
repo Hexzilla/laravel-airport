@@ -11,7 +11,8 @@
 
 
 <!-- Som Forms Id Field -->
-<div class="form-group row">
+<input type="hidden" name="som_forms_id" id="som_forms_id" value="{!! $somforms_id !!}">
+<!-- <div class="form-group row">
     <div class="col-sm-2 col-form-label text-sm-right">
         {!! Form::label('som_forms_id', 'Som Forms Id') !!}
         <span class="required">*</span>
@@ -19,7 +20,7 @@
     <div class="col-sm-10">
         {!! Form::select('som_forms_id', $somFormsIds, $somforms_id, ['class' => 'form-control']) !!}
     </div>
-</div>
+</div> -->
 
 
 <!-- Order Approval Field -->

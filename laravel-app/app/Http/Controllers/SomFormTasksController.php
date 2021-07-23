@@ -16,6 +16,8 @@ use Flash;
 use Response;
 
 use DataTables;
+use App\Http\Utils\CRUDBooster;
+use App\Http\Utils\SomLogger;
 
 class SomFormTasksController extends AppBaseController
 {
@@ -110,6 +112,11 @@ class SomFormTasksController extends AppBaseController
                 })                    
                 ->rawColumns(['action'])                
                 ->make(true);
+        }else{
+            if (!CRUDBooster::isView()) {
+              CRUDBooster::insertLog(trans("crudbooster.log_try_view",['module'=>CRUDBooster::getCurrentModule()->name]));
+              CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+            }
         }
         
         return view('som_form_tasks.index')
@@ -124,6 +131,11 @@ class SomFormTasksController extends AppBaseController
      */
     public function create(Request $request)
     {
+        if (!CRUDBooster::isCreate()) {
+            CRUDBooster::insertLog(trans('crudbooster.log_try_add', ['module'=>CRUDBooster::getCurrentModule()->name ]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans("crudbooster.denied_access"));
+        }
+
         $somforms_id = $request->get('somforms_id');
         $somFormTasks = new SomFormTasks();
         $somFormTasks->som_forms_id = $somforms_id;
@@ -170,11 +182,28 @@ class SomFormTasksController extends AppBaseController
     public function store(CreateSomFormTasksRequest $request)
     {
         $input = $request->all();
+        $somforms_id = $request->get('som_forms_id');
 
-        $somFormTasks = $this->somFormTasksRepository->create($input);
+        try{
+
+            if(!CRUDBooster::isCreate()) {
+                CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['module'=>CRUDBooster::getCurrentModule()->name ]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+            }
+
+            $somFormTasks = $this->somFormTasksRepository->create($input);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1003","Error SomFormTasksController->store(): ".$e->getMessage());
+            SomLogger::error("ERR1003",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
+        }
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_add",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Tasks saved successfully.');
-        $somforms_id = $somFormTasks->som_forms_id;
+        
         return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
     }
 
@@ -187,6 +216,11 @@ class SomFormTasksController extends AppBaseController
      */
     public function show($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_view", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormTasks = $this->somFormTasksRepository->find($id);
 
         if (empty($somFormTasks)) {
@@ -208,6 +242,11 @@ class SomFormTasksController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!CRUDBooster::isRead()) {
+            CRUDBooster::insertLog(trans("crudbooster.log_try_edit", ['module'=>CRUDBooster::getCurrentModule()->name]));
+            CRUDBooster::redirect(CRUDBooster::adminPath(), trans('crudbooster.denied_access'));
+        }
+
         $somFormTasks = $this->somFormTasksRepository->find($id);
 
         if (empty($somFormTasks)) {
@@ -256,18 +295,36 @@ class SomFormTasksController extends AppBaseController
      */
     public function update($id, UpdateSomFormTasksRequest $request)
     {
-        $somFormTasks = $this->somFormTasksRepository->find($id);
+        $somforms_id = $request->get('som_forms_id');
 
-        if (empty($somFormTasks)) {
-            Flash::error('Som Form Tasks not found');
+        try{
 
-            return redirect(route('somFormTasks.index'));
-        }
+            if(!CRUDBooster::isUpdate()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_update",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        $somFormTasks = $this->somFormTasksRepository->update($request->all(), $id);
+            $somFormTasks = $this->somFormTasksRepository->find($id);
+
+            if (empty($somFormTasks)) {
+                Flash::error('Som Form Tasks not found');
+
+                return redirect(route('somFormTasks.index'));
+            }
+
+            $somFormTasks = $this->somFormTasksRepository->update($request->all(), $id);
+
+        }catch(\Exception $e){
+            SomLogger::error("ERR1004","Error SomFormTasksController->update(): ".$e->getMessage());
+            SomLogger::error("ERR1004",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
+        } 
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_update",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Tasks updated successfully.');
-        $somforms_id = $somFormTasks->som_forms_id;
+        
         return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
     }
 
@@ -282,16 +339,34 @@ class SomFormTasksController extends AppBaseController
      */
     public function destroy($id)
     {
-        $somFormTasks = $this->somFormTasksRepository->find($id);
+        $somforms_id = 0;
 
-        if (empty($somFormTasks)) {
-            Flash::error('Som Form Tasks not found');
+        try{
 
-            return redirect(route('somFormTasks.index'));
-        }
-        $somforms_id = $somFormTasks->som_forms_id;
+            if(!CRUDBooster::isDelete()) {
+                CRUDBooster::insertLog(trans("crudbooster.log_try_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
+                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+            }
 
-        $this->somFormTasksRepository->delete($id);
+            $somFormTasks = $this->somFormTasksRepository->find($id);
+
+            if (empty($somFormTasks)) {
+                Flash::error('Som Form Tasks not found');
+
+                return redirect(route('somFormTasks.index'));
+            }
+            $somforms_id = $somFormTasks->som_forms_id;
+
+            $this->somFormTasksRepository->delete($id);
+            
+        }catch(\Exception $e){
+            SomLogger::error("ERR1005","Error SomFormTasksController->destroy(): ".$e->getMessage());
+            SomLogger::error("ERR1005",$e->getTraceAsString());
+            Flash::error($e->getMessage());
+            return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
+        }        
+            
+        CRUDBooster::insertLog(trans("crudbooster.log_delete",['module'=>CRUDBooster::getCurrentModule()->name]));
 
         Flash::success('Som Form Tasks deleted successfully.');
         return redirect(route('somFormTasks.index', ['somforms_id'=>$somforms_id]));
