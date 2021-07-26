@@ -62,7 +62,7 @@ $(function () {
             {data: 'inflation', name: 'inflation', orderable: true, searchable: true},
             {data: 'population', name: 'population', orderable: true, searchable: true},
             {data: 'gpd_evolution', name: 'gpd_evolution', orderable: true, searchable: true},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {data: 'action', name: 'action', orderable: false, searchable: false, sWidth: '10%'},
         ]
     });
 });

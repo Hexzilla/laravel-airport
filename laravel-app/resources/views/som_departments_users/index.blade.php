@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><i class='fa fa-tasks'></i> Som Departments Users</h1>
+                    <h1><i class='fa fa-search'></i> Users departments</h1>
                 </div>
                 <div class="col-sm-6">
                     <div class="float-right">                                                
@@ -13,7 +13,7 @@
                             <i class="fa fa-palette"></i> Home
                         </a>
                         <a href="#">
-                            <i class="fa fa-chevron-right"></i> Departments Users
+                            <i class="fa fa-chevron-right"></i> Users departments
                         </a>                        
                     </div>                        
                 </div>
@@ -42,14 +42,20 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-header">
+            <div class="card-body p-3" >
                 <div class="row">
                     <div class="col-md-3">
-                        <span><i class="fa fa-tasks ml-2"></i> Departments Users List</span>
+                        <span>Departments</span>
                     </div>
-                    <div class="col-md-9"></div>
-                </div>                
+                    <div class="col-md-6 breadcrumbs-menu">
+                        <span>{!! $breadcrumbs[0]['name'] !!}</span> 
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
             </div>
+        </div>
+
+        <div class="card">            
             <div class="card-body p-0">
                 @include('som_departments_users.table')
 

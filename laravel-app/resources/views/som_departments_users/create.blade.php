@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1><i class="fa fa-tasks ml-2"></i> Create Som Departments Users</h1>
+                    <h1><i class="fa fa-search ml-2"></i> Add Users Departments</h1>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-12-lg ml-2 mb-4">
                 <a href="{{ route('somDepartmentsUsers.index',['som_departments_id'=> $som_departments_id]) }}">
-                    <i class="fa fa-chevron-left"></i> Back To List Data Country Info
+                    <i class="fa fa-chevron-left"></i> Back To List Data Users Departments
                 </a>
             </div>
         </div>
@@ -27,14 +27,10 @@
 
             {!! Form::open(['route' => 'somDepartmentsUsers.store']) !!}
             <div class="card-header">
-                <span><i class="fa fa-tasks ml-2"></i> Add Departments Users</span>
+                <span><i class="fa fa-search ml-2"></i> Add Users Departments</span>
             </div>
             <div class="card-body">
-
-                <div class="row">
-                    @include('som_departments_users.fields')
-                </div>
-
+                @include('som_departments_users.fields')
             </div>
 
             <div class="card-footer">

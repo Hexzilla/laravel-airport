@@ -52,7 +52,10 @@
             font-size: 19px;
             font-weight: 500;
         }
-    </style>
+        .select2-selection{
+            height: 40px !important;
+        }
+    </style>    
 
     @yield('third_party_stylesheets')
 

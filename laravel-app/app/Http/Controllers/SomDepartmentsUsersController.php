@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSomDepartmentsUsersRequest;
 use App\Http\Requests\UpdateSomDepartmentsUsersRequest;
 use App\Repositories\SomDepartmentsUsersRepository;
 use App\Repositories\CmsUsersRepository;
+use App\Repositories\SomDepartmentsRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
@@ -20,12 +21,15 @@ class SomDepartmentsUsersController extends AppBaseController
     /** @var  SomDepartmentsUsersRepository */
     private $somDepartmentsUsersRepository;
     private $cmsUsersRepository;
+    private $somDepartmentsRepository;
 
     public function __construct(SomDepartmentsUsersRepository $somDepartmentsUsersRepo,
-                                CmsUsersRepository $cmsUsersRepository)
+                                CmsUsersRepository $cmsUsersRepository,
+                                SomDepartmentsRepository $somDepartmentsRepo)
     {
         $this->somDepartmentsUsersRepository = $somDepartmentsUsersRepo;
         $this->cmsUsersRepository = $cmsUsersRepository;
+        $this->somDepartmentsRepository = $somDepartmentsRepo;
     }
 
     /**
@@ -38,6 +42,12 @@ class SomDepartmentsUsersController extends AppBaseController
     public function index(Request $request)
     {
         $som_departments_id = $request->get("som_departments_id");
+
+        $somDepartments = $this->somDepartmentsRepository->find($som_departments_id);
+        $breadcrumbs = array();
+        $breadcrumbs[0] = array();
+        $breadcrumbs[0]['id'] = $somDepartments['id'];
+        $breadcrumbs[0]['name'] = $somDepartments['name'];
 
         if ($request->ajax()) {
 
@@ -74,7 +84,8 @@ class SomDepartmentsUsersController extends AppBaseController
         } 
 
         return view('som_departments_users.index')
-            ->with('som_departments_id', $som_departments_id);
+            ->with('som_departments_id', $som_departments_id)
+            ->with('breadcrumbs', $breadcrumbs);
     }
 
     /**
@@ -217,6 +228,16 @@ class SomDepartmentsUsersController extends AppBaseController
         }  
         $selected_user_id = $somDepartmentsUsers->cms_users_id;
         $data['selected_user'] = $selected_user_id;
+
+        $data['departments'] = array();
+        $somDepartments = $this->somDepartmentsRepository->all();
+        $selected_department_id = 0;
+        foreach ($somDepartments as $department) {
+            $data['departments'][$department->id] = $department->name;
+        }  
+
+        $selected_department_id = $somDepartmentsUsers->som_departments_id;
+        $data['selected_department_id'] = $selected_department_id;
 
         return view('som_departments_users.edit')
                     ->with('som_departments_id',$somDepartmentsUsers->som_departments_id)
